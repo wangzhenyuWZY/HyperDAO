@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import store from "../store";
 import router from "../router";
 // 创建axios实例
@@ -12,7 +12,7 @@ service.interceptors.request.use(
   config => {
     if (store.state.token) {
       // 给请求头添加laohu-token
-      config.headers["laohu-token"] = store.state.token;
+      config.headers["user-token"] = store.state.token;
     }
     return config;
   },

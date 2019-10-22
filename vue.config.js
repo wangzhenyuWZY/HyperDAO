@@ -1,7 +1,7 @@
 const autoprefixer = require("autoprefixer");
 const pxtorem = require("postcss-pxtorem");
-const less = require("less");
-const modifyVars = less.modifyVars;
+const path = require('path');
+const themePath = path.resolve(__dirname,'src/assets/style/theme.less');
 
 module.exports = {
   // 关闭eslint检查
@@ -24,7 +24,7 @@ module.exports = {
         //   // hack: `true; @import "@/assets/style/my-theme.less";`
         // }
         modifyVars: {
-          hack: `true; @import "/Users/huruqing/Desktop/项目/qlmall/fresh-h5/src/assets/style/theme.less";`
+          hack: `true; @import "${themePath}";`
         }
       },
       postcss: {
@@ -36,6 +36,12 @@ module.exports = {
           })
         ]
       }
+    }
+  },
+
+  configureWebpack: {
+    externals: {
+      axios: "axios" // 配置使用CDN
     }
   }
 

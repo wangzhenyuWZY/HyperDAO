@@ -4,8 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --model",
+    "dev": "vue-cli-service serve --model",
+    "prod": "vue-cli-service serve --model production",
     "build": "vue-cli-service build --model",
+    "push": "git add . && git commit -m'xxx' && git push",
     "lint": "vue-cli-service lint"
+
   },
   "dependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
