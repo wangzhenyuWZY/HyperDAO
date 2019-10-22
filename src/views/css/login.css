@@ -1,0 +1,26 @@
+/* 本页公共样式 */
+.login {
+  height: 100vh;
+  background-color: #fff;
+}
+header {
+  text-align: center;
+}
+header img {
+  margin: 79px auto;
+}
+header .handset {
+  border-bottom: 1px solid #f8f8f8;
+}
+header .handset input {
+  border: none;
+  outline: none;
+}
+header .butt {
+  margin-top: 20px;
+  border-radius: 3px;
+  background-color: #ff5f16;
+  width: calc(85vw);
+  height: 40px;
+  border: none;
+}
