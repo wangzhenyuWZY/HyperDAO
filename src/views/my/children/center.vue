@@ -4,7 +4,7 @@
     <header>
       <div class="beijin"></div>
       <div class="flex aic users pixed" style="width:50%;">
-        <img :src="require('../../assets/img/personal/tx.jpg')" class="imege" />
+        <img :src="require('../../../assets/img/personal/tx.jpg')" class="imege" />
         <router-link v-if="!isLogin" to="/login" class="f16 fff ml-20">立即登录</router-link>
         <span v-else class="f16 fff ml-20">用户 {{username.slice(-4)}}</span>
       </div>

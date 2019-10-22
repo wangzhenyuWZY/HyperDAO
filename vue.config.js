@@ -1,5 +1,7 @@
 const autoprefixer = require("autoprefixer");
 const pxtorem = require("postcss-pxtorem");
+const less = require("less");
+const modifyVars = less.modifyVars;
 
 module.exports = {
   // 关闭eslint检查
@@ -7,6 +9,24 @@ module.exports = {
   // 配置css前缀,px转rem
   css: {
     loaderOptions: {
+      less: {
+        // http://lesscss.org/usage/#less-options-strict-units `Global Variables`
+        // `primary` is global variables fields name
+        // modifyVars: {
+        //   // 直接覆盖变量
+        //   "text-color": "#111",
+        //   "border-color": "#eee",
+        //   "nav-bar-text-color": "#c03131",
+        //   "van-nav-bar__text": "#c03131",
+        //   "nav-bar-title-text-color": "#c03131",
+
+        //   // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+        //   // hack: `true; @import "@/assets/style/my-theme.less";`
+        // }
+        modifyVars: {
+          hack: `true; @import "/Users/huruqing/Desktop/项目/qlmall/fresh-h5/src/assets/style/theme.less";`
+        }
+      },
       postcss: {
         plugins: [
           autoprefixer(),
@@ -18,6 +38,74 @@ module.exports = {
       }
     }
   }
+
+  // css: {
+  //   loaderOptions: {
+  //     // 给 less-loader 传递 Less.js 相关选项
+  //     less: {
+  //       // http://lesscss.org/usage/#less-options-strict-units `Global Variables`
+  //       // `primary` is global variables fields name
+  //       // modifyVars: {
+  //       //   // 直接覆盖变量
+  //       //   "text-color": "#111",
+  //       //   "border-color": "#eee",
+  //       //   "nav-bar-text-color": "#c03131",
+  //       //   "van-nav-bar__text": "#c03131",
+  //       //   "nav-bar-title-text-color": "#c03131",
+
+  //       //   // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+  //       //   // hack: `true; @import "@/assets/style/my-theme.less";`
+  //       // }
+  //       modifyVars: {
+  //         red: "#03a9f4",
+  //         blue: "#3eaf7c",
+  //         orange: "#f08d49",
+  //         "text-color": "#111"
+  //       }
+  //     }
+  //   }
+  // }
+
+  // chainWebpack: config => {
+  //   const lessRule = config.module.rule("less");
+  //   lessRule.uses.clear();
+  //   lessRule
+  //     .test(/\.less$/)
+  //     .use("style-loader")
+  //     .loader("css-loader")
+  //     .loader("less-loader")
+  //     .options({
+  //       modifyVars: {
+  //         // 直接覆盖变量
+  //         "text-color": "#111",
+  //         "border-color": "#eee",
+  //         // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+  //         hack: `true; @import "@/assets/style/my-theme.less";`
+  //       }
+  //     });
+  // }
+
+  // // 自定义主题样式
+  // rules: [
+  //   {
+  //     test: /\.less$/,
+  //     use: [
+  //       // ...其他 loader 配置
+  //       {
+  //         loader: "less-loader",
+  //         options: {
+  //           modifyVars: {
+  //             // 直接覆盖变量
+  //             "text-color": "#111",
+  //             "border-color": "#eee",
+  //             // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+  //             hack: `true; @import "@/assets/style/my-theme.less";`
+  //           }
+  //         }
+  //       }
+  //     ]
+  //   }
+  // ]
   // devServer: {
   //     // 代理
   //     proxy: {

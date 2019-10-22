@@ -11,12 +11,13 @@ const router = new Router({
       redirect: "/index"
     },
     {
-      path: "/order",
+      path: "/index",
+      component: () => import("@/views/index/index"),
       meta: {
-        title: "我的订单",
-        needLogin: true
-      },
-      component: () => import("@/views/order/index")
+        title: "每日生鲜",
+        // 缓存首页
+        keepAlive: true
+      }
     },
     {
       path: "/cart",
@@ -26,24 +27,8 @@ const router = new Router({
       component: () => import("@/views/cart/index")
     },
     {
-      path: "/login",
-      component: () => import("@/views/login/index"),
-      meta: {
-        title: "登陆"
-      }
-    },
-    {
-      path: "/index",
-      component: () => import("@/views/index/index"),
-      meta: {
-        title: "首页",
-        // 缓存首页
-        keepAlive: true
-      }
-    },
-    {
       path: "/my",
-      component: () => import("@/views/my"),
+      component: () => import("@/views/my/index"),
       redirect: "/my/center",
       children: [
         {
@@ -51,16 +36,27 @@ const router = new Router({
           meta: {
             title: "个人中心"
           },
-          component: () => import("@/views/my/center")
+          component: () => import("@/views/my/children/center")
         },
         {
           path: "set",
           meta: {
             title: "设置"
           },
-          component: () => import("@/views/my/set")
+          component: () => import("@/views/my/children/set")
         }
       ]
+    },
+    {
+      path: "/login",
+      component: () => import("@/views/login/index"),
+      meta: {
+        title: "登陆"
+      }
+    },
+    {
+      path: "*",
+      component: () => import("@/components/NotFound")
     }
   ]
 });

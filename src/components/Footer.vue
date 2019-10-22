@@ -10,19 +10,19 @@
     <li class="item">
       <router-link to="/cart" class="flex2 aic f20 text" active-class="active">
         <van-icon class="text" name="shopping-cart-o"></van-icon>
-        <p class="mt-5 f12">购物车</p>
+        <p class="mt-5 text f12">购物车</p>
       </router-link>
     </li>
     <li class="item">
       <router-link to="/my" class="flex2 aic f20 text" active-class="active">
         <van-icon class="text" name="user-o"></van-icon>
-        <p class="mt-5 f12">我的</p>
+        <p class="mt-5 text f12">我的</p>
       </router-link>
     </li>
     <!-- <li class="item">
       <router-link to="/demo" class="flex2 aic f20 text" active-class="active">
         <van-icon class="text" name="user-o"></van-icon>
-        <p class="mt-5 f12">例子</p>
+        <p class="mt-5 text f12">例子</p>
       </router-link>
     </li>-->
   </ul>
@@ -44,7 +44,7 @@ export default {};
     color: #797d82;
   }
   .active .text {
-    color: #ff5f16;
+    color: @red;
   }
 }
 </style>
