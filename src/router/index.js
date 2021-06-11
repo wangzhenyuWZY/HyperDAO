@@ -12,52 +12,13 @@ const router = new Router({
     },
     {
       path: "/index",
-      component: () => import("@/views/index/index"),
+      component: () => import("@/views/index"),
       meta: {
-        title: "每日生鲜",
+        title: "首页",
         // 缓存首页
         keepAlive: true
       }
     },
-    {
-      path: "/cart",
-      meta: {
-        title: "购物车"
-      },
-      component: () => import("@/views/cart/index")
-    },
-    {
-      path: "/my",
-      component: () => import("@/views/my/index"),
-      redirect: "/my/center",
-      children: [
-        {
-          path: "center",
-          meta: {
-            title: "个人中心"
-          },
-          component: () => import("@/views/my/children/center")
-        },
-        {
-          path: "set",
-          meta: {
-            title: "设置"
-          },
-          component: () => import("@/views/my/children/set")
-        }
-      ]
-    },
-    {
-      path: "/login",
-      component: () => import("@/views/login/index"),
-      meta: {
-        title: "登陆"
-      }
-    },
-    {
-      path: "*",
-      component: () => import("@/components/NotFound")
-    }
   ]
 });
 

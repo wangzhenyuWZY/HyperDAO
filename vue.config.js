@@ -1,5 +1,5 @@
-const autoprefixer = require("autoprefixer");
-const pxtorem = require("postcss-pxtorem");
+// const autoprefixer = require("autoprefixer");
+// const pxtorem = require("postcss-pxtorem");
 const path = require('path');
 const themePath = path.resolve(__dirname,'src/assets/style/theme.less');
 
@@ -23,16 +23,16 @@ module.exports = {
         //   // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
         //   // hack: `true; @import "@/assets/style/my-theme.less";`
         // }
-        modifyVars: {
-          hack: `true; @import "${themePath}";`
-        }
+        // modifyVars: {
+        //   hack: `true; @import "${themePath}";`
+        // }
       },
       postcss: {
         plugins: [
-          autoprefixer(),
-          pxtorem({
-            rootValue: 37.5,
-            propList: ["*"]
+          require('postcss-px2rem')({
+             //lib-flexible 将屏幕分成10份(10rem)，这里设置表示设计图宽度为10*37.5=375px
+          // 配置成 37.5 是为了兼容 没有适配 rem 布局的第三方 ui 库
+              remUnit: 192
           })
         ]
       }

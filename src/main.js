@@ -7,7 +7,7 @@ import "@/assets/style/index.less";
 import $axios from "@/utils/request";
 import mixin from "./mixin/index";
 import store from "./store/index";
-
+import 'lib-flexible/flexible'
 import "@/components/Vant";
 // rem
 import "amfe-flexible";
