@@ -1,10 +1,10 @@
 <template>
     <header class="header clearfix">
         <div class="logo">
-            <img>
+            <img src="../assets/img/logo1.png">
         </div>
         <ul class="navList clearfix">
-            <li class="navItem">
+            <li class="navItem active">
                 <a>首页</a>
             </li>
             <li class="navItem">
@@ -20,6 +20,11 @@
                 <a>跨链通道</a>
             </li>
         </ul>
+        <div class="utils clearfix">
+            <a class="wallet">我的钱包</a>
+            <i class="data"></i>
+            <i class="language"></i>
+        </div>
     </header>
 </template>
 <style lang="less" scoped>
@@ -30,7 +35,8 @@
         padding-left:168px;
         line-height:100px;
         img{
-            width:60px;
+            width:273px;
+            vertical-align: middle;
         }
     }
     .navList{
@@ -53,6 +59,42 @@
                     color:#fff;
                 }
             }
+        }
+    }
+    .utils{
+        float:right;
+        padding-right:160px;
+        .wallet{
+            padding:0 44px;
+            height:50px;
+            background:#874FEC;
+            border-radius:8px;
+            line-height:50px;
+            text-align:center;
+            font-size:18px;
+            color:#fff;
+            float:left;
+            margin-top:25px;
+        }
+        .data{
+            float:left;
+            width:30px;
+            height:30px;
+            margin-left:38px;
+            background:url(../assets/img/data1.png) no-repeat center;
+            background-size:100% 100%;
+            margin-top:30px;
+            cursor: pointer;
+        }
+        .language{
+            float:left;
+            width:30px;
+            height:30px;
+            margin-left:30px;
+            background: url(../assets/img/icon8.png) no-repeat center;
+            background-size:100% 100%;
+            margin-top:30px;
+            cursor: pointer;
         }
     }
 }    

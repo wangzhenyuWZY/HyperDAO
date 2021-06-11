@@ -1,11 +1,34 @@
 <template>
     <div class="container">
-        <div class="header"></div>
+        <Header></Header>
     </div>
 </template>
+<script>
+import Header from '@/components/Header'
+export default {
+    components:{ 
+        Header
+    },
+    watch: {
+        
+    },
+    data() {
+        return {
+            
+        }
+    },
+    mounted() {
+        
+    },
+    beforeDestroy () {
+    
+    },
+    methods: {
+        
+            
+    }
+}
+</script>
 <style lang="less" scoped>
-.header{
-    height:42px;
-    background:#000;
-}  
+
 </style>
