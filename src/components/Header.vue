@@ -5,19 +5,19 @@
         </div>
         <ul class="navList clearfix">
             <li class="navItem active">
-                <a>首页</a>
+                <router-link to="/">首页</router-link>
             </li>
             <li class="navItem">
-                <a>项目</a>
+                <router-link to="project">项目</router-link>
             </li>
             <li class="navItem">
-                <a>质押</a>
+                <router-link to="stake">质押</router-link>
             </li>
             <li class="navItem">
-                <a>治理</a>
+                <router-link to="vote">治理</router-link>
             </li>
             <li class="navItem">
-                <a>跨链通道</a>
+                <router-link to="chain">跨链通道</router-link>
             </li>
         </ul>
         <div class="utils clearfix">

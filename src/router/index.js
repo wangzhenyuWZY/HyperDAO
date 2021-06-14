@@ -16,9 +16,54 @@ const router = new Router({
       meta: {
         title: "首页",
         // 缓存首页
-        keepAlive: true
+        keepAlive: false
       }
     },
+    {
+      path: "/project",
+      component: () => import("@/views/project"),
+      meta: {
+        title: "项目",
+        // 缓存首页
+        keepAlive: false
+      }
+    },
+    {
+      path: "/details",
+      component: () => import("@/views/details"),
+      meta: {
+        title: "详情",
+        // 缓存首页
+        keepAlive: false
+      }
+    },
+    {
+      path: "/stake",
+      component: () => import("@/views/stake"),
+      meta: {
+        title: "质押",
+        // 缓存首页
+        keepAlive: false
+      }
+    },
+    {
+      path: "/vote",
+      component: () => import("@/views/vote"),
+      meta: {
+        title: "投票",
+        // 缓存首页
+        keepAlive: false
+      }
+    },
+    {
+      path: "/chain",
+      component: () => import("@/views/crossChain"),
+      meta: {
+        title: "跨链",
+        // 缓存首页
+        keepAlive: false
+      }
+    }   
   ]
 });
 
