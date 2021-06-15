@@ -27,4 +27,22 @@
         }
     }
 }
+@media screen and (max-width:1200px) {
+    .footer{
+        height:100px;
+        .logo{
+            margin-top:23px;
+            width:146px;
+        }
+        .contectType{
+            padding-top:14px;
+            a{
+                padding:0 6px;
+                img{
+                    width:17px;
+                }
+            }
+        }
+    }
+}
 </style>

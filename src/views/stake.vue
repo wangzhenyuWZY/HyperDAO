@@ -1,6 +1,10 @@
 <template>
     <div class="stakePanel">
         <Header></Header>
+        <div class="address mobiles">
+            <h2>智能合约地址</h2>
+            <p>jkdajflkajsdjfaldsfj</p>
+        </div>
         <div class="stakeInfo">
             <div class="stakeItem">
                 <p class="title">Number of stakers</p>
@@ -102,6 +106,9 @@ export default {
 }
 .address{
     padding:80px 0;
+    &.mobiles{
+        display:none;
+    }
     h2{
         font-size:24px;
         color:#333333;
@@ -179,6 +186,80 @@ export default {
             }
             &:last-child{
                 float:right;
+            }
+        }
+    }
+}
+@media screen and (max-width:1200px) {
+    .stakeInfo{
+        padding-top:0;
+        .stakeItem{
+            display:block;
+            width:170px;
+            height:70px;
+            border-radius:6px;
+            margin:0 auto 20px;
+            .title{
+                font-size:10px;
+                line-height:14px;
+                padding-top:18px;
+                padding-bottom:6px;
+            }
+            .val{
+                font-size:12px;
+                color:#fff;
+                line-height:17px;
+            }
+        }
+    }
+    .address{
+        display:none;
+        &.mobiles{
+            display:block;
+            padding:80px 0 20px;
+        }
+        h2,p{
+            font-size:12px;
+            line-height:17px;
+            padding:0;
+        }
+    }
+    .stakedCon{
+        margin:100px 25px;
+        border:1px solid  #874FEC;
+        width:auto;
+        padding:16px 32px;
+        height:auto;
+        .stakeTitle{
+            padding-top:0;
+            font-size:10px;
+            line-height:14px;
+        }
+        .stakeNum{
+            font-size:12px;
+            line-height:17px;
+            padding-bottom:25px;
+        }
+        .withdrawIn{
+           font-size:10px;
+           line-height:14px; 
+           padding-bottom:6px;
+        }
+        .myStake{
+           .myStakeVal{
+               font-size:12px;
+               line-height:17px;
+           } 
+        }
+        .stakeBtns{
+            padding-top:20px;
+            margin-bottom:40px;
+            .btn{
+                width:120px;
+                height:40px;
+                line-height:40px;
+                border-radius:6px;
+                font-size:12px;
             }
         }
     }

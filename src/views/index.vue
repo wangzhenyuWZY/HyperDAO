@@ -3,6 +3,7 @@
         <Header></Header>
         <div class="banner">
             <img src="../assets/img/banner.png" width="100%">
+            <img src="../assets/img/mImg/mImg1.png" width="100%">
         </div>
         <div class="btnsbar">
             <a class="btn">购买HDAO</a>
@@ -43,21 +44,21 @@
                 <p class="title mt200">权重值</p>
                 <p class="val">10</p>
             </div>
-            <div class="hdaoinfo flowPanel">
-                <h2>IDO流程表</h2>
-                <div class="flowItem">
-                    <h3>第一轮：会员分配轮</h3>
-                    <p class="flowtext1">会员等级决定其可购买额度上限，不用拼手速，只要是会员都有额度。
+        </div>
+        <div class="hdaoinfo flowPanel">
+            <h2>IDO流程表</h2>
+            <div class="flowItem">
+                <h3>第一轮：会员分配轮</h3>
+                <p class="flowtext1">会员等级决定其可购买额度上限，不用拼手速，只要是会员都有额度。
 会员若选择参与IDO，则IDO开始后，往合约发送一定数量USDT，进行预申购额度下限可在后台自行设置，第一轮结束后根据参与预购人数计算总权重，若会员预申购USDT金额，超过自身额度上限，则超出部分自动返还，若未超出自身额度上限，则100%用于分配额度；所有预申购会员额度分配结束后，若还有剩余，则进入第二轮</p>
-                    <h3>第二轮：公开抢购轮</h3>
-                    <p class="flowtext2">限时申购，价格在第一轮基础上有一定溢价，
+                <h3>第二轮：公开抢购轮</h3>
+                <p class="flowtext2">限时申购，价格在第一轮基础上有一定溢价，
 此轮申购没有门槛限制，所有人都可以参与。</p>
-                    <p class="weight">非会员：每人申购数量不能超过剩余总量的1%；
+                <p class="weight">非会员：每人申购数量不能超过剩余总量的1%；
 青铜：每人申购数量不能超过剩余总量的5%；
 白银：每人申购数量不能超过剩余总量的15%；
 黄金、铂金此轮不设上限，可任意申购；
 申购截止后，若还有剩余，则剩余部分全部销毁。</p>
-                </div>
             </div>
         </div>
         <Footer></Footer>
@@ -93,6 +94,14 @@ export default {
 </script>
 <style lang="less" scoped>
 .container{
+    .banner{
+        img:first-child{
+            display:block;
+        }
+        img:last-child{
+            display:none;
+        }
+    }
     .btnsbar{
         text-align:center;
         margin-top:-50px;
@@ -222,6 +231,125 @@ export default {
             }
             &.flowtext2{
                 width:530px;
+            }
+        }
+    }
+}
+@media screen and (max-width:1200px) {
+    .container{
+        .banner{
+            img:first-child{
+                display:none;
+            }
+            img:last-child{
+                display:block;
+            }
+        }
+        .btnsbar{
+            margin-top:16px;
+            .btn{
+                width:102px;
+                height:34px;
+                line-height:34px;
+                font-size:12px;
+                border-radius:4px;
+                margin:0 22px;
+            }
+        }
+        .hdaoinfo{
+           padding:40px 15px 180px; 
+           width:100%;
+           background:url(../assets/img/mImg/bg.png) no-repeat bottom 25px center;
+           background-size:227px 146px;
+           margin-bottom:0;
+           h2{
+               font-size:16px;
+               line-height:22px;
+           }
+           p{
+               &.infotext1{
+                    width:100%;
+                    font-size:10px;
+                    line-height:24px;
+                    padding-bottom:16px;
+                }
+                &.infotext2{
+                    width:100%;
+                    font-size:10px;
+                    line-height:24px;
+                    padding-bottom:16px;
+                }
+                &.infotext3{
+                    width:100%;
+                    font-size:10px;
+                    line-height:24px;
+                    padding-bottom:16px;
+                }
+           }
+           &.flowPanel{
+               padding-bottom:0;
+               margin-bottom:45px;
+               background:url(../assets/img/mImg/bg2.png) no-repeat right 30px bottom;
+               background-size:90px 177px;
+               h2{
+                   padding-bottom:0;
+                   margin-bottom:25px;
+               }
+               .flowItem{
+                   h3{
+                       font-size:10px;
+                       line-height:14px;
+                       padding-bottom:7px;
+                   }
+                   p{
+                       font-size:10px;
+                       line-height:24px;
+                       padding-bottom:25px;
+                       &.flowtext1{
+                           width:100%;
+                       }
+                       &.flowtext2{
+                           padding-bottom:0;
+                           width:60%;
+                       }
+                       &.weight{
+                           width:60%;
+                           padding-top:0;
+                           padding-bottom:0;
+                       }
+                   }
+               }
+           }
+        }
+        .projectlist{
+            padding:20px;
+            .projectItem{
+                width:49%;
+                height:214px;
+                margin:0;
+                padding:11px;
+                border-radius:10px;
+                margin-bottom:10px;
+                &:nth-child(2n){
+                    margin-left:2%;
+                }
+                h2{
+                    font-size:14px;
+                    line-height:20px;
+                }
+                .title{
+                    font-size:10px;
+                    line-height:14px;
+                    padding-top:14px;
+                    padding-bottom:4px;
+                    &.mt200{
+                        margin-top:60px;
+                    }
+                }
+                .val{
+                    font-size:10px;
+                    line-height:14px;
+                }
             }
         }
     }

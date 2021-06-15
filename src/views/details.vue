@@ -9,6 +9,8 @@
                         <div class="nameContect">
                             <h2>ABCD</h2>
                             <div class="types">
+                                <a><img src="../assets/img/icon10.png"></a>
+                                <a><img src="../assets/img/icon11.png"></a>
                                 <a><img src="../assets/img/icon6.png"></a>
                                 <a><img src="../assets/img/Twitter.png"></a>
                                 <a><img src="../assets/img/telegram.png"></a>
@@ -51,8 +53,9 @@
                             </div>
                         </div>
                         <div class="fr">
-                            <a class="btn">+ Join Pool</a>
-                            <a class="btn">View Maticvigil</a>
+                            <a class="btn">参与预申购</a>
+                            <a class="btn disabled">领取额度</a>
+                            <a class="btn disabled">FCFS</a>
                         </div>
                     </div>
                 </div>
@@ -65,9 +68,11 @@
                         <div class="infoHead">
                             <span>Pool详情</span>
                             <span>Token详情</span>
+                            <p>项目详情</p>
                         </div>
                         <div class="infoBody">
                             <div class="infoDetail">
+                                <h4>Pool详情</h4>
                                 <div class="infoItem">
                                     <h3>开始时间</h3>
                                     <span>2021-05-09 08:00:00 UTC</span>
@@ -90,6 +95,11 @@
                                 </div>
                             </div>
                             <div class="infoDetail">
+                                <h4>Token详情</h4>
+                                <div class="infoItem">
+                                    <h3>项目名称</h3>
+                                    <span>ABCD</span>
+                                </div>
                                 <div class="infoItem">
                                     <h3>币种名称</h3>
                                     <span>ABCD</span>
@@ -106,6 +116,16 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="popWrap">
+            <div class="popPanel">
+                <i class="close"></i>
+                <div class="idoput">
+                    <input>
+                    <p>4985345<span>/ USDT</span></p>
+                </div>
+                <a class="btn">确认</a>
             </div>
         </div>
         <Footer></Footer>
@@ -140,6 +160,78 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.popWrap{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    background:rgba(0,0,0,0.6);
+    z-index:999;
+    .popPanel{
+        position:absolute;
+        top:20%;
+        left:50%;
+        width:1350px;
+        height:800px;
+        margin-left:-675px;
+        background:#fff;
+        border-radius:20px;
+        .close{
+            position:absolute;
+            width:37px;
+            height:37px;
+            background:url(../assets/img/closeIco.png) no-repeat center;
+            background-size:100% 100%;
+            right:74px;
+            top:52px;
+            cursor: pointer;
+        }
+        .idoput{
+            width:1020px;
+            height:160px;
+            border:1px solid #999;
+            overflow:hidden;
+            margin:220px auto 0;
+            input{
+                width:50%;
+                line-height:160px;
+                text-indent:35px;
+                font-size:36px;
+                color:#333333;
+                float:left;
+                border:none;
+                background:none;
+                outline:none;
+            }
+            p{
+                float:right;
+                font-size:48px;
+                color:#333;
+                line-height:160px;
+                font-weight:bold;
+                padding-right:40px;
+                span{
+                    font-size:36px;
+                }
+            }
+        }
+        .btn{
+            display:block;
+            margin:140px auto 0;
+            width:600px;
+            height:140px;
+            line-height:140px;
+            box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+            background:#874FEC;
+            border-radius:10px;
+            font-size:48px;
+            color:#fff;
+            text-align:center;
+            cursor: pointer;
+        }
+    }
+}
 .detailPanel{
     .projectDetail{
         .nameInfo{
@@ -167,6 +259,7 @@ export default {
                     }
                     .types{
                         font-size:0;
+                        cursor: pointer;
                         img{
                             width:38px;
                             margin-right:30px;
@@ -222,7 +315,6 @@ export default {
                 }
                 .fr{
                     float:right;
-                    padding-top:60px;
                     .btn{
                         width:282px;
                         height:66px;
@@ -235,6 +327,10 @@ export default {
                         color:#874FEC;
                         margin-bottom:40px;
                         cursor: pointer;
+                        &.disabled{
+                            background:#EDD9FF;
+                            cursor:initial;
+                        }
                     }
                 }
             }
@@ -278,6 +374,9 @@ export default {
                         line-height:50px;
                         font-weight:bold;
                     }
+                    p{
+                        display:none;
+                    }
                 }
                 .infoBody{
                     padding:30px 40px;
@@ -285,6 +384,9 @@ export default {
                     .infoDetail{
                         float:left;
                         width:50%;
+                        h4{
+                            display:none;
+                        }
                         .infoItem{
                             padding-bottom:30px;
                             h3{
@@ -300,6 +402,146 @@ export default {
                                 font-size:24px;
                                 color:#333333;
                                 line-height:33px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media screen and (max-width:1200px) {
+    .detailPanel{
+        padding:0 15px;
+        .projectDetail{
+            .nameInfo{
+                padding:60px 0 50px;
+                .projectName{
+                    &>img{
+                        width:48px;
+                        height:48px;
+                    }
+                    .nameContect{
+                        padding-left:14px;
+                        h2{
+                            font-size:10px;
+                            line-height:14px;
+                            padding-bottom:11px;
+                        }
+                        .types{
+                            img{
+                                width:18px;
+                                margin-right:12px;
+                            }
+                        }
+                    }
+                }
+                .allcationn{
+                    padding-top:16px;
+                    .title{
+                        font-size:10px;
+                        line-height:14px;
+                    }
+                    .val{
+                        font-size:10px;
+                        line-height:14px;
+                    }
+                }
+            }
+            .mydetail{
+                background:none;
+                padding:0;
+                .content{
+                    width:auto;
+                    .fl{
+                        float:initial;
+                        .textbox{
+                            padding-bottom:26px;
+                            .texts{
+                                width:96px;
+                                margin-right:0;
+                                h3{
+                                    font-size:10px;
+                                    color:#333333;
+                                    line-height:14px;
+                                    padding-bottom:8px;
+                                }
+                                p{
+                                    font-size:10px;
+                                    line-height:14px;
+                                    color:#333333;
+                                }
+                            }
+                        }
+                    }
+                    .fr{
+                        float:initial;
+                        padding-top:24px;
+                        .btn{
+                            width:184px;
+                            height:42px;
+                            line-height:42px;
+                            background:#874FEC;
+                            border-radius:6px;
+                            font-size:12px;
+                            color:#fff;
+                            margin:0 auto 26px;
+                        }
+                    }
+                }
+            }
+            .infoPanel{
+                width:100%;
+                margin:0;
+                padding-bottom:60px;
+                .tabs{
+                    display:none;
+                }
+                .infoCon{
+                    border-radius:10px 10px 0 0;
+                    .infoHead{
+                        border-radius:10px 10px 0 0;
+                        height:26px;
+                        span{
+                            display:none;
+                        }
+                        p{
+                            display:block;
+                            font-size:12px;
+                            color:#fff;
+                            line-height:26px;
+                            text-align:center;
+                            font-weight:bold;
+                        }
+                    }
+                    .infoBody{
+                        padding:12px 18px;
+                        .infoDetail{
+                            float:initial;
+                            width:100%;
+                            border-top:1px dashed #DADADA;
+                            padding:10px 0;
+                            &:first-child{
+                                border-top:none;
+                            }
+                            h4{
+                                font-size:10px;
+                                color:#333;
+                                line-height:14px;
+                                padding-bottom:5px;
+                                display:block;
+                            }
+                            .infoItem{
+                                padding-bottom:5px;
+                                h3{
+                                    font-size:10px;
+                                    line-height:20px;
+                                }
+                                span{
+                                    font-size:10px;
+                                    line-height:20px;
+                                    float:right;
+                                }
                             }
                         }
                     }

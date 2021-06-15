@@ -11,6 +11,9 @@ import 'lib-flexible/flexible'
 import "@/components/Vant";
 // rem
 import "amfe-flexible";
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css'; 
+Vue.use(ElementUI)
 // 把变量挂载到vue的原型上
 Vue.prototype.$axios = $axios;
 

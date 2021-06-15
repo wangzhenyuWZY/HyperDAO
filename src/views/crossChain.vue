@@ -83,4 +83,30 @@ export default {
         cursor: pointer;
     }
 }
+@media screen and (max-width:1200px) {
+    .chainPanel{
+        .chainInfo{
+            width:100%;
+            margin-top:18px;
+            font-size:10px;
+            line-height:24px;
+            padding:0 16px;
+            &.info1{
+                margin-top:18px;
+
+            }
+            &.info2{
+                padding-bottom:85px;
+            }
+        }
+        .stakeBtn{
+            width:120px;
+            height:40px;
+            line-height:40px;
+            border-radius:6px;
+            font-size:12px;   
+            margin:0 auto 40px;
+        }
+    }
+}
 </style>
