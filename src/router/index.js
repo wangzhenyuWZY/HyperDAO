@@ -63,7 +63,16 @@ const router = new Router({
         // 缓存首页
         keepAlive: false
       }
-    }   
+    },
+    {
+      path: "/DatePiker",
+      component: () => import("@/views/datePiker"),
+      meta: {
+        title: "日程",
+        // 缓存首页
+        keepAlive: false
+      }
+    }    
   ]
 });
 

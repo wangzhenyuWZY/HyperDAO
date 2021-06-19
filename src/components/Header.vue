@@ -22,7 +22,7 @@
             </li>
         </ul>
         <div class="utils clearfix">
-            <a class="wallet">我的钱包</a>
+            <a class="wallet">{{defaultAccount?defaultAccount:'我的钱包'}}</a>
             <i class="data"></i>
             <i class="language"></i>
         </div>
@@ -66,8 +66,16 @@
         data() {
             return {
                 tolerPop:false,
-                drawer:false
+                drawer:false,
+                defaultAccount:null
             }
+        },
+        created(){
+            this.$initWeb3().then((web3)=>{
+                if(web3.eth.defaultAccount){
+                    this.defaultAccount = this.plusXing(web3.eth.defaultAccount,5,5)
+                }
+            })
         },
         mounted() {
             
@@ -76,8 +84,14 @@
         
         },
         methods: {
-            
-                
+            plusXing (str,frontLen,endLen) {
+                var len = str.length-frontLen-endLen;
+                var xing = '';
+                for (var i=0;i<len;i++) {
+                    xing ='*******';
+                }
+                return str.substring(0,frontLen)+xing+str.substring(str.length-endLen);
+            }   
         }
     }
     </script>

@@ -3,45 +3,89 @@
         <Header></Header>
         <div class="address mobiles">
             <h2>智能合约地址</h2>
-            <p>jkdajflkajsdjfaldsfj</p>
+            <p>{{idoAddress}}</p>
         </div>
         <div class="stakeInfo">
             <div class="stakeItem">
                 <p class="title">Number of stakers</p>
-                <p class="val">5955</p>
+                <p class="val">{{tiersNum}}</p>
             </div>
             <div class="stakeItem">
                 <p class="title">Total Staked</p>
-                <p class="val">1000.3333 HDAO</p>
+                <p class="val">{{totalStakeNum}} HDAO</p>
             </div>
             <div class="stakeItem">
                 <p class="title">APR</p>
-                <p class="val">18%</p>
+                <p class="val">{{APR}}%</p>
             </div>
         </div>
         <div class="address">
             <h2>智能合约地址</h2>
-            <p>jkdajflkajsdjfaldsfj</p>
+            <p>{{idoAddress}}</p>
         </div>
         <div class="stakedCon">
-            <p class="stakeTitle">staked</p>
-            <p class="stakeNum">5555 HDAO</p>
-            <p class="withdrawIn">Withdrawable in</p>
+            <p class="withdrawIn mtop">我的质押量</p>
             <div class="myStake">
-                <div class="myStakeVal">1d 3h 30m 28s</div>
-                <div class="myStakeVal">500 HDAO</div>
+                <span class="myStakeVal">{{stake_amount?stake_amount:0}} HDAO</span>
             </div>
             <div class="stakeBtns">
-                <a class="btn">Unstake</a>
-                <a class="btn">Withdraw</a>
+                <el-button class="btn" @click="popShow=true" :loading="isStaking" :disabled='isStaking'>质押</el-button>
             </div>
-            <p class="withdrawIn">Rewards</p>
+            <p class="withdrawIn left">Withdrawable in</p>
+            <div class="myStake dobbuleVal">
+                <div class="myStakeVal">{{day}}d {{hour}}：{{min}}：{{second}}</div>
+                <div class="myStakeVal">{{frozen_amount}} HDAO</div>
+            </div>
+            <div class="stakeBtns border dobbuleBtn">
+                <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">Unstake</el-button>
+                <el-button class="btn" :class="userInfo.countdown==0?'desibled':''" :disabled="userInfo.countdown==0?true:false" @click="withdraw">Withdraw</el-button>
+            </div>
+            <p class="withdrawIn">质押收益</p>
             <div class="myStake">
-                <span class="myStakeVal">3.33333</span>
+                <span class="myStakeVal">{{staticReward.toFixed(4)}}</span>
+            </div>
+            <div class="stakeBtns border">
+                <el-button class="btn" @click="getStaticRewards" :loading='isClaimStatic' :disabled="isClaimStatic">领取静态收益</el-button>
+            </div>
+            <div class="dobble">
+                <p class="withdrawIn">分享收益</p>
+                <p class="withdrawIn">分享人数</p>
+            </div>
+            <div class="myStake dobbuleVal">
+                <span class="myStakeVal center">{{dynamicRewards}}</span>
+                <span class="myStakeVal center">{{userInfo.num_invitor}}</span>
             </div>
             <div class="stakeBtns">
-                <a class="btn">Stake</a>
-                <a class="btn">Withdraw</a>
+                <el-button class="btn" @click="getDynamicRewards" :loading="isClaimDynamic" :disabled="isClaimDynamic">领取动态收益</el-button>
+            </div>
+        </div>
+        <div class="popWrap" v-show="popShow">
+            <div class="popPanel">
+                <i class="close" @click="popShow=false"></i>
+                <div class="idoput">
+                    <input placeholder="请输入质押数量" v-model="stakeNum">
+                    <p>{{hdaoBalance}}<span>/ HDAO</span></p>
+                </div>
+                <div class="idoput" v-show="userInfo.deposit_times==0">
+                    <input placeholder="请输入邀请人" v-model="inviter">
+                </div>
+                <div class="btnbox">
+                    <a class="btn" @click="popShow=false">取消</a>
+                    <a class="btn" @click="checkApproved">确认</a>
+                </div>
+            </div>
+        </div>
+        <div class="popWrap" v-show="unstakePop">
+            <div class="popPanel">
+                <i class="close" @click="unstakePop=false"></i>
+                <div class="idoput">
+                    <input placeholder="请输入解除质押数量" v-model="unstakeNum">
+                    <p>{{stake_amount}}<span>/ HDAO</span></p>
+                </div>
+                <div class="btnbox">
+                    <a class="btn" @click="unstakePop=false">取消</a>
+                    <a class="btn" @click="checkUnstake">确认</a>
+                </div>
             </div>
         </div>
         <Footer></Footer>
@@ -50,6 +94,8 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { HDAO_TOKEN, TIERSYSTEM } from '../utils/contract'
+import BigNumber from 'bignumber.js'
 export default {
     components:{ 
         Header,
@@ -60,8 +106,50 @@ export default {
     },
     data() {
         return {
-            
+            web3:null,
+            defaultAccount:null,
+            STAKEContract:null,
+            HDAOContract:null,
+            userInfo:{},
+            tiersNum:0,
+            hdaDecimals:18,
+            stakeNum:'',
+            unstakeNum:'',
+            inviter:null,
+            totalStakeNum:0,
+            idoAddress:null,
+            APR:18,
+            popShow:false,
+            unstakePop:false,
+            isApprove:false,
+            hdaoBalance:0,
+            staticReward:0,
+            stake_amount:0,
+            frozen_amount:0,
+            dynamicRewards:0,
+            lastTime:0,
+            day: '0',
+            hour: '00',
+            min: '00',
+            second: '00',
+            isStaking:false,
+            isUnstake:false,
+            isWithdraw:false,
+            isClaimStatic:false,
+            isClaimDynamic:false
         }
+    },
+    created(){
+        this.$initWeb3().then((web3)=>{
+            if(web3.eth.defaultAccount){
+                this.web3 = web3
+                this.defaultAccount = web3.eth.defaultAccount
+                this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
+                this.HDAOContract = new this.web3.eth.Contract(HDAO_TOKEN.abi, HDAO_TOKEN.address)
+                this.idoAddress = TIERSYSTEM.address
+                this.init()
+            }
+        })
     },
     mounted() {
         
@@ -70,12 +158,329 @@ export default {
     
     },
     methods: {
-        
-            
+        init(){
+            this.getHdoDecimails()
+            this.getHdaoBalance()
+            this.getAllowance()
+            this.getUserinfo()
+            this.getTierInfo()
+            this.getTotalStaked()
+            this.getApr()
+            this.getReward()
+            this.getPeriod()
+        },
+        checkUnstake(){
+            if(this.stake_amount==0){
+                this.$message({
+                    message: '当前未质押HDAO',
+                    type: 'warning'
+                })
+                return
+            }
+            if(!this.unstakeNum || this.unstakeNum==0){
+                this.$message({
+                    message: '请填写解除质押数量',
+                    type: 'warning'
+                })
+                return
+            }
+            this.toUnstake()
+        },
+        async toUnstake(){
+            this.unstakePop = false
+            this.isUnstake = true
+            let unstakeNum = new BigNumber(this.unstakeNum)
+            unstakeNum = unstakeNum.times(Math.pow(10,this.hdaDecimals))
+            let res = await this.STAKEContract.methods.unstake(unstakeNum).send({ from: this.defaultAccount })
+            if(res){
+                this.isUnstake = false
+                this.$message({
+                    message: '解除质押成功',
+                    type: 'success'
+                })
+            }
+        },
+        async withdraw(){
+            let date = new Date()
+            let now = date.getTime()
+            let end = this.lastTime
+            let leftTime = end - now
+            if(leftTime>=0){
+                this.$message({
+                    message: '尚未度过冻结期',
+                    type: 'warning'
+                })
+                return
+            }
+            if(this.frozen_amount==0){
+                this.$message({
+                    message: '暂无可提现额度',
+                    type: 'warning'
+                })
+                return
+            }
+            let res = await this.STAKEContract.methods.withdraw().send({ from: this.defaultAccount })
+            if(res){
+                this.$message({
+                    message: '提现成功',
+                    type: 'success'
+                })
+                this.getUserinfo()
+            }
+        },
+        async checkApproved(){
+            if(!this.stakeNum || this.stakeNum==0){
+                this.$message({
+                    message: '请填写质押数量',
+                    type: 'warning'
+                })
+                return
+            }
+            if(this.isApprove){
+                this.toStake()
+            }else{
+                const MAX = this.web3.utils.toTwosComplement(-1)
+                let apr1 = await this.HDAOContract.methods.approve(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                this.toStake()
+            }
+        },
+        async toStake(){
+            this.popShow = false
+            this.isStaking = true
+            let amount = new BigNumber(this.stakeNum)
+            amount = amount.times(Math.pow(10,this.hdaDecimals))
+            let inviter = this.inviter?this.inviter:TIERSYSTEM.address
+            let apr1 = await this.STAKEContract.methods.stake(amount, inviter).send({ from: this.defaultAccount })
+            this.$message({
+                message: '质押成功',
+                type: 'success'
+            })
+            this.isStaking = false
+        },
+        async getStaticRewards(){
+            this.isClaimStatic = true
+            let res = await this.STAKEContract.methods.getStaticRewards().send({ from: this.defaultAccount })
+            if(res){
+                this.$message({
+                    message: '提取收益成功',
+                    type: 'success'
+                }) 
+                this.isClaimStatic = false
+                this.getUserinfo()
+            }
+        },
+        async getDynamicRewards(){
+            this.isClaimDynamic = true
+            let res = await this.STAKEContract.methods.getDynamicRewards().send({ from: this.defaultAccount })
+            if(res){
+                this.$message({
+                    message: '提取收益成功',
+                    type: 'success'
+                })
+                this.isClaimDynamic = false
+                this.getUserinfo() 
+            }
+        },
+        async getUserinfo (Spender) {
+            let res = await this.STAKEContract.methods.userInfo(this.defaultAccount).call()
+            if(res){
+                this.userInfo = res
+                if(res.deposit_times==0){
+                    this.inviter = TIERSYSTEM.address
+                }else{
+                    this.inviter = res.invite
+                }
+                let stake_amount = new BigNumber(res.stake_amount)
+                this.stake_amount = stake_amount.div(Math.pow(10,this.hdaDecimals))
+                let frozen_amount = new BigNumber(res.frozen_amount)
+                this.frozen_amount = frozen_amount.div(Math.pow(10,this.hdaDecimals))
+                let dynamicRewards = new BigNumber(res.dynamicRewards)
+                this.dynamicRewards = dynamicRewards.div(Math.pow(10,this.hdaDecimals))
+            }
+        },
+        async getPeriod(){
+            let res = await this.STAKEContract.methods.period().call()
+            if(res){
+                this.lastTime = parseInt(res)*1000+parseInt(this.userInfo.countdown)*1000
+                this.countTime()
+            }
+        },
+        async getTierInfo(){
+            let that = this
+            for(var i=1;i<=4;i++){
+                let res = await that.STAKEContract.methods.tierInfo(i).call()
+                if(res){
+                    that.tiersNum += parseInt(res)
+                }
+            }
+        },
+        async getHdoDecimails(){
+            let res = await this.HDAOContract.methods.decimals().call()
+            if(res){
+                this.hdaDecimals = res
+            }
+        },
+        async getTotalStaked(){
+            let res = await this.STAKEContract.methods.totalStake().call()
+            if(res){
+                let stakeNum = new BigNumber(res)
+                this.totalStakeNum = stakeNum.div(Math.pow(10,this.hdaDecimals))
+            }
+        },
+        async getApr(){
+            let res = await this.STAKEContract.methods.rate().call()
+            if(res){
+                this.APR = res
+            }
+        },  
+        async getAllowance () {
+            let res = await this.HDAOContract.methods.allowance(this.defaultAccount, TIERSYSTEM.address).call()
+            if(res){
+                this.isApprove = res > 0 ? true : false
+            }
+        },
+        async getHdaoBalance () {
+            let res = await this.HDAOContract.methods.balanceOf(this.defaultAccount).call()
+            if(res){
+                let balance = new BigNumber(res)
+                this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals))
+            }
+        },
+        async getReward(){
+            let res = await this.STAKEContract.methods.queryRewards(this.defaultAccount).call()
+            if(res){
+                let staticReward = new BigNumber(res)
+                this.staticReward = staticReward.div(Math.pow(10,this.hdaDecimals))
+            }
+        },
+        countTime () {
+            // 获取当前时间
+            let date = new Date()
+            let now = date.getTime()
+            // 设置截止时间
+            let end = this.lastTime
+            // 时间差
+            let leftTime = end - now
+            // 定义变量 d,h,m,s保存倒计时的时间
+            if (leftTime >= 0) {
+                // 天
+                this.day = Math.floor(leftTime / 1000 / 60 / 60 / 24)
+                // 时
+                let h = Math.floor(leftTime / 1000 / 60 / 60 % 24)
+                this.hour = h < 10 ? '0' + h : h
+                // 分
+                let m = Math.floor(leftTime / 1000 / 60 % 60)
+                this.min = m < 10 ? '0' + m : m
+                // 秒
+                let s = Math.floor(leftTime / 1000 % 60)
+                this.second = s < 10 ? '0' + s : s
+            } else {
+                this.day = 0
+                this.hour = '00'
+                this.min = '00'
+                this.second = '00'
+            }
+            // 等于0的时候不调用
+            if (Number(this.hour) === 0 && Number(this.day) === 0 && Number(this.min) === 0 && Number(this.second) === 0) {
+                return
+            } else {
+            // 递归每秒调用countTime方法，显示动态时间效果,
+                setTimeout(this.countTime, 1000)
+            }
+        },　  
     }
 }
 </script>
 <style lang="less" scoped>
+.popWrap{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    background:rgba(0,0,0,0.6);
+    z-index:999;
+    .popPanel{
+        position:absolute;
+        top:20%;
+        left:50%;
+        width:750px;
+        margin-left:-375px;
+        background:#fff;
+        border-radius:20px;
+        padding-bottom:80px;
+        .close{
+            position:absolute;
+            width:24px;
+            height:24px;
+            background:url(../assets/img/closeIco.png) no-repeat center;
+            background-size:100% 100%;
+            right:74px;
+            top:52px;
+            cursor: pointer;
+        }
+        .idoput{
+            width:600px;
+            height:80px;
+            border:1px solid #999;
+            overflow:hidden;
+            margin:140px auto 0;
+            border-radius:10px;
+            &:nth-child(3){
+                margin-top:20px;
+                input{
+                    width:100%;
+                }
+            }
+            input{
+                width:50%;
+                line-height:80px;
+                text-indent:25px;
+                font-size:24px;
+                color:#333333;
+                float:left;
+                border:none;
+                background:none;
+                outline:none;
+            }
+            p{
+                float:right;
+                font-size:24px;
+                color:#333;
+                line-height:80px;
+                font-weight:bold;
+                padding-right:40px;
+                span{
+                    font-size:20px;
+                }
+            }
+        }
+        .btnbox{
+            overflow:hidden;
+            margin-top:80px;
+            width:600px;
+            margin:40px auto 0;
+        }
+        .btn{
+            display:block;
+            width:250px;
+            height:80px;
+            line-height:80px;
+            box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+            background:#874FEC;
+            border-radius:10px;
+            font-size:28px;
+            color:#fff;
+            text-align:center;
+            cursor: pointer;
+            float:right;
+            &:first-child{
+                float:left;
+            }
+        }
+        
+    }
+}
 .stakeInfo{
     font-size:0;
     text-align:center;
@@ -126,10 +531,10 @@ export default {
 .stakedCon{
     margin:80px auto;
     width:760px;
-    height:740px;
     border:2px solid #874FEC;
     border-radius:20px;
     padding:0 90px;
+    position:relative;
     .stakeTitle{
         font-size:24px;
         color:#999999;
@@ -150,47 +555,138 @@ export default {
         color:#999999;
         line-height:33px;
         padding-bottom:7px;
+        text-align:center;
+        &.left{
+            text-align:left;
+        }
+        &.mtop{
+            padding-top:58px;
+        }
+    }
+    .dobble{
+        overflow:hidden;
+        padding-top:30px;
+        .withdrawIn{
+            float:left;
+            width:250px;
+            &:nth-child(2){
+                float:right;
+            }
+        }
     }
     .myStake{
         overflow:hidden;
+        text-align:center;
+        &.dobbuleVal{
+            .myStakeVal{
+                float:left;
+                text-align:left;
+                &:last-child{
+                    float:right;
+                    text-align:right;
+                }
+                &.center{
+                    text-align:center;
+                }
+            }
+        }
         .myStakeVal{
             font-size:30px;
             color:#333333;
             line-height:42px;
             font-weight: bold;
-            &:nth-child(1){
-                float:left;
-            }
-            &:nth-child(2){
-                float:right;
-            }
+            width:240px;
         }
     }
     .stakeBtns{
         padding-top:50px;
         overflow:hidden;
         margin-bottom:80px;
-        .btn{
-            width:250px;
-            height:78px;
-            background:#874FEC;
-            border-radius:10px;
-            box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
-            font-size:24px;
-            color:#fff;
-            line-height:78px;
-            text-align:center;
-            cursor:pointer;
-            &:first-child{
+        text-align:center;
+        &.dobbuleBtn{
+            .btn{
                 float:left;
+                &:last-child{
+                    float:right;
+                }
             }
-            &:last-child{
-                float:right;
-            }
+        }
+        &.border{
+            border-bottom:1px solid #DADADA;
+            padding-bottom:80px;
+        }
+    }
+    .btn{
+        width:250px;
+        height:78px;
+        background:#874FEC;
+        border-radius:10px;
+        box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+        font-size:24px;
+        color:#fff;
+        text-align:center;
+        cursor:pointer;
+        border:none;
+        &.desibled{
+            background:#979797;  
+            box-shadow:none; 
+        }
+        &.stakebtn{
+            position:absolute;
+            right:80px;
+            top:60px;
         }
     }
 }
 @media screen and (max-width:1200px) {
+    .popWrap{
+        .popPanel{
+            width:90%;
+            margin:0 auto;
+            left:5%;
+            padding-bottom:30px;
+            .close{
+                width:20px;
+                height:20px;
+                right:20px;
+                top:20px;
+            }
+            .idoput{
+                width:90%;
+                height:40px;
+                margin:80px auto 0;
+                &:nth-child(3){
+                    margin-top:20px;
+                }
+                input{
+                    width:50%;
+                    line-height:40px;
+                    font-size:16px;
+                    text-indent:10px;
+                }
+                p{
+                   font-size:16px;
+                   line-height:40px;
+                   padding-right:10px; 
+                   span{
+                       font-size:14px;
+                   }
+                }
+            }
+            .btnbox{
+                width:90%;
+                margin:30px auto;
+                .btn{
+                    width:140px;
+                    height:40px;
+                    line-height:40px;
+                    font-size:16px;
+
+                }
+            }
+        }
+
+    }
     .stakeInfo{
         padding-top:0;
         .stakeItem{
@@ -240,26 +736,47 @@ export default {
             line-height:17px;
             padding-bottom:25px;
         }
+        .dobble{
+            .withdrawIn{
+                width:120px;
+            }
+        }
         .withdrawIn{
            font-size:10px;
            line-height:14px; 
            padding-bottom:6px;
+           &.mtop{
+               padding-top:20px;
+           }
         }
         .myStake{
            .myStakeVal{
                font-size:12px;
                line-height:17px;
+               width:120px;
            } 
         }
         .stakeBtns{
             padding-top:20px;
             margin-bottom:40px;
-            .btn{
+            &.border{
+                padding-bottom:30px;
+                margin-bottom:30px;
+            }
+            
+        }
+        .btn{
+            width:120px;
+            height:40px;
+            border-radius:6px;
+            font-size:12px;
+            &.stakebtn{
                 width:120px;
                 height:40px;
-                line-height:40px;
                 border-radius:6px;
                 font-size:12px;
+                right:30px;
+                top:30px;
             }
         }
     }

@@ -18,7 +18,8 @@ Vue.use(ElementUI)
 Vue.prototype.$axios = $axios;
 
 Vue.mixin(mixin);
-
+import initWeb3 from './utils/hecoFn'
+Vue.prototype.$initWeb3 = initWeb3
 Vue.config.productionTip = false;
 
 new Vue({
