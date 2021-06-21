@@ -39,11 +39,11 @@ module.exports = {
     }
   },
 
-  configureWebpack: {
-    externals: {
-      axios: "axios" // 配置使用CDN
-    }
-  }
+  // configureWebpack: {
+  //   externals: {
+  //     axios: "axios" // 配置使用CDN
+  //   }
+  // },
 
   // css: {
   //   loaderOptions: {
@@ -112,19 +112,19 @@ module.exports = {
   //     ]
   //   }
   // ]
-  // devServer: {
-  //     // 代理
-  //     proxy: {
-  //         // 只要请求地址有'api'都会匹配上
-  //         "/api": {
-  //             target: "http://132.232.94.151:3005",
-  //             ws: true,
-  //             // 允许跨域
-  //             changeOrigin: true,
-  //             pathRewrite: {
-  //                 "^/api": "" //通过pathRewrite重写地址，将前缀/api转为/
-  //             }
-  //         }
-  //     }
-  // }
+  devServer: {
+      // 代理
+      proxy: {
+          // 只要请求地址有'api'都会匹配上
+          "/api": {
+              target: "http://192.168.31.77:9091/",
+              ws: true,
+              // 允许跨域
+              changeOrigin: true,
+              pathRewrite: {
+                  "^/api": "/" //通过pathRewrite重写地址，将前缀/api转为/
+              }
+          }
+      }
+  }
 };

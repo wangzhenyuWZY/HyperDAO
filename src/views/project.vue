@@ -4,22 +4,28 @@
         <div class="projectPanel">
             <h2>正在进行的项目</h2>
             <div class="projectWrap">
-                <ul class="projectList">
-                    <li>
+                <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
+                    <li v-for="(item,index) in proList" :key="index" v-if="item.status==1">
                         <span class="statubtn">项目进行中</span>
                         <div class="name">
-                            <img>
-                            ABCD
+                            <img :src="item.logo_url">
+                            {{item.name}}
+                        </div>
+                        <div class="types">
+                            <a :href="item.url"><img src="../assets/img/icon10.png"></a>
+                            <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
+                            <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                            <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                         </div>
                         <p class="status">Allocation</p>
                         <div class="swaprate">
                             <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
+                            <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
                         </div>
                         <div class="capaccess">
                             <div class="swaprate">
                                 <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
+                                <p class="val">{{item.ido_asset_total}} USDT</p>
                             </div>
                             <div class="swaprate">
                                 <p class="title">Access</p>
@@ -28,90 +34,9 @@
                         </div>
                         <div class="swaprate">
                             <p class="title">participants</p>
-                            <p class="val">3666</p>
+                            <p class="val">{{item.participate_number}}</p>
                         </div>
-                        <a class="detailbtn">Details</a>
-                    </li>
-                    <li>
-                        <span class="statubtn">项目进行中</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <p class="status">Allocation</p>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <a class="detailbtn">Details</a>
-                    </li>
-                    <li>
-                        <span class="statubtn">项目进行中</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <p class="status">Allocation</p>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <a class="detailbtn">Details</a>
-                    </li>
-                    <li>
-                        <span class="statubtn">项目进行中</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <p class="status">Allocation</p>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <a class="detailbtn">Details</a>
+                        <router-link :to="{path:'/details',query: {id: item.id}}" class="detailbtn">Details</router-link>
                     </li>
                 </ul>
             </div>
@@ -119,21 +44,27 @@
         <div class="projectPanel ready">
             <h2>即将开始的项目</h2>
             <div class="projectWrap">
-                <ul class="projectList">
-                    <li>
+                <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+readyItem+'rem'">
+                    <li v-for="(item,index) in proList" :key="index" v-if="item.status==0">
                         <span class="statubtn">即将开始</span>
                         <div class="name">
-                            <img>
-                            ABCD
+                            <img :src="item.logo_url">
+                            {{item.name}}
+                        </div>
+                        <div class="types">
+                            <a :href="item.url"><img src="../assets/img/icon10.png"></a>
+                            <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
+                            <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                            <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                         </div>
                         <div class="swaprate">
                             <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
+                            <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
                         </div>
                         <div class="capaccess">
                             <div class="swaprate">
                                 <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
+                                <p class="val">{{item.ido_asset_total}} USDT</p>
                             </div>
                             <div class="swaprate">
                                 <p class="title">Access</p>
@@ -142,112 +73,7 @@
                         </div>
                         <div class="swaprate">
                             <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="statubtn">即将开始</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="statubtn">即将开始</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="statubtn">即将开始</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
+                            <p class="val">{{item.participate_number}}</p>
                         </div>
                         <div class="progress">
                             <p class="title">progress</p>
@@ -266,21 +92,27 @@
         <div class="projectPanel over">
             <h2>已经结束的项目</h2>
             <div class="projectWrap">
-                <ul class="projectList">
-                    <li>
+                <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+closeItem+'rem'" >
+                    <li v-for="(item,index) in proList" :key="index" v-if="item.status==2">
                         <span class="statubtn">已结束</span>
                         <div class="name">
-                            <img>
-                            ABCD
+                            <img :src="item.logo_url">
+                            {{item.name}}
+                        </div>
+                        <div class="types">
+                            <a :href="item.url"><img src="../assets/img/icon10.png"></a>
+                            <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
+                            <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                            <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                         </div>
                         <div class="swaprate">
                             <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
+                            <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
                         </div>
                         <div class="capaccess">
                             <div class="swaprate">
                                 <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
+                                <p class="val">{{item.ido_asset_total}} USDT</p>
                             </div>
                             <div class="swaprate">
                                 <p class="title">Access</p>
@@ -289,7 +121,7 @@
                         </div>
                         <div class="swaprate">
                             <p class="title">participants</p>
-                            <p class="val">3666</p>
+                            <p class="val">{{item.participate_number}}</p>
                         </div>
                         <div class="progress">
                             <p class="title">progress</p>
@@ -297,113 +129,8 @@
                                 <span></span>
                             </div>
                             <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="statubtn">已结束</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="statubtn">即将开始</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="statubtn">即将开始</span>
-                        <div class="name">
-                            <img>
-                            ABCD
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 BUSD=90.9090 ABCD</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">10000 BUSD</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">3666</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
+                                <span >{{item.progress}}%</span>
+                                <span>{{item.ido_asset_collect}}/{{item.ido_asset_total}}</span>   
                             </p>
                         </div>
                     </li>
@@ -416,6 +143,7 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import axios from "axios"
 export default {
     components:{ 
         Header,
@@ -426,18 +154,42 @@ export default {
     },
     data() {
         return {
-            
+            proList:[],
+            readyItem:0,
+            openItem:0,
+            closeItem:0 
         }
     },
+    computed : {
+        _isMobile() {
+            let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+            return flag;
+        } 
+    },
     mounted() {
-        
+       this.getList() 
     },
     beforeDestroy () {
     
     },
     methods: {
-        
-            
+        getList(){
+            axios.get("http://192.168.31.77:9091/hdaos").then((res)=>{
+                if(res.data.code==0){
+                    res.data.data.forEach((item,index)=>{
+                        if(item.status==1){
+                            this.openItem += 1.51
+                        }else if(item.status==0){
+                            this.readyItem += 1.51
+                        }else if(item.status==2){
+                            this.closeItem += 1.51
+                            item.progress = (item.ido_asset_collect/item.ido_asset_total*100).toFixed(2)
+                        }
+                    })
+                    this.proList = res.data.data
+                }
+            })
+        }
     }
 }
 </script>
@@ -492,18 +244,30 @@ export default {
         font-size:0;
         padding-bottom:75px;
         text-align:center;
+        &.pclist{
+            width:auto !important;
+        }
         li{
             display:inline-block;
             vertical-align: middle;
             background:#874FEC;
             width:420px;
-            height:610px;
+            height:680px;
             border-radius:20px;
             margin:0 15px;
             padding:35px;
             box-sizing:border-box;
             text-align:left;
             position:relative;
+            .types{
+                font-size:0;
+                cursor: pointer;
+                padding-bottom:10px;
+                img{
+                    width:24px;
+                    margin-right:30px;
+                }
+            }
             .statubtn{
                 position:absolute;
                 top:0;
@@ -568,6 +332,7 @@ export default {
                 text-align:center;
                 margin-top:26px;
                 cursor: pointer;
+                margin-bottom:20px;
             }
             .progress{
                 margin-top:36px;
@@ -616,14 +381,27 @@ export default {
         .projectWrap{
             overflow-y: scroll;
         }
+        &.ready{
+            .projectList{
+                li{
+                    height:340px;
+                }
+            }
+        }
+        &.over{
+            .projectList{
+                li{
+                    height:340px;
+                }
+            }
+        }
         .projectList{
             padding-bottom:24px;
             width:10000px;
             text-align:left;
-            
             li{
                 width:260px;
-                height:300px;
+                height:360px;
                 border-radius:10px;
                 padding:15px;
                 .statubtn{
@@ -632,6 +410,12 @@ export default {
                     border-radius: 0px 10px 0px 10px;
                     font-size:10px;
                     line-height:30px;
+                }
+                .types{
+                    img{
+                        width:20px;
+                        margin-right:15px;
+                    }
                 }
                 .name{
                     img{

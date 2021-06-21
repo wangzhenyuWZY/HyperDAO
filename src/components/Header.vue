@@ -5,19 +5,19 @@
         </div>
         <i class="navIco" @click="drawer=true"></i>
         <ul class="navList clearfix">
-            <li class="navItem active">
+            <li class="navItem" :class="active==0?'active':''">
                 <router-link to="/">首页</router-link>
             </li>
-            <li class="navItem">
+            <li class="navItem" :class="active==1?'active':''">
                 <router-link to="project">项目</router-link>
             </li>
-            <li class="navItem">
+            <li class="navItem" :class="active==2?'active':''">
                 <router-link to="stake">质押</router-link>
             </li>
-            <li class="navItem">
+            <li class="navItem" :class="active==3?'active':''">
                 <router-link to="vote">治理</router-link>
             </li>
-            <li class="navItem">
+            <li class="navItem" :class="active==4?'active':''">
                 <router-link to="chain">跨链通道</router-link>
             </li>
         </ul>
@@ -28,24 +28,24 @@
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
             <ul class="mobelNavlist">
-                <li class="active">
-                    <span class="menutitle">首页</span>
+                <li :class="active==0?'active':''">
+                    <router-link to="/" class="menutitle">首页</router-link>
                 </li>
-                <li>
-                    <span class="menutitle">项目</span>
+                <li :class="active==1?'active':''">
+                    <router-link to="project" class="menutitle">项目</router-link>
                 </li>
-                <li>
-                    <span class="menutitle">质押</span>
+                <li :class="active==2?'active':''">
+                    <router-link to="stake" class="menutitle">质押</router-link>
                 </li>
-                <li>
-                    <span class="menutitle">治理</span>
+                <li :class="active==3?'active':''">
+                    <router-link to="vote" class="menutitle">治理</router-link>
                 </li>
-                <li>
-                    <span class="menutitle">跨链通道</span>
+                <li :class="active==4?'active':''">
+                    <router-link to="chain" class="menutitle">跨链通道</router-link>
                 </li>
             </ul>
             <div class="otherLink">
-                <p>我的钱包</p>
+                <p>{{defaultAccount?defaultAccount:'我的钱包'}}</p>
                 <p>日历</p>
                 <p>切换语言</p>
             </div>
@@ -67,7 +67,8 @@
             return {
                 tolerPop:false,
                 drawer:false,
-                defaultAccount:null
+                defaultAccount:null,
+                active:0
             }
         },
         created(){
@@ -78,7 +79,20 @@
             })
         },
         mounted() {
-            
+            let path = this.$route.path
+            if(path=='/index'){
+                this.active = 0
+            }else if(path=='/project'){
+                this.active = 1
+            }else if(path=='/details'){
+                this.active = 1
+            }else if(path=='/stake'){
+                this.active = 2
+            }else if(path=='/vote'){
+                this.active = 3
+            }else if(path=='/chain'){
+                this.active = 4
+            }
         },
         beforeDestroy () {
         
@@ -108,6 +122,10 @@
             &.active{
                 border-left:4px solid #fff;
                 text-indent:28px;
+            }
+            a{
+                font-size:12px;
+                color:#fff; 
             }
         }
     }

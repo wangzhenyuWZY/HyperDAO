@@ -5,21 +5,20 @@
             <div class="projectDetail">
                 <div class="nameInfo">
                     <div class="projectName">
-                        <img>
+                        <img :src="detailInfo.logo_url">
                         <div class="nameContect">
-                            <h2>ABCD</h2>
+                            <h2>{{detailInfo.name}}</h2>
                             <div class="types">
-                                <a><img src="../assets/img/icon10.png"></a>
-                                <a><img src="../assets/img/icon11.png"></a>
-                                <a><img src="../assets/img/icon6.png"></a>
-                                <a><img src="../assets/img/Twitter.png"></a>
-                                <a><img src="../assets/img/telegram.png"></a>
+                                <a :href="detailInfo.url"><img src="../assets/img/icon10.png"></a>
+                                <a :href="detailInfo.medium_account"><img src="../assets/img/icon6.png"></a>
+                                <a :href="detailInfo.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                                <a :href="detailInfo.telegram_account"><img src="../assets/img/telegram.png"></a>
                             </div>
                         </div>
                     </div>
-                    <div class="allcationn" v-show="isOpen">
+                    <div class="allcationn" v-show="isDowning">
                         <p class="title">Allocation Round closes in<p>
-                        <p class="val">0d 1h 36m 50s</p>
+                        <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
                     </div>
                 </div>
                 <div class="mydetail">
@@ -40,11 +39,11 @@
                                 <div class="texts">
                                     <h3>Swapped</h3>
                                     <p>0.0000 USDT</p>
-                                    <p>0.0000 ABCD</p>
+                                    <p>0.0000 {{detailInfo.name}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>剩余额度</h3>
-                                    <p>{{tokensLeft}} USDT</p>
+                                    <p>{{tokensLeft}} {{detailInfo.name}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>参与人数</h3>
@@ -53,9 +52,9 @@
                             </div>
                         </div>
                         <div class="fr">
-                            <a class="btn" @click="stakePop = true">参与预申购</a>
-                            <a class="btn disabled" @click="claimQuota">领取额度</a>
-                            <a class="btn disabled" @click="R2purchase">FCFS</a>
+                            <el-button class="btn" :class="!beginPro?'disabled':''" @click="stakePop = true">参与预申购</el-button>
+                            <el-button class="btn" :class="!beginClaim?'disabled':''" :desibled="!beginClaim" @click="claimQuota">领取额度</el-button>
+                            <el-button class="btn" :class="!beginFcfs?'disabled':''" :desibled="!beginFcfs" @click="fcfsPop = true">FCFS</el-button>
                         </div>
                     </div>
                 </div>
@@ -84,6 +83,7 @@
                                 <div class="infoItem">
                                     <h3>兑换比例</h3>
                                     <span>1USDT={{(1/price).toFixed(4)}}{{symbol}}</span>
+                                    <!-- <span>{{detailInfo.asset_retention_ratio}}</span> -->
                                 </div>
                                 <div class="infoItem">
                                     <h3>IDO总额</h3>
@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="infoItem">
                                     <h3>简介</h3>
-                                    <span>internetComputer是一个第一层协议，旨在开发一个去中心化的公共网络，使只能合约得以大规模运行。该项目旨在成为互联网计算机，提供公共互联网的功能，并允许将后端软件托管在网络上。</span>
+                                    <span>{{detailInfo.description}}</span>
                                 </div>
                             </div>
                         </div>
@@ -123,20 +123,20 @@
                                 <span>Closes</span>
                             </div>
                             <div class="roundBody">
-                                <div class="roundItem">
+                                <div class="roundItem" v-for="(item,index) in times" :key="index" v-if="item.level==1">
                                     <span>Allocation</span>
-                                    <span>2021-06-10 08:00:00</span>
-                                    <span>2021-06-10 08:00:00</span>
+                                    <span>{{item.begin_time}}</span>
+                                    <span>{{item.end_time}}</span>
                                 </div>
-                                <div class="roundItem">
+                                <div class="roundItem" v-for="(item,index) in times" :key="index" v-if="item.level==2">
                                     <span>FCFS - Prepare</span>
-                                    <span>2021-06-10 08:00:00</span>
-                                    <span>2021-06-10 08:00:00</span>
+                                    <span>{{item.begin_time}}</span>
+                                    <span>{{item.end_time}}</span>
                                 </div>
-                                <div class="roundItem">
+                                <div class="roundItem" v-for="(item,index) in times" :key="index" v-if="item.level==3">
                                     <span>FCFS - Start</span>
-                                    <span>2021-06-10 08:00:00</span>
-                                    <span>2021-06-10 08:00:00</span>
+                                    <span>{{item.begin_time}}</span>
+                                    <span>{{item.end_time}}</span>
                                 </div>
                             </div>
                         </div>
@@ -156,12 +156,25 @@
                 </div>
             </div>
         </div>
+        <div class="popWrap" v-show="fcfsPop">
+            <div class="popPanel">
+                <i class="close" @click="fcfsPop=false"></i>
+                <div class="idoput">
+                    <input placeholder="请输入申购数量" v-model="fcfsNum">
+                </div>
+                <div class="btnbox">
+                    <a class="btn" @click="fcfsPop=false">取消</a>
+                    <a class="btn" @click="R2purchase">确认</a>
+                </div>
+            </div>
+        </div>
         <Footer></Footer>
     </div>
 </template>
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import axios from "axios"
 import { HDAO_TOKEN,IDO_TOKEN,TIERSYSTEM ,USDT_TOKEN} from '../utils/contract'
 import BigNumber from 'bignumber.js'
 export default {
@@ -203,7 +216,23 @@ export default {
             claimedNum:0,//第一轮已认领数量
             r2boughtNum:0,//第二轮已售出数量
             totalVol:0,
-            infoTabs:1
+            infoTabs:0,
+            detailInfo:{},
+            times:[],
+            fcfsEndTime:null,
+            clearTime:null,
+            day: '0',
+            hour: '00',
+            min: '00',
+            second: '00',
+            isDowning:false,
+            beginFcfs:false,
+            beginClaim:false,
+            beginPro:false,
+            startDate:null,
+            downTime:null,
+            fcfsPop:false,
+            fcfsNum:''
         }
     },
     created(){
@@ -227,6 +256,7 @@ export default {
     },
     methods: {
         init(){
+            this.getDetails()
             this.getUserTier()
             this.getIsOpen()
             this.getUsdtDecimails()
@@ -235,32 +265,50 @@ export default {
             this.getRound2start()
             this.getTokensClaimed()
             this.getR2bought()
+            this.getTiers()
             this.web3.eth.getBalance(this.defaultAccount).then(res=>{
                 let balance = new BigNumber(res)
                 this.maticBalance = balance.div(Math.pow(10,18)).toFixed(4)
             })
         },
+        getDetails(){
+            axios.get("http://192.168.31.77:9091/hdao/"+this.$route.query.id).then((res)=>{
+                if(res.data.code==0){
+                    this.detailInfo = res.data.data
+                }
+            })
+            axios.get("http://192.168.31.77:9091/tasks?hdao_id="+this.$route.query.id).then((res)=>{
+                if(res.data.code==0){
+                    this.times = res.data.data
+                }
+            })
+        },
         async R2purchase(){
+            this.fcfsPop = false
+            let preNum = new BigNumber(this.fcfsNum)
+            preNum = preNum.times(this.price)
+            preNum = preNum.times(Math.pow(10,this.usdtDecimals))
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let R2ForSale = await this.IDOContract.methods.R2ForSale().call()
             let quota = 0
-            if(this.tier = 1){
+            if(this.tier == 0){
                 quota = R2ForSale*0.01
-            }else if(this.tier = 2){
+            }else if(this.tier == 1){
                 quota = R2ForSale*0.05
-            }else if(this.tier = 3){
+            }else if(this.tier == 2){
                 quota = R2ForSale*0.15
-            }else if(this.tier = 4){
-                quota = R2ForSale*0.25
+            }else{
+                quota = R2ForSale
             }
-            if(!isR2started){
-                this.$message({
-                    message: '第二轮尚未开启',
-                    type: 'warning'
-                }) 
-                return
-            }
+            
+            // if(!isR2started){
+            //     this.$message({
+            //         message: '第二轮尚未开启',
+            //         type: 'warning'
+            //     }) 
+            //     return
+            // }
             if(!isR2begin){
                 this.$message({
                     message: '第二轮尚未开启',
@@ -275,9 +323,23 @@ export default {
                 }) 
                 return
             }
-            quota = new BigNumber(quota)
-            quota = quota.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.R2purchase(quota).send({ from: this.defaultAccount })
+            if(this.fcfsNum>quota){
+                this.$message({
+                    message: '最大可申购额度为'+quota,
+                    type: 'warning'
+                })
+                return
+            }
+            if(parseFloat(this.fcfsNum)*parseFloat(this.price)>this.usdtBalance){
+                this.$message({
+                    message: '钱包USDT余额不足',
+                    type: 'warning'
+                })
+                return
+            }
+            // quota = new BigNumber(quota)
+            // quota = quota.times(Math.pow(10,this.tokenDecimals))
+            let res = await this.IDOContract.methods.R2purchase(preNum).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
                     message: '抢购成功',
@@ -294,12 +356,14 @@ export default {
                     message: '第一轮尚未结束',
                     type: 'warning'
                 }) 
+                return
             }
             if(!beforeClear){
                 this.$message({
                     message: '认领时间已结束',
                     type: 'warning'
                 }) 
+                return
             }
             let res = await this.IDOContract.methods.claim().send({ from: this.defaultAccount })
             if(res){
@@ -347,7 +411,7 @@ export default {
                 })
                 return
             }
-            if(parseFloat(this.preNum)>parseFloat(this.preNum)*parseFloat(this.price)){
+            if(parseFloat(this.preNum)*parseFloat(this.price)>this.usdtBalance){
                 this.$message({
                     message: '钱包USDT余额不足',
                     type: 'warning'
@@ -359,6 +423,7 @@ export default {
         async doPurchase(){
             this.stakePop = false
             let preNum = new BigNumber(this.preNum)
+            preNum = preNum.times(this.price)
             preNum = preNum.times(Math.pow(10,this.usdtDecimals))
             let res = await this.IDOContract.methods.preAlloc(preNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
@@ -374,6 +439,7 @@ export default {
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
                 let apr1 = await this.USDTContract.methods.approve(IDO_TOKEN.address, MAX).send({ from: this.defaultAccount })
+                this.isApprove = true
                 this.doPurchase()
             }
         },
@@ -402,7 +468,6 @@ export default {
             let res = await this.IDOContract.methods.isOpen().call()
             if(res){
                 this.isOpen = res
-                this.getTiers()
             }
         },  
         async getTiers(){
@@ -425,7 +490,9 @@ export default {
                     this.getPrice()
                 }else{
                     this.round = 2
+                    this.startDate = res
                     this.startTime = this.format(parseInt(res)*1000)
+                    this.getStartTime()
                     this.getPrice2()
                 }
             }
@@ -486,11 +553,43 @@ export default {
         async getStartTime(){
             let res = await this.IDOContract.methods.startTime().call()
             if(res){
+                this.startDate = res
                 this.startTime = this.format(parseInt(res)*1000)
             }
             let duration = await this.IDOContract.methods.duration().call()
             let endTime = parseInt(res)+parseInt(duration)
-            this.endTime = this.format(endTime*1000)
+            this.endTime = endTime//第一轮结束时间
+            let clearTime = await this.IDOContract.methods.clearTime().call()
+            this.clearTime = parseInt(clearTime)//认领结束时间
+            let fcfsEndTime = new Date(this.detailInfo.end_Time).getTime()
+            this.fcfsEndTime = fcfsEndTime//第二轮结束时间
+            this.getDownTime()
+        },
+        getDownTime(){
+            let now = new Date().getTime()
+            now = now/1000
+            this.downTime = this.endTime
+            if(now>this.startDate && now<this.endTime){
+                console.log(111)
+                this.downTime = this.endTime
+                this.countTime()
+                this.isDowning = true
+                this.beginPro = true
+            }else if(now>this.startDate && now<this.clearTime){
+                console.log(222)
+                this.downTime = this.clearTime
+                this.countTime()
+                this.isDowning = true
+                this.beginClaim = true
+                
+            }else if(now>this.clearTime && now<this.fcfsEndTime){
+                console.log(333)
+                this.downTime = this.fcfsEndTime
+                this.countTime()
+                this.isDowning = true
+                this.beginFcfs = true
+                
+            }
         },
         async getName(){
             this.name = await this.SALETOKENContract.methods.name().call()
@@ -513,7 +612,41 @@ export default {
             var mm = time.getMinutes();
             var s = time.getSeconds();
             return y+'-'+this.add0(m)+'-'+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm)+':'+this.add0(s);
-        }
+        },
+        countTime () {
+            // 获取当前时间
+            let date = new Date()
+            let now = date.getTime()
+            // 时间差
+            let leftTime = this.downTime*1000 - now
+            // 定义变量 d,h,m,s保存倒计时的时间
+            if (leftTime >= 0) {
+                // 天
+                this.day = Math.floor(leftTime / 1000 / 60 / 60 / 24)
+                // 时
+                let h = Math.floor(leftTime / 1000 / 60 / 60 % 24)
+                this.hour = h < 10 ? '0' + h : h
+                // 分
+                let m = Math.floor(leftTime / 1000 / 60 % 60)
+                this.min = m < 10 ? '0' + m : m
+                // 秒
+                let s = Math.floor(leftTime / 1000 % 60)
+                this.second = s < 10 ? '0' + s : s
+            } else {
+                this.day = 0
+                this.hour = '00'
+                this.min = '00'
+                this.second = '00'
+            }
+            // 等于0的时候不调用
+            if (Number(this.hour) === 0 && Number(this.day) === 0 && Number(this.min) === 0 && Number(this.second) === 0) {
+                // this.getDownTime()
+                return
+            } else {
+            // 递归每秒调用countTime方法，显示动态时间效果,
+                setTimeout(this.countTime, 1000)
+            }
+        },
     }
 }
 </script>
@@ -684,6 +817,7 @@ export default {
                                 font-size:24px;
                                 color:#fff;
                                 line-height:33px;
+                                white-space: nowrap;
                             }
                         }
                     }
@@ -697,7 +831,6 @@ export default {
                         border-radius:10px;
                         background:#fff;
                         text-align:center;
-                        line-height:66px;
                         font-size:24px;
                         color:#874FEC;
                         margin-bottom:40px;
@@ -705,6 +838,9 @@ export default {
                         &.disabled{
                             background:#EDD9FF;
                             cursor:initial;
+                        }
+                        &:first-child{
+                            margin-left:10px;
                         }
                     }
                 }
@@ -736,13 +872,12 @@ export default {
                 border-radius:16px;
                 margin-top:40px;
                 .roundTable{
-                    border: 1px solid #874FEC;
-                    border-radius:16px;
                     overflow:hidden;
                     .roundHead{
                         background:#874FEC;
                         padding:0 40px;
                         overflow:hidden;
+                        border-radius:16px 16px 0 0;
                         span{
                             float:left;
                             width:33.3%;
@@ -935,12 +1070,14 @@ export default {
                         .btn{
                             width:184px;
                             height:42px;
-                            line-height:42px;
                             background:#874FEC;
                             border-radius:6px;
                             font-size:12px;
                             color:#fff;
                             margin:0 auto 26px;
+                            &:first-child{
+                                margin-left:auto;
+                            }
                         }
                     }
                 }
@@ -953,7 +1090,33 @@ export default {
                     display:none;
                 }
                 .infoCon{
+                    display:block !important;
                     border-radius:10px 10px 0 0;
+                    .roundTable{
+                        .roundHead{
+                            border-radius:10px 10px 0 0;
+                            height:26px;
+                            padding:0 10px;
+                            span{
+                                font-size:12px;
+                                color:#fff;
+                                line-height:26px;
+                                text-align:center;
+                                font-weight:bold;
+                            }
+                        }
+                        .roundBody{
+                            padding:10px;
+                            .roundItem{
+                                padding-bottom:10px;
+                                span{
+                                    font-size:12px;
+                                    line-height:20px;
+                                    text-align:center;
+                                }
+                            }
+                        }
+                    }
                     .infoHead{
                         border-radius:10px 10px 0 0;
                         height:26px;

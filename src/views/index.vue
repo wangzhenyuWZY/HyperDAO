@@ -11,15 +11,17 @@
         </div>
         <div class="hdaoinfo">
             <h2>平台简介</h2>
-            <p class="infotext1">HyperDAO是一个基于Polygon网络（原MATIC）的去中心化IDO平台，HyperDAO将赋予加密货币项目分发代币和提高流动性的能力。HyperDAO找到了一种解决方案，以包容性和低进入门槛的方式激励和奖励所有代币持有者</p>
-            <p class="infotext2">用户可任质押HDAO到智能合约来换取HyperDAO会员资格，会员条件达标后，IDO权益立即生效，同时质押也会产生收益，会员可随时赎回质押的HDAO。</p>
-            <p class="infotext3">HyperDAO会员等级为青铜、白银、黄金、铂金四个等级，不同等级的会员需要质押的HDAO数量不一样，享受的权益也不一样，权益包括优先认购权、更高的认购权重等。</p>
+            <p class="infotext1">HyperDAO是一个基于Polygon网络（原MATIC）的去中心化IDO平台，赋予加密货币项目分发代币和提高流动性的能力，以包容性和低进入门槛的方式激励和奖励所有代币持有者。</p>
+            <p class="infotext2">用户可以质押HDAO到智能合约来换取HyperDAO会员资格，条件达标后，会员权益立即生效，同时质押也会产生相应挖矿收益，会员可随时赎回质押的HDAO。</p>
+            <p class="infotext3">HyperDAO会员分为青铜、白银、黄金、铂金四个等级，不同等级的会员需要质押的HDAO数量不一样，享受的权益也不一样，权益包括优先认购权、更高的认购权重等。</p>
         </div>
         <div class="projectlist">
             <div class="projectItem">
                 <h2>Bronze</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
+                <p class="title">优先认购权</p>
+                <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
                 <p class="val">10</p>
             </div>
@@ -27,6 +29,8 @@
                 <h2>Bronze</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
+                <p class="title">优先认购权</p>
+                <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
                 <p class="val">10</p>
             </div>
@@ -34,6 +38,8 @@
                 <h2>Bronze</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
+                <p class="title">优先认购权</p>
+                <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
                 <p class="val">10</p>
             </div>
@@ -41,6 +47,8 @@
                 <h2>Bronze</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
+                <p class="title">优先认购权</p>
+                <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
                 <p class="val">10</p>
             </div>
@@ -49,16 +57,17 @@
             <h2>IDO流程表</h2>
             <div class="flowItem">
                 <h3>第一轮：会员分配轮</h3>
-                <p class="flowtext1">会员等级决定其可购买额度上限，不用拼手速，只要是会员都有额度。
-会员若选择参与IDO，则IDO开始后，往合约发送一定数量USDT，进行预申购额度下限可在后台自行设置，第一轮结束后根据参与预购人数计算总权重，若会员预申购USDT金额，超过自身额度上限，则超出部分自动返还，若未超出自身额度上限，则100%用于分配额度；所有预申购会员额度分配结束后，若还有剩余，则进入第二轮</p>
+                <p class="flowtext1">会员等级决定可购买额度上限，只要是会员都有额度。</p>
+                <p class="flowtext1">预审购阶段：IDO开始后，会员需在规定时间内往合约发送一定数量USDT进行预申购，预审购结束后根据参与人数计算总权重并分配额度；</p>
+                <p class="flowtext1">领取额度阶段：预申购结束后，会员需在规定时间内领取额度，若预申购USDT金额超过自身额度上限，则超出部分自动返还，否则，100%用于分配额度。第一轮结束后，若还有额度剩余，则进入第二轮</p>
                 <h3>第二轮：公开抢购轮</h3>
-                <p class="flowtext2">限时申购，价格在第一轮基础上有一定溢价，
-此轮申购没有门槛限制，所有人都可以参与。</p>
-                <p class="weight">非会员：每人申购数量不能超过剩余总量的1%；
-青铜：每人申购数量不能超过剩余总量的5%；
-白银：每人申购数量不能超过剩余总量的15%；
-黄金、铂金此轮不设上限，可任意申购；
-申购截止后，若还有剩余，则剩余部分全部销毁。</p>
+                <p class="flowtext2">价格在第一轮基础上有一定溢价，限时申购，
+没有门槛限制，所有人都可以参与。</p>
+                <p class="weight">非会员：每人申购数量不能超过剩余总量的1%；</p>
+                <p class="weight">青铜：每人申购数量不能超过剩余总量的5%；</p>
+                <p class="weight">白银：每人申购数量不能超过剩余总量的15%；</p>
+                <p class="weight">黄金、铂金此轮不设上限，可任意申购；</p>
+                <p class="flowtext2">申购截止后，若还有剩余，则剩余部分全部销毁。</p>
             </div>
         </div>
         <Footer></Footer>
@@ -192,7 +201,7 @@ export default {
                 text-align:center;
                 padding-top:26px;
                 &.mt200{
-                    margin-top:200px;
+                    margin-top:100px;
                 }
             }
             .val{
@@ -220,10 +229,10 @@ export default {
             font-size:24px;
             color:#333;
             line-height:40px;
-            padding-bottom:80px;
+            padding-bottom:10px;
             &.weight{
                 font-weight:600;
-                padding-top:40px;
+                padding-top:20px;
                 width:530px;
             }
             &.flowtext1{
@@ -304,7 +313,6 @@ export default {
                    p{
                        font-size:10px;
                        line-height:24px;
-                       padding-bottom:25px;
                        &.flowtext1{
                            width:100%;
                        }
@@ -343,7 +351,7 @@ export default {
                     padding-top:14px;
                     padding-bottom:4px;
                     &.mt200{
-                        margin-top:60px;
+                        margin-top:20px;
                     }
                 }
                 .val{

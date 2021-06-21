@@ -5,37 +5,21 @@
             <h2>正在进行的投票</h2>
             <div class="voteListWrap">
                 <div class="voteList">
-                    <div class="voteItem">
+                    <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==0">
                         <div class="voteHead">
                             <div class="proName">
-                                <img>
-                                ABCD
+                                <img :src="item.logo_url">
+                                {{item.name}}
                             </div>
                             <p class="access">Access<br>仅参与IDO的会员</p>
                         </div>
-                        <h3 class="votetodo">需要资金展开第二期应用开发</h3>
+                        <h3 class="votetodo">{{item.topic}}</h3>
                         <p class="todoInfo">
-                            详细描述（100字以内）
+                            {{item.description}}
                         </p>
-                        <a class="voteBtn">赞成</a>
-                        <a class="voteBtn">反对</a>
-                        <div class="downtime">2h 38m 45s</div>
-                    </div>
-                    <div class="voteItem">
-                        <div class="voteHead">
-                            <div class="proName">
-                                <img>
-                                ABCD
-                            </div>
-                            <p class="access">Access<br>仅参与IDO的会员</p>
-                        </div>
-                        <h3 class="votetodo">需要资金展开第二期应用开发</h3>
-                        <p class="todoInfo">
-                            详细描述（100字以内）
-                        </p>
-                        <a class="voteBtn">赞成</a>
-                        <a class="voteBtn">反对</a>
-                        <div class="downtime">2h 38m 45s</div>
+                        <a class="voteBtn" @click="toVote(item,0)">赞成</a>
+                        <a class="voteBtn" @click="toVote(item,1)">反对</a>
+                        <div class="downtime">{{item.djs}}</div>
                     </div>
                 </div>
             </div>
@@ -107,8 +91,25 @@
     </div>
 </template>
 <script>
+function InitTime(endtime){
+    var dd,hh,mm,ss = null;
+    var time = parseInt(endtime) - new Date().getTime();
+    if(time<=0){
+        return '结束'
+    }else{
+        dd = Math.floor(time / 1000/ 60 / 60 / 24);
+        hh = Math.floor((time / 1000/ 60 / 60) % 24);
+        mm = Math.floor((time / 1000/ 60) % 60);
+        ss = Math.floor((time / 1000) % 60);
+        var str = dd+"D  "+hh+"h  "+mm+"m  "+ss+"s";
+        return str;
+    }
+}    
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import axios from "axios"
+import { HDAO_TOKEN,IDO_TOKEN} from '../utils/contract'
+import BigNumber from 'bignumber.js'
 export default {
     components:{ 
         Header,
@@ -119,18 +120,95 @@ export default {
     },
     data() {
         return {
-            
+            web3:null,
+            defaultAccount:'',
+            IDOContract:null,
+            taskList:[]
         }
     },
-    mounted() {
-        
+    created(){
+        this.$initWeb3().then((web3)=>{
+            if(web3.eth.defaultAccount){
+                this.web3 = web3
+                this.defaultAccount = web3.eth.defaultAccount
+                this.init()
+            }
+        })
     },
-    beforeDestroy () {
-    
+    mounted() {
+        setInterval( ()=> {
+            for (var key in this.taskList) {
+                var aaa = new Date(this.taskList[key]["end_time"]).getTime();
+                var bbb = new Date().getTime();
+                var rightTime = aaa - bbb;
+                if (rightTime > 0) {
+                    var dd = Math.floor(rightTime / 1000 / 60 / 60 / 24);
+                    var hh = Math.floor((rightTime / 1000 / 60 / 60) % 24);
+                    var mm = Math.floor((rightTime / 1000 / 60) % 60);
+                    var ss = Math.floor((rightTime / 1000) % 60);
+                }
+                this.taskList[key]["djs"] = dd + "D  " + hh + "h  " + mm + "m  " + ss + "s";
+            }
+        })  
     },
     methods: {
-        
-            
+        init(){
+            this.getVoteList()
+        },
+        getVoteList(){
+            axios.get("http://192.168.31.77:9091/proposals").then((res)=>{
+                if(res.data.code==0){
+                    this.taskList = res.data.data
+                    this.getVoteInfo()
+                    res.data.data.map( (obj,index)=>{
+                        if(obj.status==0){
+                            let endTime = new Date(obj.end_time).getTime()
+                            this.$set(
+                                obj,"djs",InitTime(endTime)
+                            );
+                        }
+                    })
+                }
+            })
+        },
+        getVoteInfo(){
+            this.taskList.map( (obj,index)=>{
+                if(obj.status==0){
+                    let IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, obj.ido_address)
+                    this.$set(obj,"IDOContract",IDOContract)
+                    this.getUserInfo(obj)
+                }
+            })
+        },
+        async getUserInfo(obj){
+            let isVote = await obj.IDOContract.methods.isVote().call()
+            this.$set(obj,"isVote",isVote)
+            let voteRound = await obj.IDOContract.methods.voteRound().call()
+            this.$set(obj,"voteRound",voteRound)
+            let userVote = await obj.IDOContract.methods.userVote(this.defaultAccount,voteRound).call()
+            this.$set(obj,"userVote",userVote)
+        },
+        async toVote(item,unit){
+            if(!item.isVote){
+                this.$message({
+                    message: '投票未开启',
+                    type: 'warning'
+                })
+            }else if(item.userVote.voted){
+                this.$message({
+                    message: '已投票',
+                    type: 'warning'
+                })
+            }else{
+                let res = await item.IDOContract.methods.vote(unit).send({ from: this.defaultAccount })
+                if(res){
+                    this.$message({
+                        message: '投票成功',
+                        type: 'success'
+                    })
+                }
+            }
+        }
     }
 }
 </script>
