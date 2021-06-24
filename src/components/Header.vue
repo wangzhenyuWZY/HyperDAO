@@ -23,7 +23,7 @@
         </ul>
         <div class="utils clearfix">
             <a class="wallet">{{defaultAccount?defaultAccount:'我的钱包'}}</a>
-            <i class="data"></i>
+            <i class="data" @click="toDatepiker"></i>
             <i class="language"></i>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
@@ -46,19 +46,22 @@
             </ul>
             <div class="otherLink">
                 <p>{{defaultAccount?defaultAccount:'我的钱包'}}</p>
-                <p>日历</p>
+                <p @click="toDatepiker">日历</p>
                 <p>切换语言</p>
             </div>
         </el-drawer>
+        <Datepiker v-show="isDate"></Datepiker>
     </header>
 </template>
 <script>
     import Header from '@/components/Header'
     import Footer from '@/components/Footer'
+    import Datepiker from '@/views/datePiker'
     export default {
         components:{ 
             Header,
-            Footer
+            Footer,
+            Datepiker
         },
         watch: {
             
@@ -68,7 +71,8 @@
                 tolerPop:false,
                 drawer:false,
                 defaultAccount:null,
-                active:0
+                active:0,
+                isDate:false
             }
         },
         created(){
@@ -105,6 +109,9 @@
                     xing ='*******';
                 }
                 return str.substring(0,frontLen)+xing+str.substring(str.length-endLen);
+            },
+            toDatepiker(){
+                this.isDate = !this.isDate
             }   
         }
     }

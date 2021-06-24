@@ -7,7 +7,7 @@
         </div>
         <div class="btnsbar">
             <a class="btn">购买HDAO</a>
-            <a class="btn">申请IDO</a>
+            <a class="btn">申请上线IDO</a>
         </div>
         <div class="hdaoinfo">
             <h2>平台简介</h2>
@@ -26,7 +26,7 @@
                 <p class="val">10</p>
             </div>
             <div class="projectItem">
-                <h2>Bronze</h2>
+                <h2>Silver</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
                 <p class="title">优先认购权</p>
@@ -35,7 +35,7 @@
                 <p class="val">10</p>
             </div>
             <div class="projectItem">
-                <h2>Bronze</h2>
+                <h2>Gold</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
                 <p class="title">优先认购权</p>
@@ -44,7 +44,7 @@
                 <p class="val">10</p>
             </div>
             <div class="projectItem">
-                <h2>Bronze</h2>
+                <h2>Platinum</h2>
                 <p class="title">质押要求</p>
                 <p class="val">10000HDAO</p>
                 <p class="title">优先认购权</p>
@@ -180,7 +180,7 @@ export default {
             display:inline-block;
             vertical-align:middle;
             width:400px;
-            height:490px;
+            height:440px;
             padding:30px;
             border-radius:20px;
             background:#874FEC;
@@ -200,9 +200,9 @@ export default {
                 line-height:25px;
                 text-align:center;
                 padding-top:26px;
-                &.mt200{
+                /* &.mt200{
                     margin-top:100px;
-                }
+                } */
             }
             .val{
                 font-size:28px;
@@ -224,12 +224,13 @@ export default {
             line-height:40px;
             font-weight:600;
             padding-bottom:10px;
+            padding-top:60px;
         }
         p{
             font-size:24px;
             color:#333;
             line-height:40px;
-            padding-bottom:10px;
+            padding-bottom:5px;
             &.weight{
                 font-weight:600;
                 padding-top:20px;
@@ -256,6 +257,7 @@ export default {
         }
         .btnsbar{
             margin-top:16px;
+            margin-bottom:16px;
             .btn{
                 width:102px;
                 height:34px;
@@ -266,7 +268,7 @@ export default {
             }
         }
         .hdaoinfo{
-           padding:40px 15px 180px; 
+           padding:0 15px 180px; 
            width:100%;
            background:url(../assets/img/mImg/bg.png) no-repeat bottom 25px center;
            background-size:227px 146px;
@@ -309,6 +311,7 @@ export default {
                        font-size:10px;
                        line-height:14px;
                        padding-bottom:7px;
+                       padding-top:20px;
                    }
                    p{
                        font-size:10px;
@@ -333,7 +336,7 @@ export default {
             padding:20px;
             .projectItem{
                 width:49%;
-                height:214px;
+                height:200px;
                 margin:0;
                 padding:11px;
                 border-radius:10px;
@@ -350,9 +353,9 @@ export default {
                     line-height:14px;
                     padding-top:14px;
                     padding-bottom:4px;
-                    &.mt200{
+                    /* &.mt200{
                         margin-top:20px;
-                    }
+                    } */
                 }
                 .val{
                     font-size:10px;

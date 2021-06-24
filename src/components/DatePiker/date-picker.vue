@@ -38,7 +38,7 @@
 <script>
   import calendarHeader from './canlendar-head.vue';
   import * as utils from '../../utils/datepiker.js';
-
+  import axios from "axios"
   export default {
     name: 'cc-calendar',
     componentName: 'cc-calendar',
@@ -68,63 +68,14 @@
         time: {year, month, day},
         calendarList: [],
         proTimes:[
-          1623915000000,
-          1624001400000,
-          1624433400000
-        ] 
+          
+        ]
       }
     },
     computed : {
       dayStyle : function () {
         return {
           textAlign: this.options.viewStyle.day,
-        }
-      },
-      visibleCalendar : {
-        get:function(){
-          let calendatArr = [];
-          let {year, month, day} = utils.getNewDate(utils.getDate(this.time.year, this.time.month, 1));
-          
-          let currentFirstDay = utils.getDate(year, month, 1);
-
-          // 获取当前月第一天星期几
-          let weekDay = currentFirstDay.getDay();
-          if (weekDay == 0) {
-            weekDay += 7;
-          }
-          let startTime = currentFirstDay - (weekDay - 1) * 24 * 60 * 60 * 1000;
-
-          let monthDayNum;
-          if (weekDay == 5 || weekDay == 6){
-            monthDayNum = 42
-          }else {
-            monthDayNum = 35
-          };
-
-          for (let i = 0; i < monthDayNum; i++) {
-            let daystartTime = new Date(startTime + i * 24 * 60 * 60 * 1000).getTime()
-            let dayendTime = daystartTime+86400000
-            let hasPro = false
-            for(var j=0;j<this.proTimes.length;j++){
-              if(daystartTime<=this.proTimes[j] && this.proTimes[j]<dayendTime){
-                hasPro = true
-              }
-            }
-            calendatArr.push({
-              date: new Date(startTime + i * 24 * 60 * 60 * 1000),
-              year: year,
-              month: month + 1,
-              day: new Date(startTime + i * 24 * 60 * 60 * 1000).getDate(),
-              clickDay: false,
-              hasPro:hasPro
-            })
-          };
-          
-          this.headOptions.date = `${utils.englishMonth(month)} ${year}`;
-          return calendatArr
-        },
-        set:function(newValue){
-          this.calendarList = newValue
         }
       }
     },
@@ -168,32 +119,79 @@
         this.$forceUpdate();
         this.$emit('handleClickDay', item);
         this.$set(item, 'clickDay', true);
-      }
+      },
+      getTimeList(){
+        let that = this
+          var now = new Date(); //当前日期 
+          var nowMonth = now.getMonth(); //当前月 
+          var nowYear = now.getFullYear(); //当前年 
+          //本月的开始时间
+          var monthStartDate = new Date(nowYear, nowMonth, 1); 
+          //本月的结束时间
+          var monthEndDate = new Date(nowYear, nowMonth+1, 0);
+          var timeStar=Date.parse(monthStartDate)/1000;//s
+          var timeEnd=Date.parse(monthEndDate)/1000;//s
+          that.proTimes = [1624506039000,1624592439000]
+          that.visibleCalendar()
+          // axios.get(process.env.VUE_APP_URL+"menology?begin_time="+timeStar+"&end_time="+timeEnd).then((res)=>{
+          //     if(res.data.code==0){
+          //         res.data.data.forEach((item,index)=>{
+          //             let time = new Date(item.begin_time).getTime()
+          //             that.proTimes.push(time)
+          //         })
+          //         that.visibleCalendar()
+          //     }
+          // })
+      },
+      visibleCalendar(){
+          let calendatArr = [];
+          let {year, month, day} = utils.getNewDate(utils.getDate(this.time.year, this.time.month, 1));
+          
+          let currentFirstDay = utils.getDate(year, month, 1);
+
+          // 获取当前月第一天星期几
+          let weekDay = currentFirstDay.getDay();
+          if (weekDay == 0) {
+            weekDay += 7;
+          }
+          let startTime = currentFirstDay - (weekDay - 1) * 24 * 60 * 60 * 1000;
+
+          let monthDayNum;
+          if (weekDay == 5 || weekDay == 6){
+            monthDayNum = 42
+          }else {
+            monthDayNum = 35
+          };
+
+          for (let i = 0; i < monthDayNum; i++) {
+            let daystartTime = new Date(startTime + i * 24 * 60 * 60 * 1000).getTime()
+            let dayendTime = daystartTime+86400000
+            let hasPro = false
+            for(var j=0;j<this.proTimes.length;j++){
+              if(daystartTime<=this.proTimes[j] && this.proTimes[j]<dayendTime){
+                hasPro = true
+              }
+            }
+            calendatArr.push({
+              date: new Date(startTime + i * 24 * 60 * 60 * 1000),
+              year: year,
+              month: month + 1,
+              day: new Date(startTime + i * 24 * 60 * 60 * 1000).getDate(),
+              clickDay: false,
+              hasPro:hasPro
+            })
+          };
+          
+          this.headOptions.date = `${utils.englishMonth(month)} ${year}`;
+          this.calendarList = calendatArr
+        }
     },
     created () {
-      this.calendarList = this.visibleCalendar;
+      this.getTimeList()
       this.calendarType = this.options.calendarType;
     },
-    mounted() {
-       let arr = [
-        1623915000000,
-        1624001400000,
-        1624433400000
-      ]  
-      this.proTimes = arr 
-      // let calendarList = this.calendarList
-      // calendarList.forEach((item,index) => {
-      //     let startTime = new Date(item.date).getTime()
-      //     let endTime = startTime+86400000
-      //     item.hasPro = false
-      //     for(var i=0;i<arr.length;i++){
-      //       if(startTime<=arr[i] && arr[i]<endTime){
-      //         item.hasPro = true
-      //       }
-      //     }
-      // })
-      // this.visibleCalendar  = calendarList 
-      console.log(this.visibleCalendar)
+    mounted() { 
+      
     },
   }
 </script>
@@ -229,6 +227,7 @@
       width: 100%;
       border-left: 1px solid #E4E7EA;
       .date-view {
+        position:relative;
         width: 14.285%;
         height: 185px;
         border-right: 1px solid #fff;
@@ -267,6 +266,9 @@
       .hasPro{
         text-align:center;
         display:block;
+        position:absolute;
+        top:30px;
+        left:30px;
         img{
           width:134px;
         }
@@ -282,5 +284,30 @@
         }
       }
     }
+  }
+  @media screen and (max-width:1200px) {
+    .cc-calendar{
+      .calendar-week{
+        height:23px;
+        .week-item{
+          font-size:8px;
+          line-height:23px;
+        }
+      }
+      .calendar-view{
+          .date-view{
+            height:46px;
+            .hasPro{
+              left:8px;
+              top:6px;
+              img{
+                width:33px;
+                
+              }
+            }
+          }
+      }
+    }
+    
   }
 </style>

@@ -1,91 +1,65 @@
 <template>
     <div class="container">
         <Header></Header>
-        <div class="votePanel">
-            <h2>正在进行的投票</h2>
-            <div class="voteListWrap">
-                <div class="voteList">
-                    <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==0">
-                        <div class="voteHead">
-                            <div class="proName">
-                                <img :src="item.logo_url">
-                                {{item.name}}
+        <div class="voteContainer">
+            <div class="votePanel">
+                <h2>正在进行的投票</h2>
+                <div class="voteListWrap">
+                    <div class="voteList">
+                        <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==0">
+                            <div class="voteHead">
+                                <div class="proName">
+                                    <img :src="item.logo_url">
+                                    {{item.name}}
+                                </div>
+                                <p class="access">Access<br>仅参与IDO的会员</p>
                             </div>
-                            <p class="access">Access<br>仅参与IDO的会员</p>
+                            <h3 class="votetodo">{{item.topic}}</h3>
+                            <p class="todoInfo">
+                                {{item.description}}
+                            </p>
+                            <a class="voteBtn" @click="toVote(item,0)">赞成</a>
+                            <a class="voteBtn" @click="toVote(item,1)">反对</a>
+                            <div class="downtime">{{item.djs}}</div>
                         </div>
-                        <h3 class="votetodo">{{item.topic}}</h3>
-                        <p class="todoInfo">
-                            {{item.description}}
-                        </p>
-                        <a class="voteBtn" @click="toVote(item,0)">赞成</a>
-                        <a class="voteBtn" @click="toVote(item,1)">反对</a>
-                        <div class="downtime">{{item.djs}}</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="votePanel over">
-            <h2>已经结束的投票</h2>
-            <div class="voteListWrap">
-                <div class="voteList">
-                    <div class="voteItem">
-                        <div class="voteHead">
-                            <div class="proName">
-                                <img>
-                                ABCD
-                            </div>
-                            <p class="access">Access<br>仅参与IDO的会员</p>
-                        </div>
-                        <h3 class="votetodo">需要资金展开第二期应用开发</h3>
-                        <p class="todoInfo">
-                            详细描述（100字以内）
-                        </p>
-                        <div class="voteProgress">
-                            <div class="progressInfo">
-                                <div class="infoItem">
-                                    <p>赞成</p>
-                                    <p>46562354</p>
+            <div class="votePanel over">
+                <h2>已经结束的投票</h2>
+                <div class="voteListWrap">
+                    <div class="voteList">
+                        <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==0">
+                            <div class="voteHead">
+                                <div class="proName">
+                                    <img :src="item.logo_url">
+                                    {{item.name}}
                                 </div>
-                                <div class="infoItem">
-                                    <p>反对</p>
-                                    <p>46562354</p>
+                                <p class="access">Access<br>仅参与IDO的会员</p>
+                            </div>
+                            <h3 class="votetodo">{{item.topic}}</h3>
+                            <p class="todoInfo">
+                                {{item.description}}
+                            </p>
+                            <div class="voteProgress">
+                                <div class="progressInfo">
+                                    <div class="infoItem">
+                                        <p>赞成</p>
+                                        <p>{{item.counts.favor}}</p>
+                                    </div>
+                                    <div class="infoItem">
+                                        <p>反对</p>
+                                        <p>{{item.counts.oppos}}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="all">
-                                <p></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="voteItem">
-                        <div class="voteHead">
-                            <div class="proName">
-                                <img>
-                                ABCD
-                            </div>
-                            <p class="access">Access<br>仅参与IDO的会员</p>
-                        </div>
-                        <h3 class="votetodo">需要资金展开第二期应用开发</h3>
-                        <p class="todoInfo">
-                            详细描述（100字以内）
-                        </p>
-                        <div class="voteProgress">
-                            <div class="progressInfo">
-                                <div class="infoItem">
-                                    <p>赞成</p>
-                                    <p>46562354</p>
+                                <div class="all">
+                                    <p></p>
                                 </div>
-                                <div class="infoItem">
-                                    <p>反对</p>
-                                    <p>46562354</p>
-                                </div>
-                            </div>
-                            <div class="all">
-                                <p></p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>    
+                </div>    
+            </div>
         </div>
         <Footer></Footer>
     </div>
@@ -156,7 +130,7 @@ export default {
             this.getVoteList()
         },
         getVoteList(){
-            axios.get("http://192.168.31.77:9091/proposals").then((res)=>{
+            axios.get(process.env.VUE_APP_URL+"proposals").then((res)=>{
                 if(res.data.code==0){
                     this.taskList = res.data.data
                     this.getVoteInfo()
@@ -173,12 +147,23 @@ export default {
         },
         getVoteInfo(){
             this.taskList.map( (obj,index)=>{
+                let IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, obj.ido_address)
+                this.$set(obj,"IDOContract",IDOContract)
                 if(obj.status==0){
-                    let IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, obj.ido_address)
-                    this.$set(obj,"IDOContract",IDOContract)
                     this.getUserInfo(obj)
+                }else if(obj.status==1){
+                    this.getVoteCount(obj)
                 }
             })
+        },
+        async getVoteCount(obj){
+            let favorCounts = await obj.IDOContract.methods.voteCounts(1).call()
+            let oppositionCounts = await obj.IDOContract.methods.voteCounts(2).call()
+            let counts = {
+                favor:favorCounts,
+                oppos:oppositionCounts
+            }
+            this.$set(obj,"counts",counts)
         },
         async getUserInfo(obj){
             let isVote = await obj.IDOContract.methods.isVote().call()
@@ -213,6 +198,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .voteContainer{
+        min-height:80vh;
+    }
 .votePanel{
     padding-top:90px;
     padding-bottom:60px;
@@ -354,6 +342,9 @@ export default {
     }
 }
 @media screen and (max-width:1200px) {
+    .voteContainer{
+        min-height:80vh;
+    }
     .votePanel{
         &.over{
             .voteList{

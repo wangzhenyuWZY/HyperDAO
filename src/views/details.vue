@@ -10,7 +10,7 @@
                             <h2>{{detailInfo.name}}</h2>
                             <div class="types">
                                 <a :href="detailInfo.url"><img src="../assets/img/icon10.png"></a>
-                                <a :href="detailInfo.medium_account"><img src="../assets/img/icon6.png"></a>
+                                <a :href="detailInfo.medium_account"><img src="../assets/img/icon11.png"></a>
                                 <a :href="detailInfo.twitter_account"><img src="../assets/img/Twitter.png"></a>
                                 <a :href="detailInfo.telegram_account"><img src="../assets/img/telegram.png"></a>
                             </div>
@@ -38,8 +38,8 @@
                             <div class="textbox">
                                 <div class="texts">
                                     <h3>Swapped</h3>
-                                    <p>0.0000 USDT</p>
-                                    <p>0.0000 {{detailInfo.name}}</p>
+                                    <p>{{round==1?userInfo.uAmount:userInfo.claimedUsdt}} USDT</p>
+                                    <p>{{round==1?userInfo.amount:userInfo.claimed}} {{detailInfo.name}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>剩余额度</h3>
@@ -123,20 +123,20 @@
                                 <span>Closes</span>
                             </div>
                             <div class="roundBody">
-                                <div class="roundItem" v-for="(item,index) in times" :key="index" v-if="item.level==1">
+                                <div class="roundItem">
                                     <span>Allocation</span>
-                                    <span>{{item.begin_time}}</span>
-                                    <span>{{item.end_time}}</span>
+                                    <span>{{schedule.startTime1}}</span>
+                                    <span>{{schedule.endTime1}}</span>
                                 </div>
-                                <div class="roundItem" v-for="(item,index) in times" :key="index" v-if="item.level==2">
+                                <div class="roundItem">
                                     <span>FCFS - Prepare</span>
-                                    <span>{{item.begin_time}}</span>
-                                    <span>{{item.end_time}}</span>
+                                    <span>{{schedule.endTime1}}</span>
+                                    <span>{{schedule.endTime2}}</span>
                                 </div>
-                                <div class="roundItem" v-for="(item,index) in times" :key="index" v-if="item.level==3">
+                                <div class="roundItem">
                                     <span>FCFS - Start</span>
-                                    <span>{{item.begin_time}}</span>
-                                    <span>{{item.end_time}}</span>
+                                    <span>{{schedule.startTime3}}</span>
+                                    <span>{{schedule.endTime3}}</span>
                                 </div>
                             </div>
                         </div>
@@ -175,7 +175,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import axios from "axios"
-import { HDAO_TOKEN,IDO_TOKEN,TIERSYSTEM ,USDT_TOKEN} from '../utils/contract'
+import { IDO_TOKEN,TIERSYSTEM ,USDT_TOKEN} from '../utils/contract'
 import BigNumber from 'bignumber.js'
 export default {
     components:{ 
@@ -232,7 +232,10 @@ export default {
             startDate:null,
             downTime:null,
             fcfsPop:false,
-            fcfsNum:''
+            fcfsNum:'',
+            round2Start:'',
+            schedule:{},
+            userInfo:{}
         }
     },
     created(){
@@ -272,25 +275,38 @@ export default {
             })
         },
         getDetails(){
-            axios.get("http://192.168.31.77:9091/hdao/"+this.$route.query.id).then((res)=>{
+            axios.get(process.env.VUE_APP_URL+"hdao/"+this.$route.query.id).then((res)=>{
                 if(res.data.code==0){
                     this.detailInfo = res.data.data
                 }
             })
-            axios.get("http://192.168.31.77:9091/tasks?hdao_id="+this.$route.query.id).then((res)=>{
-                if(res.data.code==0){
-                    this.times = res.data.data
-                }
-            })
+        },
+        async getUserInfo(){
+            let userInfo = await this.IDOContract.methods.userInfo(this.defaultAccount).call() 
+            let amount = new BigNumber(userInfo.amount)
+            amount = amount.div(Math.pow(10,this.tokenDecimals))
+            let uAmount = new BigNumber(userInfo.uAmount)
+            uAmount = uAmount.div(Math.pow(10,this.usdtDecimals))
+            let claimed = new BigNumber(userInfo.claimed)
+            claimed = claimed.div(Math.pow(10,this.tokenDecimals))
+            let claimedUsdt = claimed.times(this.price)
+            this.userInfo = {
+                amount:amount,
+                uAmount:uAmount,
+                claimed:claimed,
+                claimedUsdt:claimedUsdt
+            }
         },
         async R2purchase(){
             this.fcfsPop = false
             let preNum = new BigNumber(this.fcfsNum)
-            preNum = preNum.times(this.price)
-            preNum = preNum.times(Math.pow(10,this.usdtDecimals))
+            // preNum = preNum.times(this.price)
+            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let R2ForSale = await this.IDOContract.methods.R2ForSale().call()
+            R2ForSale = new BigNumber(R2ForSale)
+            R2ForSale = R2ForSale.div(Math.pow(10,this.tokenDecimals))
             let quota = 0
             if(this.tier == 0){
                 quota = R2ForSale*0.01
@@ -302,13 +318,13 @@ export default {
                 quota = R2ForSale
             }
             
-            // if(!isR2started){
-            //     this.$message({
-            //         message: '第二轮尚未开启',
-            //         type: 'warning'
-            //     }) 
-            //     return
-            // }
+            if(!isR2started){
+                this.$message({
+                    message: '第二轮尚未开启',
+                    type: 'warning'
+                }) 
+                return
+            }
             if(!isR2begin){
                 this.$message({
                     message: '第二轮尚未开启',
@@ -339,7 +355,7 @@ export default {
             }
             // quota = new BigNumber(quota)
             // quota = quota.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.R2purchase(preNum).send({ from: this.defaultAccount })
+            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
                     message: '抢购成功',
@@ -423,8 +439,8 @@ export default {
         async doPurchase(){
             this.stakePop = false
             let preNum = new BigNumber(this.preNum)
-            preNum = preNum.times(this.price)
-            preNum = preNum.times(Math.pow(10,this.usdtDecimals))
+            // preNum = preNum.times(this.price)
+            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
             let res = await this.IDOContract.methods.preAlloc(preNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
@@ -484,6 +500,7 @@ export default {
                 let date = new Date()
                 let now = date.getTime()
                 let leftTime = res*1000 - now
+                this.round2Start = res
                 if (leftTime >= 0) {
                     this.round = 1
                     this.getStartTime()
@@ -496,6 +513,7 @@ export default {
                     this.getPrice2()
                 }
             }
+            await this.getUserInfo()
         },
         async getPrice(){
             let res = await this.IDOContract.methods.price().call()
@@ -552,6 +570,7 @@ export default {
         },
         async getStartTime(){
             let res = await this.IDOContract.methods.startTime().call()
+            let round2end = await this.IDOContract.methods.round2end().call()//第二轮结束时间
             if(res){
                 this.startDate = res
                 this.startTime = this.format(parseInt(res)*1000)
@@ -561,9 +580,14 @@ export default {
             this.endTime = endTime//第一轮结束时间
             let clearTime = await this.IDOContract.methods.clearTime().call()
             this.clearTime = parseInt(clearTime)//认领结束时间
-            let fcfsEndTime = new Date(this.detailInfo.end_Time).getTime()
-            this.fcfsEndTime = fcfsEndTime//第二轮结束时间
             this.getDownTime()
+            this.schedule = {
+                startTime1:this.startTime,
+                endTime1:this.format(parseInt(endTime)*1000),
+                endTime2:this.format(parseInt(this.clearTime)*1000),
+                startTime3:this.format(parseInt(this.round2Start)*1000),
+                endTime4:this.format(parseInt(round2end)*1000)
+            }
         },
         getDownTime(){
             let now = new Date().getTime()

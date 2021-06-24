@@ -1,142 +1,145 @@
 <template>
     <div class="container">
         <Header></Header>
-        <div class="projectPanel">
-            <h2>正在进行的项目</h2>
-            <div class="projectWrap">
-                <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
-                    <li v-for="(item,index) in proList" :key="index" v-if="item.status==1">
-                        <span class="statubtn">项目进行中</span>
-                        <div class="name">
-                            <img :src="item.logo_url">
-                            {{item.name}}
-                        </div>
-                        <div class="types">
-                            <a :href="item.url"><img src="../assets/img/icon10.png"></a>
-                            <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
-                            <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
-                            <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
-                        </div>
-                        <p class="status">Allocation</p>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
-                        </div>
-                        <div class="capaccess">
+        <div class="projectContainer">
+            <div class="projectPanel">
+                <h2>正在进行的项目</h2>
+                <div class="projectWrap">
+                    <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
+                        <li v-for="(item,index) in proList" :key="index" v-if="item.status==1">
+                            <span class="statubtn">项目进行中</span>
+                            <div class="name">
+                                <img :src="item.logo_url">
+                                {{item.name}}
+                            </div>
+                            <div class="types">
+                                <a :href="item.url"><img src="../assets/img/icon10.png"></a>
+                                <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
+                                <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                                <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
+                            </div>
+                            <p class="status">Allocation</p>
                             <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">{{item.ido_asset_total}} USDT</p>
+                                <p class="title">Swap Rate</p>
+                                <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
+                            </div>
+                            <div class="capaccess">
+                                <div class="swaprate">
+                                    <p class="title">Cap</p>
+                                    <p class="val">{{item.ido_asset_total}} USDT</p>
+                                </div>
+                                <div class="swaprate">
+                                    <p class="title">Access</p>
+                                    <p class="val">Private</p>
+                                </div>
                             </div>
                             <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
+                                <p class="title">participants</p>
+                                <p class="val">{{item.participate_number}}</p>
                             </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">{{item.participate_number}}</p>
-                        </div>
-                        <router-link :to="{path:'/details',query: {id: item.id}}" class="detailbtn">Details</router-link>
-                    </li>
-                </ul>
+                            <router-link :to="{path:'/details',query: {id: item.id}}" class="detailbtn">Details</router-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="projectPanel ready">
+                <h2>即将开始的项目</h2>
+                <div class="projectWrap">
+                    <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+readyItem+'rem'">
+                        <li v-for="(item,index) in proList" :key="index" v-if="item.status==0">
+                            <span class="statubtn">即将开始</span>
+                            <div class="name">
+                                <img :src="item.logo_url">
+                                {{item.name}}
+                            </div>
+                            <div class="types">
+                                <a :href="item.url"><img src="../assets/img/icon10.png"></a>
+                                <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
+                                <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                                <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
+                            </div>
+                            <div class="swaprate">
+                                <p class="title">Swap Rate</p>
+                                <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
+                            </div>
+                            <div class="capaccess">
+                                <div class="swaprate">
+                                    <p class="title">Cap</p>
+                                    <p class="val">{{item.ido_asset_total}} USDT</p>
+                                </div>
+                                <div class="swaprate">
+                                    <p class="title">Access</p>
+                                    <p class="val">Private</p>
+                                </div>
+                            </div>
+                            <div class="swaprate">
+                                <p class="title">participants</p>
+                                <p class="val">{{item.participate_number}}</p>
+                            </div>
+                            <div class="progress">
+                                <p class="title">progress</p>
+                                <div class="all">
+                                    <span></span>
+                                </div>
+                                <p class="info">
+                                    <span>0.00%</span>
+                                    <span>0.0000/TBA</span>   
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>    
+            </div>
+            <div class="projectPanel over">
+                <h2>已经结束的项目</h2>
+                <div class="projectWrap">
+                    <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+closeItem+'rem'" >
+                        <li v-for="(item,index) in proList" :key="index" v-if="item.status==2">
+                            <span class="statubtn">已结束</span>
+                            <div class="name">
+                                <img :src="item.logo_url">
+                                {{item.name}}
+                            </div>
+                            <div class="types">
+                                <a :href="item.url"><img src="../assets/img/icon10.png"></a>
+                                <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
+                                <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
+                                <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
+                            </div>
+                            <div class="swaprate">
+                                <p class="title">Swap Rate</p>
+                                <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
+                            </div>
+                            <div class="capaccess">
+                                <div class="swaprate">
+                                    <p class="title">Cap</p>
+                                    <p class="val">{{item.ido_asset_total}} USDT</p>
+                                </div>
+                                <div class="swaprate">
+                                    <p class="title">Access</p>
+                                    <p class="val">Private</p>
+                                </div>
+                            </div>
+                            <div class="swaprate">
+                                <p class="title">participants</p>
+                                <p class="val">{{item.participate_number}}</p>
+                            </div>
+                            <div class="progress">
+                                <p class="title">progress</p>
+                                <div class="all">
+                                    <span></span>
+                                </div>
+                                <p class="info">
+                                    <span >{{item.progress}}%</span>
+                                    <span>{{item.ido_asset_collect}}/{{item.ido_asset_total}}</span>   
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="projectPanel ready">
-            <h2>即将开始的项目</h2>
-            <div class="projectWrap">
-                <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+readyItem+'rem'">
-                    <li v-for="(item,index) in proList" :key="index" v-if="item.status==0">
-                        <span class="statubtn">即将开始</span>
-                        <div class="name">
-                            <img :src="item.logo_url">
-                            {{item.name}}
-                        </div>
-                        <div class="types">
-                            <a :href="item.url"><img src="../assets/img/icon10.png"></a>
-                            <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
-                            <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
-                            <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">{{item.ido_asset_total}} USDT</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">{{item.participate_number}}</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span>0.00%</span>
-                                <span>0.0000/TBA</span>   
-                            </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>    
-        </div>
-        <div class="projectPanel over">
-            <h2>已经结束的项目</h2>
-            <div class="projectWrap">
-                <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+closeItem+'rem'" >
-                    <li v-for="(item,index) in proList" :key="index" v-if="item.status==2">
-                        <span class="statubtn">已结束</span>
-                        <div class="name">
-                            <img :src="item.logo_url">
-                            {{item.name}}
-                        </div>
-                        <div class="types">
-                            <a :href="item.url"><img src="../assets/img/icon10.png"></a>
-                            <a :href="item.medium_account"><img src="../assets/img/icon11.png"></a>
-                            <a :href="item.twitter_account"><img src="../assets/img/Twitter.png"></a>
-                            <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">Swap Rate</p>
-                            <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
-                        </div>
-                        <div class="capaccess">
-                            <div class="swaprate">
-                                <p class="title">Cap</p>
-                                <p class="val">{{item.ido_asset_total}} USDT</p>
-                            </div>
-                            <div class="swaprate">
-                                <p class="title">Access</p>
-                                <p class="val">Private</p>
-                            </div>
-                        </div>
-                        <div class="swaprate">
-                            <p class="title">participants</p>
-                            <p class="val">{{item.participate_number}}</p>
-                        </div>
-                        <div class="progress">
-                            <p class="title">progress</p>
-                            <div class="all">
-                                <span></span>
-                            </div>
-                            <p class="info">
-                                <span >{{item.progress}}%</span>
-                                <span>{{item.ido_asset_collect}}/{{item.ido_asset_total}}</span>   
-                            </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        
         <Footer></Footer>
     </div>
 </template>
@@ -167,6 +170,7 @@ export default {
         } 
     },
     mounted() {
+        console.log(process)
        this.getList() 
     },
     beforeDestroy () {
@@ -174,7 +178,7 @@ export default {
     },
     methods: {
         getList(){
-            axios.get("http://192.168.31.77:9091/hdaos").then((res)=>{
+            axios.get(process.env.VUE_APP_URL+"hdaos").then((res)=>{
                 if(res.data.code==0){
                     res.data.data.forEach((item,index)=>{
                         if(item.status==1){
@@ -194,6 +198,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+ .projectContainer{
+        min-height:80vh;
+    }
 .projectPanel{
     &.ready{
         h2{
@@ -371,6 +378,9 @@ export default {
     }
 }
 @media screen and (max-width:1200px) {
+    .projectContainer{
+        min-height:83vh;
+    }
     .projectPanel{
         overflow:hidden;
         h2{

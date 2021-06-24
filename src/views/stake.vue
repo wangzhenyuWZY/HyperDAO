@@ -38,7 +38,7 @@
             </div>
             <div class="stakeBtns border dobbuleBtn">
                 <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">Unstake</el-button>
-                <el-button class="btn" :class="userInfo.countdown==0?'desibled':''" :disabled="userInfo.countdown==0?true:false" @click="withdraw">Withdraw</el-button>
+                <el-button class="btn" :class="frozen_amount==0?'desibled':''" :disabled="frozen_amount==0?true:false" @click="withdraw">Withdraw</el-button>
             </div>
             <p class="withdrawIn">质押收益</p>
             <div class="myStake">
@@ -94,7 +94,7 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { HDAO_TOKEN, TIERSYSTEM } from '../utils/contract'
+import { HDAO_MATIC, TIERSYSTEM } from '../utils/contract'
 import BigNumber from 'bignumber.js'
 export default {
     components:{ 
@@ -145,7 +145,7 @@ export default {
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
                 this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
-                this.HDAOContract = new this.web3.eth.Contract(HDAO_TOKEN.abi, HDAO_TOKEN.address)
+                this.HDAOContract = new this.web3.eth.Contract(HDAO_MATIC.abi, HDAO_MATIC.address)
                 this.idoAddress = TIERSYSTEM.address
                 this.init()
             }
@@ -159,7 +159,7 @@ export default {
     },
     methods: {
         init(){
-            this.getHdoDecimails()
+            // this.getHdoDecimails()
             this.getHdaoBalance()
             this.getAllowance()
             this.getUserinfo()
@@ -236,11 +236,18 @@ export default {
                 })
                 return
             }
+            if(!this.inviter){
+                this.$message({
+                    message: '请填写邀请码，如没有请填写上方智能合约地址',
+                    type: 'warning'
+                })
+                return
+            }
             if(this.isApprove){
                 this.toStake()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
-                let apr1 = await this.HDAOContract.methods.approve(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                let apr1 = await this.HDAOContract.methods.APPROVE(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
                 this.toStake()
             }
         },
@@ -286,7 +293,7 @@ export default {
             if(res){
                 this.userInfo = res
                 if(res.deposit_times==0){
-                    this.inviter = TIERSYSTEM.address
+                    // this.inviter = TIERSYSTEM.address
                 }else{
                     this.inviter = res.invite
                 }
@@ -314,12 +321,12 @@ export default {
                 }
             }
         },
-        async getHdoDecimails(){
-            let res = await this.HDAOContract.methods.decimals().call()
-            if(res){
-                this.hdaDecimals = res
-            }
-        },
+        // async getHdoDecimails(){
+        //     let res = await this.HDAOContract.methods.decimals().call()
+        //     if(res){
+        //         this.hdaDecimals = res
+        //     }
+        // },
         async getTotalStaked(){
             let res = await this.STAKEContract.methods.totalStake().call()
             if(res){
@@ -334,13 +341,13 @@ export default {
             }
         },  
         async getAllowance () {
-            let res = await this.HDAOContract.methods.allowance(this.defaultAccount, TIERSYSTEM.address).call()
+            let res = await this.HDAOContract.methods.ALLOWANCE(this.defaultAccount, TIERSYSTEM.address).call()
             if(res){
                 this.isApprove = res > 0 ? true : false
             }
         },
         async getHdaoBalance () {
-            let res = await this.HDAOContract.methods.balanceOf(this.defaultAccount).call()
+            let res = await this.HDAOContract.methods.BALANCEOF(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
                 this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals))

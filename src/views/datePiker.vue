@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <Header></Header>
         <div class="datePiker">
             <datePicker 
                 :options="calendarArr" 
@@ -10,7 +9,6 @@
                 @handleNextMonth="handleNextMonth"
             />
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>
@@ -63,9 +61,27 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .container{
+        position:absolute;
+        top:100px;
+        left:0;
+        right:0;
+        height:200vh;
+        background:#fff;
+        z-index:999;
+    }
     .datePiker{
         width:1400px;
         margin:70px auto;
 
+    }
+    @media screen and (max-width:1200px) {
+        .container{
+            top:42px;
+            padding:0 10px;
+            .datePiker{
+                width:100%;
+            }
+        }
     }
 </style>
