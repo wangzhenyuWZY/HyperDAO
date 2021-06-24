@@ -247,7 +247,8 @@ export default {
                 this.toStake()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
-                let apr1 = await this.HDAOContract.methods.APPROVE(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                let apr1 = await this.HDAOContract.methods.approve(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                this.isApprove = true
                 this.toStake()
             }
         },
@@ -341,13 +342,13 @@ export default {
             }
         },  
         async getAllowance () {
-            let res = await this.HDAOContract.methods.ALLOWANCE(this.defaultAccount, TIERSYSTEM.address).call()
+            let res = await this.HDAOContract.methods.allowance(this.defaultAccount, TIERSYSTEM.address).call()
             if(res){
                 this.isApprove = res > 0 ? true : false
             }
         },
         async getHdaoBalance () {
-            let res = await this.HDAOContract.methods.BALANCEOF(this.defaultAccount).call()
+            let res = await this.HDAOContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
                 this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals))

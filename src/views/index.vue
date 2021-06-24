@@ -28,29 +28,29 @@
             <div class="projectItem">
                 <h2>Silver</h2>
                 <p class="title">质押要求</p>
-                <p class="val">10000HDAO</p>
+                <p class="val">100000HDAO</p>
                 <p class="title">优先认购权</p>
                 <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
-                <p class="val">10</p>
+                <p class="val">145</p>
             </div>
             <div class="projectItem">
                 <h2>Gold</h2>
                 <p class="title">质押要求</p>
-                <p class="val">10000HDAO</p>
+                <p class="val">500000HDAO</p>
                 <p class="title">优先认购权</p>
                 <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
-                <p class="val">10</p>
+                <p class="val">925</p>
             </div>
             <div class="projectItem">
                 <h2>Platinum</h2>
                 <p class="title">质押要求</p>
-                <p class="val">10000HDAO</p>
+                <p class="val">1000000HDAO</p>
                 <p class="title">优先认购权</p>
                 <p class="val">YES</p>
                 <p class="title mt200">权重值</p>
-                <p class="val">10</p>
+                <p class="val">2500</p>
             </div>
         </div>
         <div class="hdaoinfo flowPanel">
