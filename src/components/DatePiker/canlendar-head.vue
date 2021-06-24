@@ -67,12 +67,12 @@
           vertical-align: middle;
           width: 8px;
           height: 11px;
-          background: url('../../assets/img/left.png') no-repeat;
+          /* background: url('../../assets/img/left.png') no-repeat; */
           background-size: contain;
           cursor: pointer;
         }
         .calendar-next {
-          background: url('../../assets/img/right.png') no-repeat;
+          /* background: url('../../assets/img/right.png') no-repeat; */
           background-size: contain;
         }
       }

@@ -243,11 +243,11 @@ export default {
             if(web3.eth.defaultAccount){
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
-                this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, IDO_TOKEN.address)
+                // this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, IDO_TOKEN.address)
                 this.USDTContract = new this.web3.eth.Contract(USDT_TOKEN.abi, USDT_TOKEN.address)
                 this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
+                this.getDetails()
                 
-                this.init()
             }
         })
     },
@@ -259,7 +259,7 @@ export default {
     },
     methods: {
         init(){
-            this.getDetails()
+            
             this.getUserTier()
             this.getIsOpen()
             this.getUsdtDecimails()
@@ -278,6 +278,8 @@ export default {
             axios.get(process.env.VUE_APP_URL+"hdao/"+this.$route.query.id).then((res)=>{
                 if(res.data.code==0){
                     this.detailInfo = res.data.data
+                    this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, res.data.data.ido_address)
+                    this.init()
                 }
             })
         },
