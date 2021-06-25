@@ -247,7 +247,7 @@ export default {
                 this.USDTContract = new this.web3.eth.Contract(USDT_TOKEN.abi, USDT_TOKEN.address)
                 this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
                 this.getDetails()
-                this.init()
+                
             }
         })
     },
@@ -262,7 +262,7 @@ export default {
             this.getUserTier()
             this.getIsOpen()
             this.getUsdtDecimails()
-            this.getAllowance()
+            
             this.getToken()
             this.getRound2start()
             this.getTokensClaimed()
@@ -278,6 +278,7 @@ export default {
                 if(res.data.code==0){
                     this.detailInfo = res.data.data
                     this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, res.data.data.ido_address)
+                    this.getAllowance(res.data.data.ido_address)
                     this.init()
                 }
             })
@@ -455,13 +456,13 @@ export default {
                 this.doPurchase()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
-                let apr1 = await this.USDTContract.methods.approve(IDO_TOKEN.address, MAX).send({ from: this.defaultAccount })
+                let apr1 = await this.USDTContract.methods.approve(this.detailInfo.ido_address, MAX).send({ from: this.defaultAccount })
                 this.isApprove = true
                 this.doPurchase()
             }
         },
-        async getAllowance () {
-            let res = await this.USDTContract.methods.allowance(this.defaultAccount, IDO_TOKEN.address).call()
+        async getAllowance (address) {
+            let res = await this.USDTContract.methods.allowance(this.defaultAccount, address).call()
             if(res){
                 this.isApprove = res > 0 ? true : false
             }

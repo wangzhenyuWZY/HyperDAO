@@ -50,7 +50,10 @@
                             <span class="statubtn">即将开始</span>
                             <div class="name">
                                 <img :src="item.logo_url">
-                                {{item.name}}
+                                <div class="time">
+                                    <p>{{item.tasks[0].begin_time}}</p>
+                                    <p>{{item.name}}</p>
+                                </div>
                             </div>
                             <div class="types">
                                 <a :href="item.url"><img src="../assets/img/icon10.png"></a>
@@ -187,7 +190,7 @@ export default {
                             this.readyItem += 1.51
                         }else if(item.status==2){
                             this.closeItem += 1.51
-                            item.progress = (item.ido_asset_collect/item.ido_asset_total*100).toFixed(2)
+                            item.progress = item.ido_asset_collect!==0?(item.ido_asset_collect/item.ido_asset_total*100).toFixed(2):0
                         }
                     })
                     this.proList = res.data.data
@@ -294,6 +297,16 @@ export default {
                 color:#fff;
                 line-height:80px;
                 margin-bottom:15px;
+                .time{
+                    display: inline-block;
+                    vertical-align: top;
+                    padding-top:10px;
+                }
+                p{
+                    font-size:24px;
+                    line-height:33px;
+                    
+                }
                 img{
                     width:80px;
                     margin-right:20px;
@@ -435,6 +448,13 @@ export default {
                     font-size:14px;
                     color:#fff;
                     line-height:34px;
+                    .time{
+                        padding-top:0;
+                        p{
+                            font-size:14px;
+                            line-height:20px;
+                        }
+                    }
                 }
                 .status{
                     font-size:10px;
