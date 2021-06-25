@@ -53,8 +53,8 @@
                         </div>
                         <div class="fr">
                             <el-button class="btn" :class="!beginPro?'disabled':''" @click="stakePop = true">参与预申购</el-button>
-                            <el-button class="btn" :class="!beginClaim?'disabled':''" :desibled="!beginClaim" @click="claimQuota">领取额度</el-button>
-                            <el-button class="btn" :class="!beginFcfs?'disabled':''" :desibled="!beginFcfs" @click="fcfsPop = true">FCFS</el-button>
+                            <el-button class="btn" :class="!beginClaim?'disabled':''" :disabled="!beginClaim" @click="claimQuota">领取额度</el-button>
+                            <el-button class="btn" :class="!beginFcfs?'disabled':''" :disabled="!beginFcfs" @click="fcfsPop = true">FCFS</el-button>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="infoItem">
                                     <h3>结束时间</h3>
-                                    <span>{{endTime}} UTC</span>
+                                    <span>{{round==1?schedule.endTime1:schedule.endTime3}} UTC</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>兑换比例</h3>
@@ -247,7 +247,7 @@ export default {
                 this.USDTContract = new this.web3.eth.Contract(USDT_TOKEN.abi, USDT_TOKEN.address)
                 this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
                 this.getDetails()
-                
+                this.init()
             }
         })
     },
@@ -259,7 +259,6 @@ export default {
     },
     methods: {
         init(){
-            
             this.getUserTier()
             this.getIsOpen()
             this.getUsdtDecimails()
@@ -588,7 +587,7 @@ export default {
                 endTime1:this.format(parseInt(endTime)*1000),
                 endTime2:this.format(parseInt(this.clearTime)*1000),
                 startTime3:this.format(parseInt(this.round2Start)*1000),
-                endTime4:this.format(parseInt(round2end)*1000)
+                endTime3:parseInt(round2end)?this.format(parseInt(round2end)*1000):'--'
             }
         },
         getDownTime(){
@@ -596,20 +595,17 @@ export default {
             now = now/1000
             this.downTime = this.endTime
             if(now>this.startDate && now<this.endTime){
-                console.log(111)
                 this.downTime = this.endTime
                 this.countTime()
                 this.isDowning = true
                 this.beginPro = true
             }else if(now>this.startDate && now<this.clearTime){
-                console.log(222)
                 this.downTime = this.clearTime
                 this.countTime()
                 this.isDowning = true
                 this.beginClaim = true
                 
             }else if(now>this.clearTime && now<this.fcfsEndTime){
-                console.log(333)
                 this.downTime = this.fcfsEndTime
                 this.countTime()
                 this.isDowning = true

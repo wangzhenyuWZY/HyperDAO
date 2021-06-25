@@ -38,7 +38,7 @@
             </div>
             <div class="stakeBtns border dobbuleBtn">
                 <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">Unstake</el-button>
-                <el-button class="btn" :class="frozen_amount==0?'desibled':''" :disabled="frozen_amount==0?true:false" @click="withdraw">Withdraw</el-button>
+                <el-button class="btn" :class="(frozen_amount!==0&&!hasWithdraw)?'desibled':''" :disabled="(frozen_amount!==0&&!hasWithdraw)?true:false" @click="withdraw">Withdraw</el-button>
             </div>
             <p class="withdrawIn">质押收益</p>
             <div class="myStake">
@@ -136,7 +136,8 @@ export default {
             isUnstake:false,
             isWithdraw:false,
             isClaimStatic:false,
-            isClaimDynamic:false
+            isClaimDynamic:false,
+            hasWithdraw:false
         }
     },
     created(){
@@ -247,7 +248,8 @@ export default {
                 this.toStake()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
-                let apr1 = await this.HDAOContract.methods.APPROVE(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                let apr1 = await this.HDAOContract.methods.approve(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                this.isApprove = true
                 this.toStake()
             }
         },
@@ -257,7 +259,7 @@ export default {
             let amount = new BigNumber(this.stakeNum)
             amount = amount.times(Math.pow(10,this.hdaDecimals))
             let inviter = this.inviter?this.inviter:TIERSYSTEM.address
-            let apr1 = await this.STAKEContract.methods.stake(amount, inviter).send({ from: this.defaultAccount })
+            let apr1 = await this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
             this.$message({
                 message: '质押成功',
                 type: 'success'
@@ -341,13 +343,13 @@ export default {
             }
         },  
         async getAllowance () {
-            let res = await this.HDAOContract.methods.ALLOWANCE(this.defaultAccount, TIERSYSTEM.address).call()
+            let res = await this.HDAOContract.methods.allowance(this.defaultAccount, TIERSYSTEM.address).call()
             if(res){
                 this.isApprove = res > 0 ? true : false
             }
         },
         async getHdaoBalance () {
-            let res = await this.HDAOContract.methods.BALANCEOF(this.defaultAccount).call()
+            let res = await this.HDAOContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
                 this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals))
@@ -389,9 +391,11 @@ export default {
             }
             // 等于0的时候不调用
             if (Number(this.hour) === 0 && Number(this.day) === 0 && Number(this.min) === 0 && Number(this.second) === 0) {
+                this.hasWithdraw = true
                 return
             } else {
             // 递归每秒调用countTime方法，显示动态时间效果,
+                this.hasWithdraw = false
                 setTimeout(this.countTime, 1000)
             }
         },　  
