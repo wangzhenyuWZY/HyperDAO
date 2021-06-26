@@ -20,8 +20,8 @@
                             </div>
                             <p class="status">Allocation</p>
                             <div class="swaprate">
-                                <p class="title">Swap Rate</p>
-                                <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
+                                <p class="title">申购价格</p>
+                                <p class="val">{{item.tasks[0].price}} USDT</p>
                             </div>
                             <div class="capaccess">
                                 <div class="swaprate">
@@ -62,8 +62,8 @@
                                 <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                             </div>
                             <div class="swaprate">
-                                <p class="title">Swap Rate</p>
-                                <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
+                                <p class="title">申购价格</p>
+                                <p class="val">{{item.tasks[0].price}} USDT</p>
                             </div>
                             <div class="capaccess">
                                 <div class="swaprate">
@@ -110,8 +110,8 @@
                                 <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                             </div>
                             <div class="swaprate">
-                                <p class="title">Swap Rate</p>
-                                <p class="val">1 USDT={{item.asset_retention_ratio}} {{item.name}}</p>
+                                <p class="title">申购价格</p>
+                                <p class="val">{{item.tasks[0].price}} USDT</p>
                             </div>
                             <div class="capaccess">
                                 <div class="swaprate">

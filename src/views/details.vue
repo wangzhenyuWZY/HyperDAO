@@ -17,7 +17,9 @@
                         </div>
                     </div>
                     <div class="allcationn" v-show="isDowning">
-                        <p class="title">Allocation Round closes in<p>
+                        <p class="title" v-show="beginPro">预申购倒计时</p>          
+                        <p class="title" v-show="beginClaim">领取额度倒计时</p>    
+                        <p class="title" v-show="isR2started">FCFS倒计时</p>                      
                         <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
                     </div>
                 </div>
@@ -37,13 +39,13 @@
                             </div>
                             <div class="textbox">
                                 <div class="texts">
-                                    <h3>Swapped</h3>
+                                    <h3>已兑换额度</h3>
                                     <p>{{round==1?userInfo.uAmount:userInfo.claimedUsdt}} USDT</p>
-                                    <p>{{round==1?userInfo.amount:userInfo.claimed}} {{detailInfo.name}}</p>
+                                    <p>{{round==1?userInfo.amount:userInfo.claimed}} {{symbol}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>剩余额度</h3>
-                                    <p>{{tokensLeft}} {{detailInfo.name}}</p>
+                                    <p>{{tokensLeft.toFixed(2)}} {{symbol}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>参与人数</h3>
@@ -52,9 +54,9 @@
                             </div>
                         </div>
                         <div class="fr">
-                            <el-button class="btn" :class="!beginPro?'disabled':''" @click="stakePop = true">参与预申购</el-button>
+                            <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">参与预申购</el-button>
                             <el-button class="btn" :class="!beginClaim?'disabled':''" :disabled="!beginClaim" @click="claimQuota">领取额度</el-button>
-                            <el-button class="btn" :class="!beginFcfs?'disabled':''" :disabled="!beginFcfs" @click="fcfsPop = true">FCFS</el-button>
+                            <el-button class="btn" :class="!isR2started?'disabled':''" :disabled="!isR2started" @click="fcfsPop = true">FCFS</el-button>
                         </div>
                     </div>
                 </div>
@@ -74,20 +76,24 @@
                                 <h4>Pool详情</h4>
                                 <div class="infoItem">
                                     <h3>开始时间</h3>
-                                    <span>{{startTime}} UTC</span>
+                                    <span v-show="beginPro">{{schedule.startTime1}} UTC</span>
+                                    <span v-show="beginClaim">{{schedule.endTime1}} UTC</span>
+                                    <span v-show="isR2started">{{schedule.startTime3}} UTC</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>结束时间</h3>
-                                    <span>{{round==1?schedule.endTime1:schedule.endTime3}} UTC</span>
+                                    <span v-show="beginPro">{{schedule.endTime1}} UTC</span>
+                                    <span v-show="beginClaim">{{schedule.endTime2}} UTC</span>
+                                    <span v-show="isR2started">{{schedule.endTime3}} UTC</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>兑换比例</h3>
-                                    <span>1USDT={{(1/price).toFixed(4)}}{{symbol}}</span>
+                                    <h3>此轮申购价格</h3>
+                                    <span>{{price}}USDT</span>
                                     <!-- <span>{{detailInfo.asset_retention_ratio}}</span> -->
                                 </div>
                                 <div class="infoItem">
                                     <h3>IDO总额</h3>
-                                    <span>{{totalVol}} USDB</span>
+                                    <span>{{totalVol}} USDT</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>参与人数</h3>
@@ -98,7 +104,7 @@
                                 <h4>Token详情</h4>
                                 <div class="infoItem">
                                     <h3>项目名称</h3>
-                                    <span>{{name}}</span>
+                                    <span>{{detailInfo.name}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>币种名称</h3>
@@ -124,17 +130,17 @@
                             </div>
                             <div class="roundBody">
                                 <div class="roundItem">
-                                    <span>Allocation</span>
+                                    <span>预申购</span>
                                     <span>{{schedule.startTime1}}</span>
                                     <span>{{schedule.endTime1}}</span>
                                 </div>
                                 <div class="roundItem">
-                                    <span>FCFS - Prepare</span>
+                                    <span>领取额度</span>
                                     <span>{{schedule.endTime1}}</span>
                                     <span>{{schedule.endTime2}}</span>
                                 </div>
                                 <div class="roundItem">
-                                    <span>FCFS - Start</span>
+                                    <span>FCFS</span>
                                     <span>{{schedule.startTime3}}</span>
                                     <span>{{schedule.endTime3}}</span>
                                 </div>
@@ -149,6 +155,7 @@
                 <i class="close" @click="stakePop=false"></i>
                 <div class="idoput">
                     <input placeholder="请输入申购数量" v-model="preNum">
+                    <span>USDT</span>
                 </div>
                 <div class="btnbox">
                     <a class="btn" @click="stakePop=false">取消</a>
@@ -161,6 +168,7 @@
                 <i class="close" @click="fcfsPop=false"></i>
                 <div class="idoput">
                     <input placeholder="请输入申购数量" v-model="fcfsNum">
+                    <span>USDT</span>
                 </div>
                 <div class="btnbox">
                     <a class="btn" @click="fcfsPop=false">取消</a>
@@ -235,7 +243,9 @@ export default {
             fcfsNum:'',
             round2Start:'',
             schedule:{},
-            userInfo:{}
+            userInfo:{},
+            isR2started:false,
+            r1Price:0
         }
     },
     created(){
@@ -293,20 +303,23 @@ export default {
             claimed = claimed.div(Math.pow(10,this.tokenDecimals))
             let claimedUsdt = claimed.times(this.price)
             this.userInfo = {
-                amount:amount,
-                uAmount:uAmount,
-                claimed:claimed,
-                claimedUsdt:claimedUsdt
+                amount:amount.toFixed(2),
+                uAmount:uAmount.toFixed(2),
+                claimed:claimed.toFixed(2),
+                claimedUsdt:claimedUsdt.toFixed(2)
             }
+            let isR2started = await this.IDOContract.methods.isR2started().call()
+            this.isR2started = isR2started
         },
         async R2purchase(){
             this.fcfsPop = false
             let preNum = new BigNumber(this.fcfsNum)
-            // preNum = preNum.times(this.price)
+            preNum = preNum.div(this.price)
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let R2ForSale = await this.IDOContract.methods.R2ForSale().call()
+            
             R2ForSale = new BigNumber(R2ForSale)
             R2ForSale = R2ForSale.div(Math.pow(10,this.tokenDecimals))
             let quota = 0
@@ -321,13 +334,6 @@ export default {
             }
             
             if(!isR2started){
-                this.$message({
-                    message: '第二轮尚未开启',
-                    type: 'warning'
-                }) 
-                return
-            }
-            if(!isR2begin){
                 this.$message({
                     message: '第二轮尚未开启',
                     type: 'warning'
@@ -357,7 +363,7 @@ export default {
             }
             // quota = new BigNumber(quota)
             // quota = quota.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
+            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed(0)).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
                     message: '抢购成功',
@@ -441,9 +447,9 @@ export default {
         async doPurchase(){
             this.stakePop = false
             let preNum = new BigNumber(this.preNum)
-            // preNum = preNum.times(this.price)
+            preNum = preNum.div(this.price)
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.preAlloc(preNum.toFixed()).send({ from: this.defaultAccount })
+            let res = await this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
                     message: '申购成功',
@@ -521,7 +527,8 @@ export default {
             let res = await this.IDOContract.methods.price().call()
             if(res){
                 this.price = parseInt(res)/10000
-                this.totalVol = this.claimedNum.times(this.price)
+                this.r1Price = parseInt(res)/10000
+                this.totalVol = this.claimedNum.times(this.price).toFixed(2)
             }
         },
         async getPrice2(){
@@ -530,7 +537,7 @@ export default {
                 this.price = parseInt(res)/10000
                 let numPrice1 = this.claimedNum.times(this.price)
                 let numPrice2 = this.r2boughtNum.times(this.price)
-                this.totalVol = numPrice1.plus(numPrice2)
+                this.totalVol = numPrice1.plus(numPrice2).toFixed(2)
             }
         },
         async getTokensLeft(){
@@ -567,7 +574,7 @@ export default {
             let res = await this.USDTContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
-                this.usdtBalance = balance.div(Math.pow(10,this.usdtDecimals))
+                this.usdtBalance = balance.div(Math.pow(10,this.usdtDecimals)).toFixed(2)
             }
         },
         async getStartTime(){
@@ -577,6 +584,7 @@ export default {
                 this.startDate = res
                 this.startTime = this.format(parseInt(res)*1000)
             }
+            this.fcfsEndTime = round2end
             let duration = await this.IDOContract.methods.duration().call()
             let endTime = parseInt(res)+parseInt(duration)
             this.endTime = endTime//第一轮结束时间
@@ -708,11 +716,21 @@ export default {
             overflow:hidden;
             margin:140px auto 0;
             border-radius:10px;
+            position:relative;
             &:nth-child(3){
                 margin-top:20px;
                 input{
                     width:100%;
                 }
+            }
+            span{
+                position:absolute;
+                right:0;
+                top:0;
+                font-size:24px;
+                line-height:80px;
+                color:#333;
+                padding-right:20px;
             }
             input{
                 width:90%;
@@ -994,6 +1012,11 @@ export default {
                 margin:80px auto 0;
                 &:nth-child(3){
                     margin-top:20px;
+                }
+                span{
+                    font-size:16px;
+                    line-height:40px;
+                    padding-right:10px;
                 }
                 input{
                     width:90%;
