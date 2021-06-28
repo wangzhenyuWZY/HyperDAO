@@ -2,7 +2,7 @@
     <div class="container">
         <Header></Header>
         <div class="projectContainer">
-            <div class="projectPanel">
+            <div class="projectPanel doing">
                 <h2>正在进行的项目</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
@@ -10,7 +10,9 @@
                             <span class="statubtn">项目进行中</span>
                             <div class="name">
                                 <img :src="item.logo_url">
-                                {{item.name}}
+                                <div class="time">
+                                    <p>{{item.name}}</p>
+                                </div>
                             </div>
                             <div class="types">
                                 <a :href="item.url"><img src="../assets/img/icon10.png"></a>
@@ -101,7 +103,9 @@
                             <span class="statubtn">已结束</span>
                             <div class="name">
                                 <img :src="item.logo_url">
-                                {{item.name}}
+                                <div class="time">
+                                    <p>{{item.name}}</p>
+                                </div>
                             </div>
                             <div class="types">
                                 <a :href="item.url"><img src="../assets/img/icon10.png"></a>
@@ -218,6 +222,18 @@ export default {
             }
         }
     }
+    &.doing{
+        .projectList{
+            li{
+                .time{
+                    p{
+                        font-size:30px;
+                        padding-top:15px;
+                    }
+                }
+            }
+        }
+    }
     &.over{
         color:#DADADA;
         h2{
@@ -238,6 +254,12 @@ export default {
                 .progress{
                     .title{
                         color:#DADADA;
+                    }
+                }
+                .time{
+                    p{
+                        font-size:30px;
+                        padding-top:15px;
                     }
                 }
             }
@@ -264,7 +286,7 @@ export default {
             width:420px;
             height:680px;
             border-radius:20px;
-            margin:0 15px;
+            margin:0 15px 15px;
             padding:35px;
             box-sizing:border-box;
             text-align:left;
@@ -396,6 +418,18 @@ export default {
     }
     .projectPanel{
         overflow:hidden;
+        &.doing{
+            .projectList{
+                li{
+                    .time{
+                        p{
+                            font-size:30px;
+                            padding-top:7px;
+                        }
+                    }
+                }
+            }
+        }
         h2{
             padding:32px 0 10px;
             font-size:16px;

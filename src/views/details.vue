@@ -19,7 +19,7 @@
                     <div class="allcationn" v-show="isDowning">
                         <p class="title" v-show="beginPro">预申购倒计时</p>          
                         <p class="title" v-show="beginClaim">领取额度倒计时</p>    
-                        <p class="title" v-show="isR2started">FCFS倒计时</p>                      
+                        <p class="title" v-show="beginFcfs">FCFS倒计时</p>                      
                         <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
                             <div class="textbox">
                                 <div class="texts">
                                     <h3>已兑换额度</h3>
-                                    <p>{{round==1?userInfo.uAmount:userInfo.claimedUsdt}} USDT</p>
-                                    <p>{{round==1?userInfo.amount:userInfo.claimed}} {{symbol}}</p>
+                                    <p>{{round==1?userInfo.uAmount:userInfo2.uAmount}} USDT</p>
+                                    <p>{{round==1?userInfo.amount:userInfo2.amount}} {{symbol}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>剩余额度</h3>
@@ -54,9 +54,15 @@
                             </div>
                         </div>
                         <div class="fr">
+                            <div class="allcationn" v-show="isDowning">
+                                <p class="title" v-show="beginPro">预申购倒计时</p>          
+                                <p class="title" v-show="beginClaim">领取额度倒计时</p>    
+                                <p class="title" v-show="beginFcfs">FCFS倒计时</p>                      
+                                <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
+                            </div>
                             <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">参与预申购</el-button>
                             <el-button class="btn" :class="!beginClaim?'disabled':''" :disabled="!beginClaim" @click="claimQuota">领取额度</el-button>
-                            <el-button class="btn" :class="!isR2started?'disabled':''" :disabled="!isR2started" @click="fcfsPop = true">FCFS</el-button>
+                            <el-button class="btn" :class="!beginFcfs?'disabled':''" :disabled="!beginFcfs" @click="fcfsPop = true">FCFS</el-button>
                         </div>
                     </div>
                 </div>
@@ -78,13 +84,13 @@
                                     <h3>开始时间</h3>
                                     <span v-show="beginPro">{{schedule.startTime1}} UTC</span>
                                     <span v-show="beginClaim">{{schedule.endTime1}} UTC</span>
-                                    <span v-show="isR2started">{{schedule.startTime3}} UTC</span>
+                                    <span v-show="beginFcfs">{{schedule.startTime3}} UTC</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>结束时间</h3>
                                     <span v-show="beginPro">{{schedule.endTime1}} UTC</span>
                                     <span v-show="beginClaim">{{schedule.endTime2}} UTC</span>
-                                    <span v-show="isR2started">{{schedule.endTime3}} UTC</span>
+                                    <span v-show="beginFcfs">{{schedule.endTime3}} UTC</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>此轮申购价格</h3>
@@ -158,8 +164,8 @@
                     <span>USDT</span>
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="stakePop=false">取消</a>
-                    <a class="btn" @click="checkPurchase">确认</a>
+                    <el-button class="btn" @click="stakePop=false">取消</el-button>
+                    <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkPurchase">{{isApprove?'确认':'授权'}}</el-button>
                 </div>
             </div>
         </div>
@@ -171,8 +177,8 @@
                     <span>USDT</span>
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="fcfsPop=false">取消</a>
-                    <a class="btn" @click="R2purchase">确认</a>
+                    <el-button class="btn" @click="fcfsPop=false">取消</el-button>
+                    <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkApprove">{{isApprove?'确认':'授权'}}</el-button>
                 </div>
             </div>
         </div>
@@ -244,8 +250,10 @@ export default {
             round2Start:'',
             schedule:{},
             userInfo:{},
+            userInfo2:{},
             isR2started:false,
-            r1Price:0
+            r1Price:0,
+            isBuying:false
         }
     },
     created(){
@@ -269,14 +277,16 @@ export default {
     },
     methods: {
         init(){
+            this.getPrice()
+            this.getPrice2()
             this.getUserTier()
             this.getIsOpen()
             this.getUsdtDecimails()
             
             this.getToken()
             this.getRound2start()
-            this.getTokensClaimed()
-            this.getR2bought()
+            
+            
             this.getTiers()
             this.web3.eth.getBalance(this.defaultAccount).then(res=>{
                 let balance = new BigNumber(res)
@@ -301,7 +311,9 @@ export default {
             uAmount = uAmount.div(Math.pow(10,this.usdtDecimals))
             let claimed = new BigNumber(userInfo.claimed)
             claimed = claimed.div(Math.pow(10,this.tokenDecimals))
-            let claimedUsdt = claimed.times(this.price)
+            let price = await this.IDOContract.methods.price().call()
+            price = parseInt(price)/10000
+            let claimedUsdt = claimed.times(price)
             this.userInfo = {
                 amount:amount.toFixed(2),
                 uAmount:uAmount.toFixed(2),
@@ -310,6 +322,27 @@ export default {
             }
             let isR2started = await this.IDOContract.methods.isR2started().call()
             this.isR2started = isR2started
+            let userInfo2 = await this.IDOContract.methods.userInfo2(this.defaultAccount).call() 
+            let amount2 = new BigNumber(userInfo2.amount_purchased);
+            amount2 = amount2.div(Math.pow(10,this.tokenDecimals))
+            let uAmount2 = new BigNumber(userInfo2.u_paid)
+            uAmount2 = uAmount2.div(Math.pow(10,this.usdtDecimals))
+            this.userInfo2 = {
+                amount:amount2.plus(claimed).toFixed(2),
+                uAmount:uAmount2.plus(claimedUsdt).toFixed(2)
+            }
+            console.log(userInfo2)
+        },
+        async checkApprove(){
+            this.isBuying = true
+            if(this.isApprove){
+                this.R2purchase()
+            }else{
+                const MAX = this.web3.utils.toTwosComplement(-1)
+                let apr1 = await this.USDTContract.methods.approve(this.detailInfo.ido_address, MAX).send({ from: this.defaultAccount })
+                this.isApprove = true
+                this.isBuying = false
+            }
         },
         async R2purchase(){
             this.fcfsPop = false
@@ -403,6 +436,14 @@ export default {
             if(res){
                 let claimedNum = new BigNumber(res)
                 this.claimedNum = claimedNum.div(Math.pow(10,this.tokenDecimals))
+                if(this.round==1){
+                    this.totalVol = this.claimedNum.times(this.r1Price).toFixed(2)
+                }else{
+                    let numPrice1 = this.claimedNum.times(this.r1Price)
+                    let numPrice2 = this.r2boughtNum.times(this.price)
+                    this.totalVol = numPrice1.plus(numPrice2).toFixed(2)
+                }
+                
             }
         },
         //第二轮已售出的数量
@@ -411,6 +452,7 @@ export default {
             if(res){
                 let claimedNum = new BigNumber(res)
                 this.r2boughtNum = claimedNum.div(Math.pow(10,this.tokenDecimals))
+                this.getTokensClaimed()
             }
         },
         checkPurchase(){
@@ -456,15 +498,17 @@ export default {
                     type: 'success'
                 })
             }
+            this.isBuying = false
         },
         async toPreAlloc(){
+            this.isBuying = true
             if(this.isApprove){
                 this.doPurchase()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
                 let apr1 = await this.USDTContract.methods.approve(this.detailInfo.ido_address, MAX).send({ from: this.defaultAccount })
                 this.isApprove = true
-                this.doPurchase()
+                this.isBuying = false
             }
         },
         async getAllowance (address) {
@@ -495,11 +539,9 @@ export default {
             }
         },  
         async getTiers(){
-            for(var i=1;i<=4;i++){
-                let res = await this.IDOContract.methods.tier_n(i).call()
-                if(res){
-                    this.tiersNum += parseInt(res)
-                }
+            let res = await this.IDOContract.methods.participants().call()
+            if(res){
+                this.tiersNum = parseInt(res)
             }
         },
         async getRound2start(){
@@ -511,15 +553,14 @@ export default {
                 this.round2Start = res
                 if (leftTime >= 0) {
                     this.round = 1
-                    this.getStartTime()
-                    this.getPrice()
+                    this.getTokensClaimed()
                 }else{
                     this.round = 2
                     this.startDate = res
                     this.startTime = this.format(parseInt(res)*1000)
-                    this.getStartTime()
-                    this.getPrice2()
+                    this.getR2bought()
                 }
+                this.getStartTime()
             }
             await this.getUserInfo()
         },
@@ -528,16 +569,14 @@ export default {
             if(res){
                 this.price = parseInt(res)/10000
                 this.r1Price = parseInt(res)/10000
-                this.totalVol = this.claimedNum.times(this.price).toFixed(2)
+                
             }
         },
         async getPrice2(){
             let res = await this.IDOContract.methods.price2().call()
             if(res){
                 this.price = parseInt(res)/10000
-                let numPrice1 = this.claimedNum.times(this.price)
-                let numPrice2 = this.r2boughtNum.times(this.price)
-                this.totalVol = numPrice1.plus(numPrice2).toFixed(2)
+                
             }
         },
         async getTokensLeft(){
@@ -579,11 +618,13 @@ export default {
         },
         async getStartTime(){
             let res = await this.IDOContract.methods.startTime().call()
+            let round2start = await this.IDOContract.methods.round2start().call()
             let round2end = await this.IDOContract.methods.round2end().call()//第二轮结束时间
             if(res){
                 this.startDate = res
                 this.startTime = this.format(parseInt(res)*1000)
             }
+            this.round2Start = round2start
             this.fcfsEndTime = round2end
             let duration = await this.IDOContract.methods.duration().call()
             let endTime = parseInt(res)+parseInt(duration)
@@ -614,12 +655,15 @@ export default {
                 this.isDowning = true
                 this.beginClaim = true
                 
-            }else if(now>this.clearTime && now<this.fcfsEndTime){
+            }else if(now>this.clearTime && now<this.round2start){
+                this.downTime = this.fcfsEndTime
+                this.countTime()
+                
+            }else if(now>this.round2Start && now<this.fcfsEndTime){
                 this.downTime = this.fcfsEndTime
                 this.countTime()
                 this.isDowning = true
-                this.beginFcfs = true
-                
+                this.beginFcfs = true 
             }
         },
         async getName(){
@@ -765,7 +809,6 @@ export default {
             display:block;
             width:250px;
             height:80px;
-            line-height:80px;
             box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
             background:#874FEC;
             border-radius:10px;
@@ -794,6 +837,8 @@ export default {
                     width:115px;
                     height:115px;
                     vertical-align: middle;
+                    border:1px solid #333;
+                    border-radius:50%;
                 }
                 .nameContect{
                     display:inline-block;
@@ -880,9 +925,12 @@ export default {
                             background:#EDD9FF;
                             cursor:initial;
                         }
-                        &:first-child{
+                        &:nth-child(2){
                             margin-left:10px;
                         }
+                    }
+                    .allcationn{
+                        display:none;
                     }
                 }
             }
@@ -1039,7 +1087,6 @@ export default {
                 .btn{
                     width:140px;
                     height:40px;
-                    line-height:40px;
                     font-size:16px;
 
                 }
@@ -1052,6 +1099,7 @@ export default {
         .projectDetail{
             .nameInfo{
                 padding:60px 0 50px;
+                width:auto;
                 .projectName{
                     &>img{
                         width:48px;
@@ -1073,6 +1121,7 @@ export default {
                     }
                 }
                 .allcationn{
+                    display:none !important;
                     padding-top:16px;
                     .title{
                         font-size:10px;
@@ -1123,6 +1172,22 @@ export default {
                             margin:0 auto 26px;
                             &:first-child{
                                 margin-left:auto;
+                            }
+                        }
+                        .allcationn{
+                            display:block;
+                            margin-bottom:20px;
+                            text-align:center;
+                            .title{
+                                font-size:18px;
+                                color:#999999;
+                                line-height:26px;
+                            }
+                            .val{
+                                font-size:18px;
+                                color:#333333;
+                                line-height:26px;
+                                font-weight:bold;
                             }
                         }
                     }
