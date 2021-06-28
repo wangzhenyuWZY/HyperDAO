@@ -70,8 +70,8 @@
                     <input placeholder="请输入邀请人" v-model="inviter">
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="popShow=false">取消</a>
-                    <a class="btn" @click="checkApproved">确认</a>
+                    <el-button class="btn" @click="popShow=false">取消</el-button>
+                    <el-button :loading="isDoing" :disabled="isDoing" class="btn" @click="checkApproved">{{isApprove?'确认':'授权'}}</el-button>
                 </div>
             </div>
         </div>
@@ -83,8 +83,8 @@
                     <p>{{stake_amount}}<span>/ HDAO</span></p>
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="unstakePop=false">取消</a>
-                    <a class="btn" @click="checkUnstake">确认</a>
+                    <el-button class="btn" @click="unstakePop=false">取消</el-button>
+                    <el-button class="btn" @click="checkUnstake">确认</el-button>
                 </div>
             </div>
         </div>
@@ -137,7 +137,8 @@ export default {
             isWithdraw:false,
             isClaimStatic:false,
             isClaimDynamic:false,
-            hasWithdraw:false
+            hasWithdraw:false,
+            isDoing:false
         }
     },
     created(){
@@ -244,13 +245,14 @@ export default {
                 })
                 return
             }
+            this.isDoing = true
             if(this.isApprove){
                 this.toStake()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
                 let apr1 = await this.HDAOContract.methods.approve(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
                 this.isApprove = true
-                this.toStake()
+                this.isDoing = false
             }
         },
         async toStake(){
@@ -265,6 +267,7 @@ export default {
                 type: 'success'
             })
             this.isStaking = false
+            this.isDoing = false
         },
         async getStaticRewards(){
             this.isClaimStatic = true
@@ -476,7 +479,6 @@ export default {
             display:block;
             width:250px;
             height:80px;
-            line-height:80px;
             box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
             background:#874FEC;
             border-radius:10px;
@@ -690,7 +692,6 @@ export default {
                 .btn{
                     width:140px;
                     height:40px;
-                    line-height:40px;
                     font-size:16px;
 
                 }

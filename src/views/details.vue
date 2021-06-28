@@ -82,19 +82,19 @@
                                 <h4>Pool详情</h4>
                                 <div class="infoItem">
                                     <h3>开始时间</h3>
-                                    <span v-show="beginPro">{{schedule.startTime1}} UTC</span>
-                                    <span v-show="beginClaim">{{schedule.endTime1}} UTC</span>
-                                    <span v-show="beginFcfs">{{schedule.startTime3}} UTC</span>
+                                    <span v-show="beginPro">{{schedule.startTime1}} (UTC+8)</span>
+                                    <span v-show="beginClaim">{{schedule.endTime1}} (UTC+8)</span>
+                                    <span v-show="beginFcfs">{{schedule.startTime3}} (UTC+8)</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>结束时间</h3>
-                                    <span v-show="beginPro">{{schedule.endTime1}} UTC</span>
-                                    <span v-show="beginClaim">{{schedule.endTime2}} UTC</span>
-                                    <span v-show="beginFcfs">{{schedule.endTime3}} UTC</span>
+                                    <span v-show="beginPro">{{schedule.endTime1}} (UTC+8)</span>
+                                    <span v-show="beginClaim">{{schedule.endTime2}} (UTC+8)</span>
+                                    <span v-show="beginFcfs">{{schedule.endTime3}} (UTC+8)</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>此轮申购价格</h3>
-                                    <span>{{price}}USDT</span>
+                                    <span>{{round==1?r1Price:price}}USDT</span>
                                     <!-- <span>{{detailInfo.asset_retention_ratio}}</span> -->
                                 </div>
                                 <div class="infoItem">
@@ -137,18 +137,18 @@
                             <div class="roundBody">
                                 <div class="roundItem">
                                     <span>预申购</span>
-                                    <span>{{schedule.startTime1}}</span>
-                                    <span>{{schedule.endTime1}}</span>
+                                    <span>{{schedule.startTime1}}(UTC+8)</span>
+                                    <span>{{schedule.endTime1}}(UTC+8)</span>
                                 </div>
                                 <div class="roundItem">
                                     <span>领取额度</span>
-                                    <span>{{schedule.endTime1}}</span>
-                                    <span>{{schedule.endTime2}}</span>
+                                    <span>{{schedule.endTime1}}(UTC+8)</span>
+                                    <span>{{schedule.endTime2}}(UTC+8)</span>
                                 </div>
                                 <div class="roundItem">
                                     <span>FCFS</span>
-                                    <span>{{schedule.startTime3}}</span>
-                                    <span>{{schedule.endTime3}}</span>
+                                    <span>{{schedule.startTime3}}(UTC+8)</span>
+                                    <span>{{schedule.endTime3}}(UTC+8)</span>
                                 </div>
                             </div>
                         </div>
@@ -265,7 +265,6 @@ export default {
                 this.USDTContract = new this.web3.eth.Contract(USDT_TOKEN.abi, USDT_TOKEN.address)
                 this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
                 this.getDetails()
-                
             }
         })
     },
@@ -282,11 +281,8 @@ export default {
             this.getUserTier()
             this.getIsOpen()
             this.getUsdtDecimails()
-            
             this.getToken()
             this.getRound2start()
-            
-            
             this.getTiers()
             this.web3.eth.getBalance(this.defaultAccount).then(res=>{
                 let balance = new BigNumber(res)
@@ -489,7 +485,7 @@ export default {
         async doPurchase(){
             this.stakePop = false
             let preNum = new BigNumber(this.preNum)
-            preNum = preNum.div(this.price)
+            preNum = preNum.div(this.r1Price)
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
             let res = await this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
             if(res){
@@ -656,9 +652,8 @@ export default {
                 this.beginClaim = true
                 
             }else if(now>this.clearTime && now<this.round2start){
-                this.downTime = this.fcfsEndTime
-                this.countTime()
-                
+                this.isDowning = false
+                this.beginFcfs = true 
             }else if(now>this.round2Start && now<this.fcfsEndTime){
                 this.downTime = this.fcfsEndTime
                 this.countTime()
