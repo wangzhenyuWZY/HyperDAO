@@ -39,6 +39,7 @@
     "less-loader": "^5.0.0",
     "postcss-loader": "^3.0.0",
     "vant": "^2.2.9",
+    "vue-i18n": "^8.24.5",
     "vue-router": "^3.0.6",
     "vue-template-compiler": "^2.5.21",
     "vuex": "^3.1.0"

@@ -21,9 +21,21 @@ Vue.mixin(mixin);
 import initWeb3 from './utils/hecoFn'
 Vue.prototype.$initWeb3 = initWeb3
 Vue.config.productionTip = false;
+import VueI18n from 'vue-i18n'
+Vue.use(VueI18n)
+const i18n = new VueI18n({ 
+  locale: 'zh', 
+  messages: {
+    'zh': require('./lang/cn'), 
+    'en': require('./lang/en')
+  }
+})
+
 
 new Vue({
+  el: '#app',
+  i18n,
   store,
   router,
   render: h => h(App)
-}).$mount("#app");
+});

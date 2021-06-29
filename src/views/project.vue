@@ -3,11 +3,11 @@
         <Header></Header>
         <div class="projectContainer">
             <div class="projectPanel doing">
-                <h2>正在进行的项目</h2>
+                <h2>{{$t('lang.lang26')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
                         <li v-for="(item,index) in proList" :key="index" v-if="item.status==1">
-                            <span class="statubtn">项目进行中</span>
+                            <span class="statubtn">{{$t('lang.lang109')}}</span>
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
@@ -22,21 +22,21 @@
                             </div>
                             <p class="status">Allocation</p>
                             <div class="swaprate">
-                                <p class="title">申购价格</p>
+                                <p class="title">{{$t('lang.lang29')}}</p>
                                 <p class="val">{{item.tasks[0].price}} USDT</p>
                             </div>
                             <div class="capaccess">
                                 <div class="swaprate">
-                                    <p class="title">Cap</p>
+                                    <p class="title">{{$t('lang.lang30')}}</p>
                                     <p class="val">{{item.ido_asset_total}} USDT</p>
                                 </div>
                                 <div class="swaprate">
-                                    <p class="title">Access</p>
-                                    <p class="val">Private</p>
+                                    <p class="title">{{$t('lang.lang31')}}</p>
+                                    <p class="val">{{$t('lang.lang32')}}</p>
                                 </div>
                             </div>
                             <div class="swaprate">
-                                <p class="title">participants</p>
+                                <p class="title">{{$t('lang.lang33')}}</p>
                                 <p class="val">{{item.participate_number}}</p>
                             </div>
                             <router-link :to="{path:'/details',query: {id: item.id}}" class="detailbtn">Details</router-link>
@@ -45,11 +45,11 @@
                 </div>
             </div>
             <div class="projectPanel ready">
-                <h2>即将开始的项目</h2>
+                <h2>{{$t('lang.lang27')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+readyItem+'rem'">
                         <li v-for="(item,index) in proList" :key="index" v-if="item.status==0">
-                            <span class="statubtn">即将开始</span>
+                            <span class="statubtn">{{$t('lang.lang110')}}</span>
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
@@ -64,25 +64,25 @@
                                 <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                             </div>
                             <div class="swaprate">
-                                <p class="title">申购价格</p>
+                                <p class="title">{{$t('lang.lang29')}}</p>
                                 <p class="val">{{item.tasks[0].price}} USDT</p>
                             </div>
                             <div class="capaccess">
                                 <div class="swaprate">
-                                    <p class="title">Cap</p>
+                                    <p class="title">{{$t('lang.lang30')}}</p>
                                     <p class="val">{{item.ido_asset_total}} USDT</p>
                                 </div>
                                 <div class="swaprate">
-                                    <p class="title">Access</p>
-                                    <p class="val">Private</p>
+                                    <p class="title">{{$t('lang.lang31')}}</p>
+                                    <p class="val">{{$t('lang.lang32')}}</p>
                                 </div>
                             </div>
                             <div class="swaprate">
-                                <p class="title">participants</p>
+                                <p class="title">{{$t('lang.lang33')}}</p>
                                 <p class="val">{{item.participate_number}}</p>
                             </div>
                             <div class="progress">
-                                <p class="title">progress</p>
+                                <p class="title">{{$t('lang.lang34')}}</p>
                                 <div class="all">
                                     <span></span>
                                 </div>
@@ -96,11 +96,11 @@
                 </div>    
             </div>
             <div class="projectPanel over">
-                <h2>已经结束的项目</h2>
+                <h2>{{$t('lang.lang28')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+closeItem+'rem'" >
                         <li v-for="(item,index) in proList" :key="index" v-if="item.status==2">
-                            <span class="statubtn">已结束</span>
+                            <span class="statubtn">{{$t('lang.lang111')}}</span>
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
@@ -114,25 +114,25 @@
                                 <a :href="item.telegram_account"><img src="../assets/img/telegram.png"></a>
                             </div>
                             <div class="swaprate">
-                                <p class="title">申购价格</p>
+                                <p class="title">{{$t('lang.lang29')}}</p>
                                 <p class="val">{{item.tasks[0].price}} USDT</p>
                             </div>
                             <div class="capaccess">
                                 <div class="swaprate">
-                                    <p class="title">Cap</p>
+                                    <p class="title">{{$t('lang.lang30')}}</p>
                                     <p class="val">{{item.ido_asset_total}} USDT</p>
                                 </div>
                                 <div class="swaprate">
-                                    <p class="title">Access</p>
-                                    <p class="val">Private</p>
+                                    <p class="title">{{$t('lang.lang31')}}</p>
+                                    <p class="val">{{$t('lang.lang32')}}</p>
                                 </div>
                             </div>
                             <div class="swaprate">
-                                <p class="title">participants</p>
+                                <p class="title">{{$t('lang.lang33')}}</p>
                                 <p class="val">{{item.participate_number}}</p>
                             </div>
                             <div class="progress">
-                                <p class="title">progress</p>
+                                <p class="title">{{$t('lang.lang34')}}</p>
                                 <div class="all">
                                     <span></span>
                                 </div>
@@ -185,7 +185,7 @@ export default {
     },
     methods: {
         getList(){
-            axios.get(process.env.VUE_APP_URL+"hdaos").then((res)=>{
+            axios.get(process.env.VUE_APP_URL+"hdaos?scan=2").then((res)=>{
                 if(res.data.code==0){
                     res.data.data.forEach((item,index)=>{
                         if(item.status==1){
@@ -193,7 +193,7 @@ export default {
                         }else if(item.status==0){
                             this.readyItem += 1.51
                         }else if(item.status==2){
-                            this.closeItem += 1.51
+                            this.closeItem += 1.54
                             item.progress = item.ido_asset_collect!==0?(item.ido_asset_collect/item.ido_asset_total*100).toFixed(2):0
                         }
                     })
@@ -465,7 +465,7 @@ export default {
                     width:80px;
                     height:30px;
                     border-radius: 0px 10px 0px 10px;
-                    font-size:10px;
+                    font-size:14px;
                     line-height:30px;
                 }
                 .types{
@@ -497,11 +497,11 @@ export default {
                 .swaprate{
                     padding-top:14px;
                     .title{
-                        font-size:10px;
+                        font-size:14px;
                         line-height:14px;
                     }
                     .val{
-                        font-size:10px;
+                        font-size:14px;
                         line-height:14px; 
                     }
                 }
@@ -522,7 +522,7 @@ export default {
                 .progress{
                     margin-top:19px;
                     .title{
-                        font-size:10px;
+                        font-size:14px;
                         line-height:14px;
                         padding-bottom:5px;
                         margin-bottom:0;
@@ -534,7 +534,7 @@ export default {
                     .info{
                         padding-top:5px;
                         span{
-                           font-size:10px;
+                           font-size:14px;
                            line-height:14px; 
                         }
                     }

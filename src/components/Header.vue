@@ -6,48 +6,48 @@
         <i class="navIco" @click="drawer=true"></i>
         <ul class="navList clearfix">
             <li class="navItem" :class="active==0?'active':''">
-                <router-link to="/">首页</router-link>
+                <router-link to="/">{{$t('lang.lang83')}}</router-link>
             </li>
             <li class="navItem" :class="active==1?'active':''">
-                <router-link to="project">项目</router-link>
+                <router-link to="project">{{$t('lang.lang84')}}</router-link>
             </li>
             <li class="navItem" :class="active==2?'active':''">
-                <router-link to="stake">质押</router-link>
+                <router-link to="stake">{{$t('lang.lang85')}}</router-link>
             </li>
             <li class="navItem" :class="active==3?'active':''">
-                <router-link to="vote">治理</router-link>
+                <router-link to="vote">{{$t('lang.lang86')}}</router-link>
             </li>
             <li class="navItem" :class="active==4?'active':''">
-                <router-link to="chain">跨链通道</router-link>
+                <router-link to="chain">{{$t('lang.lang87')}}</router-link>
             </li>
         </ul>
         <div class="utils clearfix">
-            <a class="wallet">{{defaultAccount?defaultAccount:'我的钱包'}}</a>
+            <a class="wallet">{{defaultAccount?defaultAccount:$t('lang.lang126')}}</a>
             <i class="data" @click="toDatepiker"></i>
-            <i class="language"></i>
+            <i class="language" @click="toggleLang"></i>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
             <ul class="mobelNavlist">
                 <li :class="active==0?'active':''">
-                    <router-link to="/" class="menutitle">首页</router-link>
+                    <router-link to="/" class="menutitle">{{$t('lang.lang83')}}</router-link>
                 </li>
                 <li :class="active==1?'active':''">
-                    <router-link to="project" class="menutitle">项目</router-link>
+                    <router-link to="project" class="menutitle">{{$t('lang.lang84')}}</router-link>
                 </li>
                 <li :class="active==2?'active':''">
-                    <router-link to="stake" class="menutitle">质押</router-link>
+                    <router-link to="stake" class="menutitle">{{$t('lang.lang85')}}</router-link>
                 </li>
                 <li :class="active==3?'active':''">
-                    <router-link to="vote" class="menutitle">治理</router-link>
+                    <router-link to="vote" class="menutitle">{{$t('lang.lang86')}}</router-link>
                 </li>
                 <li :class="active==4?'active':''">
-                    <router-link to="chain" class="menutitle">跨链通道</router-link>
+                    <router-link to="chain" class="menutitle">{{$t('lang.lang87')}}</router-link>
                 </li>
             </ul>
             <div class="otherLink">
-                <p>{{defaultAccount?defaultAccount:'我的钱包'}}</p>
-                <p @click="toDatepiker">日历</p>
-                <p>切换语言</p>
+                <p>{{defaultAccount?defaultAccount:$t('lang.lang126')}}</p>
+                <p @click="toDatepiker">{{$t('lang.lang124')}}</p>
+                <p @click="toggleLang">{{$t('lang.lang125')}}</p>
             </div>
         </el-drawer>
         <Datepiker v-show="isDate"></Datepiker>
@@ -112,7 +112,10 @@
             },
             toDatepiker(){
                 this.isDate = !this.isDate
-            }   
+            },
+            toggleLang () {
+                this.$i18n.locale = this.$i18n.locale === 'en' ? 'cn' : 'en'
+            },   
         }
     }
     </script>

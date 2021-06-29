@@ -6,68 +6,67 @@
             <img src="../assets/img/mImg/mImg1.png" width="100%">
         </div>
         <div class="btnsbar">
-            <a class="btn">购买HDAO</a>
-            <a class="btn">申请上线IDO</a>
+            <router-link to="/project" class="btn">{{$t('lang.lang1')}}</router-link>
+            <router-link to="/" class="btn">{{$t('lang.lang2')}}</router-link>
         </div>
         <div class="hdaoinfo">
-            <h2>平台简介</h2>
-            <p class="infotext1">HyperDAO是一个基于Polygon网络（原MATIC）的去中心化IDO平台，赋予加密货币项目分发代币和提高流动性的能力，以包容性和低进入门槛的方式激励和奖励所有代币持有者。</p>
-            <p class="infotext2">用户可以质押HDAO到智能合约来换取HyperDAO会员资格，条件达标后，会员权益立即生效，同时质押也会产生相应挖矿收益，会员可随时赎回质押的HDAO。</p>
-            <p class="infotext3">HyperDAO会员分为青铜、白银、黄金、铂金四个等级，不同等级的会员需要质押的HDAO数量不一样，享受的权益也不一样，权益包括优先认购权、更高的认购权重等。</p>
+            <h2>{{$t('lang.lang3')}}</h2>
+            <p class="infotext1">{{$t('lang.lang4')}}</p>
+            <p class="infotext2">{{$t('lang.lang5')}}</p>
+            <p class="infotext3">{{$t('lang.lang6')}}</p>
         </div>
         <div class="projectlist">
             <div class="projectItem">
-                <h2>Bronze</h2>
-                <p class="title">质押要求</p>
+                <h2>{{$t('lang.lang7')}}</h2>
+                <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">10000HDAO</p>
-                <p class="title">优先认购权</p>
+                <p class="title">{{$t('lang.lang12')}}</p>
                 <p class="val">YES</p>
-                <p class="title mt200">权重值</p>
+                <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">10</p>
             </div>
             <div class="projectItem">
-                <h2>Silver</h2>
-                <p class="title">质押要求</p>
+                <h2>{{$t('lang.lang8')}}</h2>
+                <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">100000HDAO</p>
-                <p class="title">优先认购权</p>
+                <p class="title">{{$t('lang.lang12')}}</p>
                 <p class="val">YES</p>
-                <p class="title mt200">权重值</p>
+                <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">145</p>
             </div>
             <div class="projectItem">
-                <h2>Gold</h2>
-                <p class="title">质押要求</p>
+                <h2>{{$t('lang.lang9')}}</h2>
+                <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">500000HDAO</p>
-                <p class="title">优先认购权</p>
+                <p class="title">{{$t('lang.lang12')}}</p>
                 <p class="val">YES</p>
-                <p class="title mt200">权重值</p>
+                <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">925</p>
             </div>
             <div class="projectItem">
-                <h2>Platinum</h2>
-                <p class="title">质押要求</p>
+                <h2>{{$t('lang.lang10')}}</h2>
+                <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">1000000HDAO</p>
-                <p class="title">优先认购权</p>
+                <p class="title">{{$t('lang.lang12')}}</p>
                 <p class="val">YES</p>
-                <p class="title mt200">权重值</p>
+                <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">2500</p>
             </div>
         </div>
         <div class="hdaoinfo flowPanel">
-            <h2>IDO流程表</h2>
+            <h2>{{$t('lang.lang14')}}</h2>
             <div class="flowItem">
-                <h3>第一轮：会员分配轮</h3>
-                <p class="flowtext1">会员等级决定可购买额度上限，只要是会员都有额度。</p>
-                <p class="flowtext1">预审购阶段：IDO开始后，会员需在规定时间内往合约发送一定数量USDT进行预申购，预审购结束后根据参与人数计算总权重并分配额度；</p>
-                <p class="flowtext1">领取额度阶段：预申购结束后，会员需在规定时间内领取额度，若预申购USDT金额超过自身额度上限，则超出部分自动返还，否则，100%用于分配额度。第一轮结束后，若还有额度剩余，则进入第二轮</p>
-                <h3>第二轮：公开抢购轮</h3>
-                <p class="flowtext2">价格在第一轮基础上有一定溢价，限时申购，
-没有门槛限制，所有人都可以参与。</p>
-                <p class="weight">非会员：每人申购数量不能超过剩余总量的1%；</p>
-                <p class="weight">青铜：每人申购数量不能超过剩余总量的5%；</p>
-                <p class="weight">白银：每人申购数量不能超过剩余总量的15%；</p>
-                <p class="weight">黄金、铂金此轮不设上限，可任意申购；</p>
-                <p class="flowtext2">申购截止后，若还有剩余，则剩余部分全部销毁。</p>
+                <h3>{{$t('lang.lang15')}}</h3>
+                <p class="flowtext1">{{$t('lang.lang16')}}</p>
+                <p class="flowtext1">{{$t('lang.lang17')}}</p>
+                <p class="flowtext1">{{$t('lang.lang18')}}</p>
+                <h3>{{$t('lang.lang19')}}</h3>
+                <p class="flowtext2">{{$t('lang.lang20')}}</p>
+                <p class="weight">{{$t('lang.lang21')}}</p>
+                <p class="weight">{{$t('lang.lang22')}}</p>
+                <p class="weight">{{$t('lang.lang23')}}</p>
+                <p class="weight">{{$t('lang.lang24')}}</p>
+                <p class="flowtext2" v-show="false">{{$t('lang.lang25')}}</p>
             </div>
         </div>
         <Footer></Footer>
@@ -199,7 +198,7 @@ export default {
                 color:#FFF;
                 line-height:25px;
                 text-align:center;
-                padding-top:26px;
+                padding-top:35px;
                 /* &.mt200{
                     margin-top:100px;
                 } */
@@ -262,7 +261,7 @@ export default {
                 width:102px;
                 height:34px;
                 line-height:34px;
-                font-size:12px;
+                font-size:14px;
                 border-radius:4px;
                 margin:0 22px;
             }
@@ -280,19 +279,19 @@ export default {
            p{
                &.infotext1{
                     width:100%;
-                    font-size:10px;
+                    font-size:14px;
                     line-height:24px;
                     padding-bottom:16px;
                 }
                 &.infotext2{
                     width:100%;
-                    font-size:10px;
+                    font-size:14px;
                     line-height:24px;
                     padding-bottom:16px;
                 }
                 &.infotext3{
                     width:100%;
-                    font-size:10px;
+                    font-size:14px;
                     line-height:24px;
                     padding-bottom:16px;
                 }
@@ -308,13 +307,13 @@ export default {
                }
                .flowItem{
                    h3{
-                       font-size:10px;
+                       font-size:14px;
                        line-height:14px;
                        padding-bottom:7px;
                        padding-top:20px;
                    }
                    p{
-                       font-size:10px;
+                       font-size:14px;
                        line-height:24px;
                        &.flowtext1{
                            width:100%;
@@ -345,11 +344,11 @@ export default {
                     margin-left:2%;
                 }
                 h2{
-                    font-size:14px;
+                    font-size:16px;
                     line-height:20px;
                 }
                 .title{
-                    font-size:10px;
+                    font-size:14px;
                     line-height:14px;
                     padding-top:14px;
                     padding-bottom:4px;
@@ -358,7 +357,7 @@ export default {
                     } */
                 }
                 .val{
-                    font-size:10px;
+                    font-size:14px;
                     line-height:14px;
                 }
             }

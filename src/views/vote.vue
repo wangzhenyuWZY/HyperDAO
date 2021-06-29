@@ -6,7 +6,7 @@
                 <h2>正在进行的投票</h2>
                 <div class="voteListWrap">
                     <div class="voteList">
-                        <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==0">
+                        <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==1">
                             <div class="voteHead">
                                 <div class="proName">
                                     <img :src="item.logo_url">
@@ -29,7 +29,7 @@
                 <h2>已经结束的投票</h2>
                 <div class="voteListWrap">
                     <div class="voteList">
-                        <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==0">
+                        <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==2">
                             <div class="voteHead">
                                 <div class="proName">
                                     <img :src="item.logo_url">
@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                                 <div class="all">
-                                    <p></p>
+                                    <p :style="'width:'+item.counts.progress+'%'"></p>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +135,7 @@ export default {
                     this.taskList = res.data.data
                     this.getVoteInfo()
                     res.data.data.map( (obj,index)=>{
-                        if(obj.status==0){
+                        if(obj.status==1){
                             let endTime = new Date(obj.end_time).getTime()
                             this.$set(
                                 obj,"djs",InitTime(endTime)
@@ -149,9 +149,9 @@ export default {
             this.taskList.map( (obj,index)=>{
                 let IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, obj.ido_address)
                 this.$set(obj,"IDOContract",IDOContract)
-                if(obj.status==0){
+                if(obj.status==1){
                     this.getUserInfo(obj)
-                }else if(obj.status==1){
+                }else if(obj.status==2){
                     this.getVoteCount(obj)
                 }
             })
@@ -159,9 +159,18 @@ export default {
         async getVoteCount(obj){
             let favorCounts = await obj.IDOContract.methods.voteCounts(1).call()
             let oppositionCounts = await obj.IDOContract.methods.voteCounts(2).call()
+            favorCounts = new BigNumber(favorCounts)
+            favorCounts = favorCounts.div(Math.pow(10,18))
+            oppositionCounts = new BigNumber(oppositionCounts)
+            oppositionCounts = oppositionCounts.div(Math.pow(10,18))
+            let progress = favorCounts.plus(oppositionCounts)
+            progress = favorCounts.div(progress)
+            progress = progress.times(100)
+            console.log(progress.toFixed())
             let counts = {
                 favor:favorCounts,
-                oppos:oppositionCounts
+                oppos:oppositionCounts,
+                progress:progress.toFixed(2)
             }
             this.$set(obj,"counts",counts)
         },
@@ -356,7 +365,7 @@ export default {
                         .progressInfo{
                             .infoItem{
                                 p{
-                                    font-size:10px;
+                                    font-size:14px;
                                     line-height:14px;
                                     padding-bottom:3px;
                                 }
@@ -426,7 +435,7 @@ export default {
                     margin-bottom:10px;
                 }
                 .downtime{
-                    font-size:10px;
+                    font-size:14px;
                     line-height:14px;
                 }
             }

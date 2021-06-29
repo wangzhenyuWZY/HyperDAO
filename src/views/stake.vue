@@ -2,16 +2,16 @@
     <div class="stakePanel">
         <Header></Header>
         <div class="address mobiles">
-            <h2>智能合约地址</h2>
+            <h2>{{$t('lang.lang58')}}</h2>
             <p>{{idoAddress}}</p>
         </div>
         <div class="stakeInfo">
             <div class="stakeItem">
-                <p class="title">Number of stakers</p>
+                <p class="title">{{$t('lang.lang56')}}</p>
                 <p class="val">{{tiersNum}}</p>
             </div>
             <div class="stakeItem">
-                <p class="title">Total Staked</p>
+                <p class="title">{{$t('lang.lang57')}}</p>
                 <p class="val">{{totalStakeNum}} HDAO</p>
             </div>
             <div class="stakeItem">
@@ -20,58 +20,58 @@
             </div>
         </div>
         <div class="address">
-            <h2>智能合约地址</h2>
+            <h2>{{$t('lang.lang58')}}</h2>
             <p>{{idoAddress}}</p>
         </div>
         <div class="stakedCon">
-            <p class="withdrawIn mtop">我的质押量</p>
+            <p class="withdrawIn mtop">{{$t('lang.lang59')}}</p>
             <div class="myStake">
                 <span class="myStakeVal">{{stake_amount?stake_amount:0}} HDAO</span>
             </div>
             <div class="stakeBtns">
-                <el-button class="btn" @click="popShow=true" :loading="isStaking" :disabled='isStaking'>质押</el-button>
+                <el-button class="btn" @click="popShow=true" :loading="isStaking" :disabled='isStaking'>{{$t('lang.lang60')}}</el-button>
             </div>
-            <p class="withdrawIn left">Withdrawable in</p>
+            <p class="withdrawIn left">{{$t('lang.lang112')}}</p>
             <div class="myStake dobbuleVal">
                 <div class="myStakeVal">{{day}}d {{hour}}：{{min}}：{{second}}</div>
                 <div class="myStakeVal">{{frozen_amount}} HDAO</div>
             </div>
             <div class="stakeBtns border dobbuleBtn">
-                <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">Unstake</el-button>
-                <el-button class="btn" :class="(frozen_amount!==0&&!hasWithdraw)?'desibled':''" :disabled="(frozen_amount!==0&&!hasWithdraw)?true:false" @click="withdraw">Withdraw</el-button>
+                <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">{{$t('lang.lang61')}}</el-button>
+                <el-button class="btn" :class="(frozen_amount==0 || !hasWithdraw)?'desibled':''" :disabled="(frozen_amount==0 || !hasWithdraw)?true:false" @click="withdraw">{{$t('lang.lang62')}}</el-button>
             </div>
-            <p class="withdrawIn">质押收益</p>
+            <p class="withdrawIn">{{$t('lang.lang113')}}</p>
             <div class="myStake">
                 <span class="myStakeVal">{{staticReward.toFixed(4)}}</span>
             </div>
             <div class="stakeBtns border">
-                <el-button class="btn" @click="getStaticRewards" :loading='isClaimStatic' :disabled="isClaimStatic">领取静态收益</el-button>
+                <el-button class="btn" @click="getStaticRewards" :loading='isClaimStatic' :disabled="isClaimStatic">{{$t('lang.lang63')}}</el-button>
             </div>
             <div class="dobble">
-                <p class="withdrawIn">分享收益</p>
-                <p class="withdrawIn">分享人数</p>
+                <p class="withdrawIn">{{$t('lang.lang64')}}</p>
+                <p class="withdrawIn">{{$t('lang.lang65')}}</p>
             </div>
             <div class="myStake dobbuleVal">
                 <span class="myStakeVal center">{{dynamicRewards}}</span>
                 <span class="myStakeVal center">{{userInfo.num_invitor}}</span>
             </div>
             <div class="stakeBtns">
-                <el-button class="btn" @click="getDynamicRewards" :loading="isClaimDynamic" :disabled="isClaimDynamic">领取动态收益</el-button>
+                <el-button class="btn" @click="getDynamicRewards" :loading="isClaimDynamic" :disabled="isClaimDynamic">{{$t('lang.lang66')}}</el-button>
             </div>
         </div>
         <div class="popWrap" v-show="popShow">
             <div class="popPanel">
                 <i class="close" @click="popShow=false"></i>
                 <div class="idoput">
-                    <input placeholder="请输入质押数量" v-model="stakeNum">
+                    <input :placeholder="$t('lang.lang70')" v-model="stakeNum">
                     <p>{{hdaoBalance}}<span>/ HDAO</span></p>
                 </div>
                 <div class="idoput" v-show="userInfo.deposit_times==0">
-                    <input placeholder="请输入邀请人" v-model="inviter">
+                    <input :placeholder="$t('lang.lang14')" v-model="inviter">
                 </div>
                 <div class="btnbox">
-                    <el-button class="btn" @click="popShow=false">取消</el-button>
-                    <el-button :loading="isDoing" :disabled="isDoing" class="btn" @click="checkApproved">{{isApprove?'确认':'授权'}}</el-button>
+                    <el-button class="btn" @click="popShow=false">{{$t('lang.lang67')}}</el-button>
+                    <el-button :loading="isDoing" :disabled="isDoing" class="btn" @click="checkApproved">{{isApprove?$t('lang.lang68'):$t('lang.lang91')}}</el-button>
                 </div>
             </div>
         </div>
@@ -79,12 +79,12 @@
             <div class="popPanel">
                 <i class="close" @click="unstakePop=false"></i>
                 <div class="idoput">
-                    <input placeholder="请输入解除质押数量" v-model="unstakeNum">
+                    <input :placeholder="$t('lang.lang69')" v-model="unstakeNum">
                     <p>{{stake_amount}}<span>/ HDAO</span></p>
                 </div>
                 <div class="btnbox">
-                    <el-button class="btn" @click="unstakePop=false">取消</el-button>
-                    <el-button class="btn" @click="checkUnstake">确认</el-button>
+                    <el-button class="btn" @click="unstakePop=false">{{$t('lang.lang67')}}</el-button>
+                    <el-button class="btn" @click="checkUnstake">{{$t('lang.lang68')}}</el-button>
                 </div>
             </div>
         </div>
@@ -174,14 +174,14 @@ export default {
         checkUnstake(){
             if(this.stake_amount==0){
                 this.$message({
-                    message: '当前未质押HDAO',
+                    message: this.$t('lang.lang115'),
                     type: 'warning'
                 })
                 return
             }
             if(!this.unstakeNum || this.unstakeNum==0){
                 this.$message({
-                    message: '请填写解除质押数量',
+                    message: this.$t('lang.lang69'),
                     type: 'warning'
                 })
                 return
@@ -197,7 +197,7 @@ export default {
             if(res){
                 this.isUnstake = false
                 this.$message({
-                    message: '解除质押成功',
+                    message: this.$t('lang.lang116'),
                     type: 'success'
                 })
             }
@@ -209,14 +209,14 @@ export default {
             let leftTime = end - now
             if(leftTime>=0){
                 this.$message({
-                    message: '尚未度过冻结期',
+                    message: this.$t('lang.lang117'),
                     type: 'warning'
                 })
                 return
             }
             if(this.frozen_amount==0){
                 this.$message({
-                    message: '暂无可提现额度',
+                    message: this.$t('lang.lang118'),
                     type: 'warning'
                 })
                 return
@@ -224,7 +224,7 @@ export default {
             let res = await this.STAKEContract.methods.withdraw().send({ from: this.defaultAccount })
             if(res){
                 this.$message({
-                    message: '提现成功',
+                    message: this.$t('lang.lang119'),
                     type: 'success'
                 })
                 this.getUserinfo()
@@ -233,14 +233,14 @@ export default {
         async checkApproved(){
             if(!this.stakeNum || this.stakeNum==0){
                 this.$message({
-                    message: '请填写质押数量',
+                    message: this.$t('lang.lang120'),
                     type: 'warning'
                 })
                 return
             }
             if(!this.inviter){
                 this.$message({
-                    message: '请填写邀请码，如没有请填写上方智能合约地址',
+                    message: this.$t('lang.lang121'),
                     type: 'warning'
                 })
                 return
@@ -263,7 +263,7 @@ export default {
             let inviter = this.inviter?this.inviter:TIERSYSTEM.address
             let apr1 = await this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
             this.$message({
-                message: '质押成功',
+                message: this.$t('lang.lang122'),
                 type: 'success'
             })
             this.isStaking = false
@@ -274,7 +274,7 @@ export default {
             let res = await this.STAKEContract.methods.getStaticRewards().send({ from: this.defaultAccount })
             if(res){
                 this.$message({
-                    message: '提取收益成功',
+                    message: this.$t('lang.lang123'),
                     type: 'success'
                 }) 
                 this.isClaimStatic = false
@@ -286,7 +286,7 @@ export default {
             let res = await this.STAKEContract.methods.getDynamicRewards().send({ from: this.defaultAccount })
             if(res){
                 this.$message({
-                    message: '提取收益成功',
+                    message: this.$t('lang.lang123'),
                     type: 'success'
                 })
                 this.isClaimDynamic = false
@@ -305,7 +305,7 @@ export default {
                 let stake_amount = new BigNumber(res.stake_amount)
                 this.stake_amount = stake_amount.div(Math.pow(10,this.hdaDecimals))
                 let frozen_amount = new BigNumber(res.frozen_amount)
-                this.frozen_amount = frozen_amount.div(Math.pow(10,this.hdaDecimals))
+                this.frozen_amount = parseFloat(frozen_amount.div(Math.pow(10,this.hdaDecimals)))
                 let dynamicRewards = new BigNumber(res.dynamicRewards)
                 this.dynamicRewards = dynamicRewards.div(Math.pow(10,this.hdaDecimals))
             }
@@ -708,7 +708,7 @@ export default {
             border-radius:6px;
             margin:0 auto 20px;
             .title{
-                font-size:10px;
+                font-size:14px;
                 line-height:14px;
                 padding-top:18px;
                 padding-bottom:6px;
@@ -727,9 +727,10 @@ export default {
             padding:80px 0 20px;
         }
         h2,p{
-            font-size:12px;
+            font-size:14px;
             line-height:17px;
             padding:0;
+            padding-bottom:10px;
         }
     }
     .stakedCon{
@@ -740,11 +741,11 @@ export default {
         height:auto;
         .stakeTitle{
             padding-top:0;
-            font-size:10px;
+            font-size:14px;
             line-height:14px;
         }
         .stakeNum{
-            font-size:12px;
+            font-size:14px;
             line-height:17px;
             padding-bottom:25px;
         }
@@ -754,7 +755,7 @@ export default {
             }
         }
         .withdrawIn{
-           font-size:10px;
+           font-size:14px;
            line-height:14px; 
            padding-bottom:6px;
            &.mtop{

@@ -4,23 +4,23 @@
         <div class="chainPanel">
             <img class="banner" src="../assets/img/banner2.png">
             <p class="chainInfo info1">
-                Polygon（原Matic）主要解决以太坊目前拥堵和矿工费高的问题，具有极低近乎为0的交易费和高速交易吞吐量和极快（1-2s）的确认时间。便于现有以太坊开发者的零学习成本部署，是DeFi、NFT、游戏、DEX等项目克服以太坊性能瓶颈的理想方案。
+                {{$t('lang.lang76')}}
             </p>
             <p class="chainInfo info2">
-                Polygon的Layer2链已被广泛应用，拥有约700万的链上交易和约20万独立地址用户，可以将以太坊上数字资产跨链到Matic参与Matic生态中的Dapp。
+                {{$t('lang.lang77')}}
             </p>
             <div class="proBox">
                 <div class="proItem">
                     <p class="chainInfo info3">
-                        HyperDAO已全面升级并支持Polygon网络，原HDAO代币用户可进行1：1铸币完成代币迭代
+                        {{$t('lang.lang78')}}
                     </p>
-                    <a class="stakeBtn" @click="mintPop=true">铸币</a>
+                    <a class="stakeBtn" @click="mintPop=true">{{$t('lang.lang80')}}</a>
                 </div>
                 <div class="proItem">
                     <p class="chainInfo info3">
-                        HyperDAO支持用户在Polygon网络与ETH网络之间进行HDAO代币的自由转换
+                        {{$t('lang.lang79')}}
                     </p>
-                    <a class="stakeBtn" href="https://wallet.matic.network/" target="_blank">跨链</a>
+                    <a class="stakeBtn" href="https://wallet.matic.network/" target="_blank">{{$t('lang.lang81')}}</a>
                 </div>
             </div>
             
@@ -29,11 +29,11 @@
             <div class="popPanel">
                 <i class="close" @click="mintPop=false"></i>
                 <div class="idoput">
-                    <input placeholder="请输入铸币数量" v-model="mintNum">
+                    <input :placeholder="$t('lang.lang82')" v-model="mintNum">
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="mintPop=false">取消</a>
-                    <a class="btn" @click="toMint">确认</a>
+                    <a class="btn" @click="mintPop=false">{{$t('lang.lang67')}}</a>
+                    <a class="btn" @click="toMint">{{$t('lang.lang68')}}</a>
                 </div>
             </div>
         </div>
@@ -337,7 +337,7 @@ export default {
         .chainInfo{
             width:100%;
             margin-top:18px;
-            font-size:10px;
+            font-size:14px;
             line-height:24px;
             padding:0 16px;
             &.info1{
@@ -367,7 +367,7 @@ export default {
             height:40px;
             line-height:40px;
             border-radius:6px;
-            font-size:12px;   
+            font-size:14px;   
             margin:0 auto 40px;
         }
     }

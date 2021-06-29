@@ -17,9 +17,9 @@
                         </div>
                     </div>
                     <div class="allcationn" v-show="isDowning">
-                        <p class="title" v-show="beginPro">预申购倒计时</p>          
-                        <p class="title" v-show="beginClaim">领取额度倒计时</p>    
-                        <p class="title" v-show="beginFcfs">FCFS倒计时</p>                      
+                        <p class="title" v-show="beginPro">{{$t('lang.lang106')}}</p>          
+                        <p class="title" v-show="beginClaim">{{$t('lang.lang107')}}</p>    
+                        <p class="title" v-show="beginFcfs">{{$t('lang.lang108')}}</p>                      
                         <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
                     </div>
                 </div>
@@ -28,100 +28,104 @@
                         <div class="fl">
                             <div class="textbox">
                                 <div class="texts">
-                                    <h3>我的资产</h3>
+                                    <h3>{{$t('lang.lang35')}}</h3>
                                     <p>{{usdtBalance}} USDT</p>
                                     <p>{{maticBalance}}MATIC</p>
                                 </div>
                                 <div class="texts">
-                                    <h3>我的等级</h3>
+                                    <h3>{{$t('lang.lang36')}}</h3>
                                     <p>{{tierName}}</p>
-                                </div>    
+                                </div>  
+                                <div class="texts">
+                                    <h3>{{$t('lang.lang33')}}</h3>
+                                    <p>{{tiersNum}}</p>
+                                </div>  
                             </div>
                             <div class="textbox">
                                 <div class="texts">
-                                    <h3>已兑换额度</h3>
+                                    <h3>{{$t('lang.lang37')}}</h3>
                                     <p>{{round==1?userInfo.uAmount:userInfo2.uAmount}} USDT</p>
                                     <p>{{round==1?userInfo.amount:userInfo2.amount}} {{symbol}}</p>
                                 </div>
                                 <div class="texts">
-                                    <h3>剩余额度</h3>
-                                    <p>{{tokensLeft.toFixed(2)}} {{symbol}}</p>
+                                    <h3>{{$t('lang.lang38')}}</h3>
+                                    <p>{{(tokensLeft-r2boughtNum).toFixed(2)}} {{symbol}}</p>
                                 </div>
                                 <div class="texts">
-                                    <h3>参与人数</h3>
-                                    <p>{{tiersNum}}</p>
+                                    <h3>{{beginClaim?$t('lang.lang39'):(fcfsBtn?$t('lang.lang40'):'')}}</h3>
+                                    <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuota:'')}}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="fr">
                             <div class="allcationn" v-show="isDowning">
-                                <p class="title" v-show="beginPro">预申购倒计时</p>          
-                                <p class="title" v-show="beginClaim">领取额度倒计时</p>    
-                                <p class="title" v-show="beginFcfs">FCFS倒计时</p>                      
+                                <p class="title" v-show="beginPro">{{$t('lang.lang106')}}</p>          
+                                <p class="title" v-show="beginClaim">{{$t('lang.lang107')}}</p>    
+                                <p class="title" v-show="beginFcfs">{{$t('lang.lang108')}}</p>                      
                                 <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
                             </div>
-                            <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">参与预申购</el-button>
-                            <el-button class="btn" :class="!beginClaim?'disabled':''" :disabled="!beginClaim" @click="claimQuota">领取额度</el-button>
-                            <el-button class="btn" :class="!beginFcfs?'disabled':''" :disabled="!beginFcfs" @click="fcfsPop = true">FCFS</el-button>
+                            <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">{{$t('lang.lang41')}}</el-button>
+                            <el-button class="btn" :class="!beginClaim?'disabled':''" :disabled="!beginClaim" @click="claimQuota">{{$t('lang.lang42')}}</el-button>
+                            <el-button class="btn" :class="!fcfsBtn?'disabled':''" :disabled="!fcfsBtn" @click="fcfsPop = true">{{$t('lang.lang43')}}</el-button>
                         </div>
                     </div>
                 </div>
                 <div class="infoPanel">
                     <div class="tabs">
-                        <span :class="infoTabs==0?'active':''" @click="infoTabs=0">项目详情</span>
-                        <span :class="infoTabs==1?'active':''" @click="infoTabs=1">项目日程</span>
+                        <span :class="infoTabs==0?'active':''" @click="infoTabs=0">{{$t('lang.lang44')}}</span>
+                        <span :class="infoTabs==1?'active':''" @click="infoTabs=1">{{$t('lang.lang45')}}</span>
                     </div>
                     <div class="infoCon" v-show="infoTabs==0">
                         <div class="infoHead">
-                            <span>Pool详情</span>
-                            <span>Token详情</span>
-                            <p>项目详情</p>
+                            <span>{{$t('lang.lang46')}}</span>
+                            <span>{{$t('lang.lang47')}}</span>
+                            <p>{{$t('lang.lang44')}}</p>
                         </div>
                         <div class="infoBody">
                             <div class="infoDetail">
-                                <h4>Pool详情</h4>
+                                <h4>{{$t('lang.lang46')}}</h4>
                                 <div class="infoItem">
-                                    <h3>开始时间</h3>
+                                    <h3>{{$t('lang.lang48')}}</h3>
                                     <span v-show="beginPro">{{schedule.startTime1}} (UTC+8)</span>
                                     <span v-show="beginClaim">{{schedule.endTime1}} (UTC+8)</span>
                                     <span v-show="beginFcfs">{{schedule.startTime3}} (UTC+8)</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>结束时间</h3>
+                                    <h3>{{$t('lang.lang49')}}</h3>
                                     <span v-show="beginPro">{{schedule.endTime1}} (UTC+8)</span>
                                     <span v-show="beginClaim">{{schedule.endTime2}} (UTC+8)</span>
                                     <span v-show="beginFcfs">{{schedule.endTime3}} (UTC+8)</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>此轮申购价格</h3>
+                                    <h3>{{$t('lang.lang50')}}</h3>
                                     <span>{{round==1?r1Price:price}}USDT</span>
                                     <!-- <span>{{detailInfo.asset_retention_ratio}}</span> -->
                                 </div>
                                 <div class="infoItem">
-                                    <h3>IDO总额</h3>
+                                    <h3>{{$t('lang.lang51')}}</h3>
                                     <span>{{totalVol}} USDT</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>参与人数</h3>
+                                    <h3>{{$t('lang.lang33')}}</h3>
                                     <span>{{tiersNum}}</span>
                                 </div>
                             </div>
                             <div class="infoDetail">
-                                <h4>Token详情</h4>
+                                <h4>{{$t('lang.lang47')}}</h4>
                                 <div class="infoItem">
-                                    <h3>项目名称</h3>
+                                    <h3>{{$t('lang.lang52')}}</h3>
                                     <span>{{detailInfo.name}}</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>币种名称</h3>
+                                    <h3>{{$t('lang.lang53')}}</h3>
                                     <span>{{symbol}}</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>发行总量</h3>
+                                    <h3>{{$t('lang.lang54')}}</h3>
                                     <span>{{totalSupply}}</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>简介</h3>
+                                    <h3>{{$t('lang.lang55')}}</h3>
                                     <span>{{detailInfo.description}}</span>
                                 </div>
                             </div>
@@ -136,17 +140,17 @@
                             </div>
                             <div class="roundBody">
                                 <div class="roundItem">
-                                    <span>预申购</span>
+                                    <span>{{$t('lang.lang41')}}</span>
                                     <span>{{schedule.startTime1}}(UTC+8)</span>
                                     <span>{{schedule.endTime1}}(UTC+8)</span>
                                 </div>
                                 <div class="roundItem">
-                                    <span>领取额度</span>
+                                    <span>{{$t('lang.lang42')}}</span>
                                     <span>{{schedule.endTime1}}(UTC+8)</span>
                                     <span>{{schedule.endTime2}}(UTC+8)</span>
                                 </div>
                                 <div class="roundItem">
-                                    <span>FCFS</span>
+                                    <span>{{$t('lang.lang43')}}</span>
                                     <span>{{schedule.startTime3}}(UTC+8)</span>
                                     <span>{{schedule.endTime3}}(UTC+8)</span>
                                 </div>
@@ -160,12 +164,12 @@
             <div class="popPanel">
                 <i class="close" @click="stakePop=false"></i>
                 <div class="idoput">
-                    <input placeholder="请输入申购数量" v-model="preNum">
+                    <input :placeholder="$t('lang.lang90')" v-model="preNum">
                     <span>USDT</span>
                 </div>
                 <div class="btnbox">
-                    <el-button class="btn" @click="stakePop=false">取消</el-button>
-                    <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkPurchase">{{isApprove?'确认':'授权'}}</el-button>
+                    <el-button class="btn" @click="stakePop=false">{{$t('lang.lang67')}}</el-button>
+                    <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkPurchase">{{isApprove?$t('lang.lang68'):$t('lang.lang91')}}</el-button>
                 </div>
             </div>
         </div>
@@ -173,12 +177,12 @@
             <div class="popPanel">
                 <i class="close" @click="fcfsPop=false"></i>
                 <div class="idoput">
-                    <input placeholder="请输入申购数量" v-model="fcfsNum">
+                    <input :placeholder="$t('lang.lang90')" v-model="fcfsNum">
                     <span>USDT</span>
                 </div>
                 <div class="btnbox">
-                    <el-button class="btn" @click="fcfsPop=false">取消</el-button>
-                    <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkApprove">{{isApprove?'确认':'授权'}}</el-button>
+                    <el-button class="btn" @click="fcfsPop=false">{{$t('lang.lang67')}}</el-button>
+                    <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkApprove">{{isApprove?$t('lang.lang68'):$t('lang.lang91')}}</el-button>
                 </div>
             </div>
         </div>
@@ -253,7 +257,10 @@ export default {
             userInfo2:{},
             isR2started:false,
             r1Price:0,
-            isBuying:false
+            isBuying:false,
+            fcfsBtn:false,
+            claimQ:0,
+            fcfsQuota:0
         }
     },
     created(){
@@ -340,15 +347,8 @@ export default {
                 this.isBuying = false
             }
         },
-        async R2purchase(){
-            this.fcfsPop = false
-            let preNum = new BigNumber(this.fcfsNum)
-            preNum = preNum.div(this.price)
-            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
-            let isR2started = await this.IDOContract.methods.isR2started().call()
-            let isR2begin = await this.IDOContract.methods.isR2begin().call()
+        async getQuota(){
             let R2ForSale = await this.IDOContract.methods.R2ForSale().call()
-            
             R2ForSale = new BigNumber(R2ForSale)
             R2ForSale = R2ForSale.div(Math.pow(10,this.tokenDecimals))
             let quota = 0
@@ -361,41 +361,49 @@ export default {
             }else{
                 quota = R2ForSale
             }
-            
+            return quota
+        },
+        async R2purchase(){
+            this.fcfsPop = false
+            let preNum = new BigNumber(this.fcfsNum)
+            preNum = preNum.div(this.price)
+            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
+            let isR2started = await this.IDOContract.methods.isR2started().call()
+            let isR2begin = await this.IDOContract.methods.isR2begin().call()
+            let quota = await this.getQuota()
+            if(this.fcfsNum>quota){
+                this.$message({
+                    message: this.$t('lang.lang92')+quota,
+                    type: 'warning'
+                })
+                return
+            }
             if(!isR2started){
                 this.$message({
-                    message: '第二轮尚未开启',
+                    message: this.$t('lang.lang93'),
                     type: 'warning'
                 }) 
                 return
             }
             if(this.tier<1){
                 this.$message({
-                    message: '会员才可抢购',
+                    message: this.$t('lang.lang94'),
                     type: 'warning'
                 }) 
                 return
             }
-            if(this.fcfsNum>quota){
-                this.$message({
-                    message: '最大可申购额度为'+quota,
-                    type: 'warning'
-                })
-                return
-            }
+            
             if(parseFloat(this.fcfsNum)*parseFloat(this.price)>this.usdtBalance){
                 this.$message({
-                    message: '钱包USDT余额不足',
+                    message: this.$t('lang.lang95'),
                     type: 'warning'
                 })
                 return
             }
-            // quota = new BigNumber(quota)
-            // quota = quota.times(Math.pow(10,this.tokenDecimals))
             let res = await this.IDOContract.methods.R2purchase(preNum.toFixed(0)).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
-                    message: '抢购成功',
+                    message: this.$t('lang.lang96'),
                     type: 'success'
                 }) 
             }
@@ -406,14 +414,14 @@ export default {
             let beforeClear = await this.IDOContract.methods.beforeClear().call()
             if(!hasFinalized){
                 this.$message({
-                    message: '第一轮尚未结束',
+                    message: this.$t('lang.lang97'),
                     type: 'warning'
                 }) 
                 return
             }
             if(!beforeClear){
                 this.$message({
-                    message: '认领时间已结束',
+                    message: this.$t('lang.lang98'),
                     type: 'warning'
                 }) 
                 return
@@ -421,7 +429,7 @@ export default {
             let res = await this.IDOContract.methods.claim().send({ from: this.defaultAccount })
             if(res){
                 this.$message({
-                    message: '额度认领成功',
+                    message: this.$t('lang.lang99'),
                     type: 'success'
                 })
             }
@@ -454,28 +462,28 @@ export default {
         checkPurchase(){
             if(this.tier<1 || !this.tier){
                 this.$message({
-                    message: '成为会员才可申购',
+                    message: this.$t('lang.lang94'),
                     type: 'warning'
                 })
                 return
             }
             if(!this.isOpen){
                 this.$message({
-                    message: '当前不可预申购',
+                    message: this.$t('lang.lang100'),
                     type: 'warning'
                 })
                 return
             }
             if(parseFloat(this.preNum)>parseFloat(this.tokensLeft)){
                 this.$message({
-                    message: '申购数量不能大于剩余额度',
+                    message: this.$t('lang.lang101'),
                     type: 'warning'
                 })
                 return
             }
             if(parseFloat(this.preNum)*parseFloat(this.price)>this.usdtBalance){
                 this.$message({
-                    message: '钱包USDT余额不足',
+                    message: this.$t('lang.lang95'),
                     type: 'warning'
                 })
                 return
@@ -490,7 +498,7 @@ export default {
             let res = await this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
-                    message: '申购成功',
+                    message: this.$t('lang.lang96'),
                     type: 'success'
                 })
             }
@@ -518,13 +526,13 @@ export default {
             if(res){
                 this.tier = res
                 if(res==1){
-                    this.tierName = '青铜'
+                    this.tierName = this.$t('lang.lang7')
                 }else if(res==2){
-                    this.tierName = '白银'
+                    this.tierName = this.$t('lang.lang8')
                 }else if(res==3){
-                    this.tierName = '黄金'
+                    this.tierName = this.$t('lang.lang9')
                 }else if(res==4){
-                    this.tierName = '铂金'
+                    this.tierName = this.$t('lang.lang10')
                 }
             }
         },  
@@ -650,8 +658,8 @@ export default {
                 this.countTime()
                 this.isDowning = true
                 this.beginClaim = true
-                
-            }else if(now>this.clearTime && now<this.round2start){
+                this.getClaimQ()
+            }else if(now>this.clearTime && now<this.round2Start){
                 this.isDowning = false
                 this.beginFcfs = true 
             }else if(now>this.round2Start && now<this.fcfsEndTime){
@@ -659,6 +667,17 @@ export default {
                 this.countTime()
                 this.isDowning = true
                 this.beginFcfs = true 
+                this.fcfsBtn = true
+                this.getQuota().then(res=>{
+                    this.fcfsQuota = res
+                })
+            }
+        },
+        async getClaimQ(){
+            let res = await this.IDOContract.methods.getClaimQ(this.defaultAccount).call()
+            if(res){
+                let balance = new BigNumber(res)
+                this.claimQ = balance.div(Math.pow(10,this.tokenDecimals)).toFixed(2)
             }
         },
         async getName(){
@@ -1057,7 +1076,7 @@ export default {
                     margin-top:20px;
                 }
                 span{
-                    font-size:16px;
+                    font-size:18px;
                     line-height:40px;
                     padding-right:10px;
                 }
@@ -1093,7 +1112,7 @@ export default {
         padding:0 15px;
         .projectDetail{
             .nameInfo{
-                padding:60px 0 50px;
+                padding:30px 0 20px;
                 width:auto;
                 .projectName{
                     &>img{
@@ -1141,13 +1160,13 @@ export default {
                                 width:96px;
                                 margin-right:0;
                                 h3{
-                                    font-size:10px;
+                                    font-size:14px;
                                     color:#333333;
                                     line-height:14px;
                                     padding-bottom:8px;
                                 }
                                 p{
-                                    font-size:10px;
+                                    font-size:14px;
                                     line-height:14px;
                                     color:#333333;
                                 }
@@ -1162,11 +1181,14 @@ export default {
                             height:42px;
                             background:#874FEC;
                             border-radius:6px;
-                            font-size:12px;
+                            font-size:14px;
                             color:#fff;
                             margin:0 auto 26px;
                             &:first-child{
                                 margin-left:auto;
+                            }
+                            &:nth-child(2){
+                                margin: 0 auto 0.2rem;
                             }
                         }
                         .allcationn{
@@ -1201,10 +1223,10 @@ export default {
                     .roundTable{
                         .roundHead{
                             border-radius:10px 10px 0 0;
-                            height:26px;
+                            height:30px;
                             padding:0 10px;
                             span{
-                                font-size:12px;
+                                font-size:14px;
                                 color:#fff;
                                 line-height:26px;
                                 text-align:center;
@@ -1249,7 +1271,7 @@ export default {
                                 border-top:none;
                             }
                             h4{
-                                font-size:10px;
+                                font-size:14px;
                                 color:#333;
                                 line-height:14px;
                                 padding-bottom:5px;
@@ -1258,11 +1280,11 @@ export default {
                             .infoItem{
                                 padding-bottom:5px;
                                 h3{
-                                    font-size:10px;
+                                    font-size:12px;
                                     line-height:20px;
                                 }
                                 span{
-                                    font-size:10px;
+                                    font-size:12px;
                                     line-height:20px;
                                     float:right;
                                 }
