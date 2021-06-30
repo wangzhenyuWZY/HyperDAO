@@ -110,29 +110,35 @@ export default {
         })
     },
     mounted() {
-        setInterval( ()=> {
-            for (var key in this.taskList) {
-                var aaa = new Date(this.taskList[key]["end_time"]).getTime();
-                var bbb = new Date().getTime();
-                var rightTime = aaa - bbb;
-                if (rightTime > 0) {
-                    var dd = Math.floor(rightTime / 1000 / 60 / 60 / 24);
-                    var hh = Math.floor((rightTime / 1000 / 60 / 60) % 24);
-                    var mm = Math.floor((rightTime / 1000 / 60) % 60);
-                    var ss = Math.floor((rightTime / 1000) % 60);
-                }
-                this.taskList[key]["djs"] = dd + "D  " + hh + "h  " + mm + "m  " + ss + "s";
-            }
-        })  
+         
     },
     methods: {
         init(){
             this.getVoteList()
         },
+        setDownTime(){
+            setInterval( ()=> {
+                for (var key in this.taskList) {
+                    if(this.taskList[key]['status']==1){
+                        var aaa = new Date(this.taskList[key]["end_time"]).getTime();
+                        var bbb = new Date().getTime();
+                        var rightTime = aaa - bbb;
+                        if (rightTime > 0) {
+                            var dd = Math.floor(rightTime / 1000 / 60 / 60 / 24);
+                            var hh = Math.floor((rightTime / 1000 / 60 / 60) % 24);
+                            var mm = Math.floor((rightTime / 1000 / 60) % 60);
+                            var ss = Math.floor((rightTime / 1000) % 60);
+                        }
+                        this.taskList[key]["djs"] = dd + "D  " + hh + "h  " + mm + "m  " + ss + "s";
+                    }
+                }
+            }) 
+        },
         getVoteList(){
             axios.get(process.env.VUE_APP_URL+"proposals").then((res)=>{
                 if(res.data.code==0){
                     this.taskList = res.data.data
+                    this.setDownTime()
                     this.getVoteInfo()
                     res.data.data.map( (obj,index)=>{
                         if(obj.status==1){
