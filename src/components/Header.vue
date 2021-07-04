@@ -114,7 +114,7 @@
                 this.isDate = !this.isDate
             },
             toggleLang () {
-                this.$i18n.locale = this.$i18n.locale === 'en' ? 'cn' : 'en'
+                this.$i18n.locale = this.$i18n.locale === 'en' ? 'zh' : 'en'
             },   
         }
     }
