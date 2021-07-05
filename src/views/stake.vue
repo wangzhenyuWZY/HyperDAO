@@ -67,7 +67,7 @@
                     <p>{{hdaoBalance}}<span>/ HDAO</span></p>
                 </div>
                 <div class="idoput" v-show="userInfo.deposit_times==0">
-                    <input :placeholder="$t('lang.lang14')" v-model="inviter">
+                    <input :placeholder="$t('lang.lang114')" v-model="inviter">
                 </div>
                 <div class="btnbox">
                     <el-button class="btn" @click="popShow=false">{{$t('lang.lang67')}}</el-button>

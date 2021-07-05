@@ -82,7 +82,7 @@ function InitTime(endtime){
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import axios from "axios"
-import { HDAO_TOKEN,IDO_TOKEN} from '../utils/contract'
+import { HDAO_MATIC,IDO_TOKEN} from '../utils/contract'
 import BigNumber from 'bignumber.js'
 export default {
     components:{ 
