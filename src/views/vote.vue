@@ -3,7 +3,7 @@
         <Header></Header>
         <div class="voteContainer">
             <div class="votePanel">
-                <h2>正在进行的投票</h2>
+                <h2>{{$t('lang.lang71')}}</h2>
                 <div class="voteListWrap">
                     <div class="voteList">
                         <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==1">
@@ -12,21 +12,21 @@
                                     <img :src="item.logo_url">
                                     {{item.name}}
                                 </div>
-                                <p class="access">Access<br>仅参与IDO的会员</p>
+                                <p class="access">Access<br>{{$t('lang.lang73')}}</p>
                             </div>
                             <h3 class="votetodo">{{item.topic}}</h3>
                             <p class="todoInfo">
                                 {{item.description}}
                             </p>
-                            <a class="voteBtn" @click="toVote(item,0)">赞成</a>
-                            <a class="voteBtn" @click="toVote(item,1)">反对</a>
+                            <a class="voteBtn" @click="toVote(item,0)">{{$t('lang.lang74')}}</a>
+                            <a class="voteBtn" @click="toVote(item,1)">{{$t('lang.lang75')}}</a>
                             <div class="downtime">{{item.djs}}</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="votePanel over">
-                <h2>已经结束的投票</h2>
+                <h2>{{$t('lang.lang72')}}</h2>
                 <div class="voteListWrap">
                     <div class="voteList">
                         <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==2">
@@ -35,7 +35,7 @@
                                     <img :src="item.logo_url">
                                     {{item.name}}
                                 </div>
-                                <p class="access">Access<br>仅参与IDO的会员</p>
+                                <p class="access">Access<br>{{$t('lang.lang73')}}</p>
                             </div>
                             <h3 class="votetodo">{{item.topic}}</h3>
                             <p class="todoInfo">

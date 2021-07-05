@@ -477,7 +477,7 @@ export default {
         }
         .btn{
             display:block;
-            width:250px;
+            padding:0 15px;
             height:80px;
             box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
             background:#874FEC;
@@ -630,7 +630,7 @@ export default {
         }
     }
     .btn{
-        width:250px;
+        min-width:250px;
         height:78px;
         background:#874FEC;
         border-radius:10px;
@@ -776,7 +776,12 @@ export default {
                 padding-bottom:30px;
                 margin-bottom:30px;
             }
-            
+            .btn{
+                width:100%;
+                &:first-child{
+                    margin-bottom:15px;
+                }
+            }
         }
         .btn{
             width:120px;
