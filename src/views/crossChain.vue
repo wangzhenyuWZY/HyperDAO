@@ -2,8 +2,8 @@
     <div class="container">
         <Header></Header>
         <div class="chainPanel">
-            <img class="banner" v-show="!isCn" src="../assets/img/banner2.png">
             <img class="banner" v-show="isCn" src="../assets/img/banner2.png">
+            <img class="banner" v-show="!isCn" src="../assets/img/banner22.png">
             <p class="chainInfo info1">
                 {{$t('lang.lang76')}}
             </p>

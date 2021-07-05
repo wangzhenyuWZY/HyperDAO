@@ -1,14 +1,14 @@
 <template>
     <div class="container">
         <Header></Header>
-        <div class="banner" v-show="isCn">
-            <img src="../assets/img/banner.png" width="100%">
-            <img src="../assets/img/mImg/mImg1.png" width="100%">
+        <div class="banner">
+            <img src="../assets/img/banner.png" v-show="isCn" width="100%">
+            <img src="../assets/img/banner11.png" v-show="!isCn" width="100%">
         </div>
-        <div class="banner" v-show="!isCn">
-            <img src="../assets/img/banner.png" width="100%">
+        <!-- <div class="banner" v-show="!isCn">
+            <img src="../assets/img/banner11.png" width="100%">
             <img src="../assets/img/mImg/mImg1.png" width="100%">
-        </div>
+        </div> -->
         <div class="btnsbar">
             <router-link to="/project" class="btn">{{$t('lang.lang1')}}</router-link>
             <router-link to="/" class="btn">{{$t('lang.lang2')}}</router-link>
@@ -113,12 +113,12 @@ export default {
 <style lang="less" scoped>
 .container{
     .banner{
-        img:first-child{
+        /* img:first-child{
             display:block;
         }
         img:last-child{
             display:none;
-        }
+        } */
     }
     .btnsbar{
         text-align:center;
@@ -257,12 +257,12 @@ export default {
 @media screen and (max-width:1200px) {
     .container{
         .banner{
-            img:first-child{
+            /* img:first-child{
                 display:none;
             }
             img:last-child{
                 display:block;
-            }
+            } */
         }
         .btnsbar{
             margin-top:16px;
