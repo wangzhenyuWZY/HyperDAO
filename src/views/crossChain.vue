@@ -110,7 +110,7 @@ export default {
         async toMint(){
             if(!this.mintNum || this.mintNum==0){
                 this.$message({
-                    message: '请填写质押数量',
+                    message: '请填写数量',
                     type: 'warning'
                 })
                 return
@@ -128,7 +128,7 @@ export default {
             let mintNum = new BigNumber(this.mintNum)
             mintNum = mintNum.times(Math.pow(10,this.oldDecimals))
             let oldBalance = new BigNumber(this.oldBalance)
-            if(mintNum>oldBalance){
+            if(parseInt(mintNum)>parseInt(oldBalance)){
                 this.$message({
                     message: '余额不足',
                     type: 'warning'
