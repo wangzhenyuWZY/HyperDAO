@@ -1,7 +1,11 @@
 <template>
     <div class="container">
         <Header></Header>
-        <div class="banner">
+        <div class="banner" v-show="isCn">
+            <img src="../assets/img/banner.png" width="100%">
+            <img src="../assets/img/mImg/mImg1.png" width="100%">
+        </div>
+        <div class="banner" v-show="!isCn">
             <img src="../assets/img/banner.png" width="100%">
             <img src="../assets/img/mImg/mImg1.png" width="100%">
         </div>
@@ -81,11 +85,17 @@ export default {
         Footer
     },
     watch: {
-        
+        '$i18n.locale' (newValue) {
+            if (this.$i18n.locale === 'en') {
+                this.isCn = false
+            } else if (this.$i18n.locale === 'zh') {
+                this.isCn = true
+            }
+        }
     },
     data() {
         return {
-            
+            isCn:false
         }
     },
     mounted() {

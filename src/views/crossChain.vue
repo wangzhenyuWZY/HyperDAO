@@ -2,7 +2,8 @@
     <div class="container">
         <Header></Header>
         <div class="chainPanel">
-            <img class="banner" src="../assets/img/banner2.png">
+            <img class="banner" v-show="!isCn" src="../assets/img/banner2.png">
+            <img class="banner" v-show="isCn" src="../assets/img/banner2.png">
             <p class="chainInfo info1">
                 {{$t('lang.lang76')}}
             </p>
@@ -53,6 +54,15 @@ export default {
     watch: {
         
     },
+    watch: {
+            '$i18n.locale' (newValue) {
+                if (this.$i18n.locale === 'en') {
+                    this.isCn = false
+                } else if (this.$i18n.locale === 'zh') {
+                    this.isCn = true
+                }
+            }
+        },
     data() {
         return {
             web3:null,
@@ -64,7 +74,8 @@ export default {
             mintNum:'',
             oldDecimals:18,
             oldBalance:0,
-            isApprove:false
+            isApprove:false,
+            isCn:false
         }
     },
     created(){
