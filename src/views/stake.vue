@@ -193,7 +193,7 @@ export default {
             this.isUnstake = true
             let unstakeNum = new BigNumber(this.unstakeNum)
             unstakeNum = unstakeNum.times(Math.pow(10,this.hdaDecimals))
-            let res = await this.STAKEContract.methods.unstake(unstakeNum.toFixed(2)).send({ from: this.defaultAccount })
+            let res = await this.STAKEContract.methods.unstake(unstakeNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
                 this.isUnstake = false
                 this.$message({
