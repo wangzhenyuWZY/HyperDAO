@@ -127,6 +127,7 @@ export default {
                 })
                 return
             }
+            this.doStake()
             if(this.isApprove){
                 this.doStake()
             }else{
@@ -139,7 +140,10 @@ export default {
         async doStake(){
             let mintNum = new BigNumber(this.mintNum)
             mintNum = mintNum.times(Math.pow(10,this.oldDecimals))
-            let oldBalance = this.oldBalance.times(Math.pow(10,this.oldDecimals))
+            let oldBalance = new BigNumber(this.oldBalance)
+            oldBalance = oldBalance.times(Math.pow(10,this.oldDecimals))
+            console.log(mintNum.toFixed())
+            console.log(oldBalance.toFixed())
             if(parseInt(mintNum)>parseInt(oldBalance)){
                 this.$message({
                     message: '余额不足',
@@ -160,7 +164,7 @@ export default {
             this.oldDecimals = await this.OLDHDAOContract.methods.decimals().call()
             let oldBalance = await this.OLDHDAOContract.methods.balanceOf(this.defaultAccount).call()
             oldBalance = new BigNumber(oldBalance)
-            this.oldBalance = oldBalance.div(Math.pow(10,this.oldDecimals))
+            this.oldBalance = oldBalance.div(Math.pow(10,this.oldDecimals)).toFixed(4)
         },    
     }
 }
@@ -207,7 +211,7 @@ export default {
                 }
             }
             input{
-                width:60%;
+                width:50%;
                 line-height:80px;
                 text-indent:25px;
                 font-size:24px;
