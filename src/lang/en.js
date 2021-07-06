@@ -125,5 +125,6 @@ export const lang = {
     "lang123":"Rewards Claimed",
     "lang124":"Calendar",
     "lang125":"Language",
-    "lang126":"My Wallet"
+    "lang126":"My Wallet",
+    "lang127":"Details"
 }

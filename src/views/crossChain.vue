@@ -15,7 +15,7 @@
                     <p class="chainInfo info3">
                         {{$t('lang.lang78')}}
                     </p>
-                    <a class="stakeBtn" @click="mintPop=true">{{$t('lang.lang80')}}</a>
+                    <a class="stakeBtn" @click="checkChain">{{$t('lang.lang80')}}</a>
                 </div>
                 <div class="proItem">
                     <p class="chainInfo info3">
@@ -106,6 +106,17 @@ export default {
             let res = await this.OLDHDAOContract.methods.allowance(this.defaultAccount, CONVERT.address).call()
             if(res){
                 this.isApprove = res > 0 ? true : false
+            }
+        },
+        async checkChain(){
+            const chainId = await this.web3.eth.getChainId()
+            if (chainId === 1) {
+                this.mintPop = true
+            }else{
+                this.$message({
+                    message: '请切换到Ethereum主网络',
+                    type: 'warning'
+                })
             }
         },
         async toMint(){

@@ -39,7 +39,7 @@
                                 <p class="title">{{$t('lang.lang33')}}</p>
                                 <p class="val">{{item.participate_number}}</p>
                             </div>
-                            <router-link :to="{path:'/details',query: {id: item.id}}" class="detailbtn">Details</router-link>
+                            <router-link :to="{path:'/details',query: {id: item.id}}" class="detailbtn">{{$t('lang.lang127')}}</router-link>
                         </li>
                     </ul>
                 </div>
@@ -332,6 +332,7 @@ export default {
                 img{
                     width:80px;
                     margin-right:20px;
+                    border-radius:50%;
                 }
             }
             .status{
