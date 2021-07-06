@@ -143,13 +143,13 @@ export default {
             oldBalance = oldBalance.times(Math.pow(10,this.oldDecimals))
             console.log(mintNum.toFixed())
             console.log(oldBalance.toFixed())
-            if(parseInt(mintNum)>parseInt(oldBalance)){
-                this.$message({
-                    message: '余额不足',
-                    type: 'warning'
-                })
-                return
-            }
+            // if(parseInt(mintNum)>parseInt(oldBalance)){
+            //     this.$message({
+            //         message: '余额不足',
+            //         type: 'warning'
+            //     })
+            //     return
+            // }
             this.mintPop = false
             let res = await this.CONVERTContract.methods.swap(mintNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
