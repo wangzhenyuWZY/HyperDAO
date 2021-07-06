@@ -128,6 +128,10 @@
                                     <h3>{{$t('lang.lang55')}}</h3>
                                     <span>{{detailInfo.description}}</span>
                                 </div>
+                                <div class="infoItem">
+                                    <h3>{{$t('lang.lang128')}}</h3>
+                                    <span>{{detailInfo.asset_retention_ratio}}%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -300,6 +304,7 @@ export default {
             axios.get(process.env.VUE_APP_URL+"hdao/"+this.$route.query.id).then((res)=>{
                 if(res.data.code==0){
                     this.detailInfo = res.data.data
+                    this.detailInfo.asset_retention_ratio = 100-parseFloat(res.data.data.asset_retention_ratio)
                     this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, res.data.data.ido_address)
                     this.getAllowance(res.data.data.ido_address)
                     this.init()
@@ -683,7 +688,8 @@ export default {
         async getName(){
             this.name = await this.SALETOKENContract.methods.name().call()
             this.symbol = await this.SALETOKENContract.methods.symbol().call()
-            let totalSupply = await this.SALETOKENContract.methods.totalSupply().call()
+            let totalSupply = await this.IDOContract.methods.tokensForSale().call() 
+            // let totalSupply = await this.SALETOKENContract.methods.totalSupply().call()
             if(totalSupply){
                 let total = new BigNumber(totalSupply)
                 this.totalSupply = total.div(Math.pow(10,this.tokenDecimals))

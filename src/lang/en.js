@@ -126,5 +126,6 @@ export const lang = {
     "lang124":"Calendar",
     "lang125":"Language",
     "lang126":"My Wallet",
-    "lang127":"Details"
+    "lang127":"Details",
+    "lang128":"IDO fund withdrawable amount allowed"
 }

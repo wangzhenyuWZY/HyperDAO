@@ -52,7 +52,7 @@
                 <p class="withdrawIn">{{$t('lang.lang65')}}</p>
             </div>
             <div class="myStake dobbuleVal">
-                <span class="myStakeVal center">{{dynamicRewards}}</span>
+                <span class="myStakeVal center">{{dynamicRewards.toFixed(4)}}</span>
                 <span class="myStakeVal center">{{userInfo.num_invitor}}</span>
             </div>
             <div class="stakeBtns">
