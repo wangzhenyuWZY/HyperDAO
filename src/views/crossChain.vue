@@ -127,7 +127,6 @@ export default {
                 })
                 return
             }
-            this.doStake()
             if(this.isApprove){
                 this.doStake()
             }else{
