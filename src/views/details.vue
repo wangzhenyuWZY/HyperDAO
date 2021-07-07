@@ -43,17 +43,33 @@
                             </div>
                             <div class="textbox">
                                 <div class="texts">
-                                    <h3>{{$t('lang.lang37')}}</h3>
-                                    <p>{{round==1?userInfo.uAmount:userInfo2.uAmount}} USDT</p>
-                                    <p>{{round==1?userInfo.amount:userInfo2.amount}} {{symbol}}</p>
+                                    <!-- <h3>{{$t('lang.lang37')}}</h3> -->
+                                    <h3 v-show="round==1&&!userInfo.checked">{{$t('lang.lang129')}}</h3>
+                                    <h3 v-show="round==1&&userInfo.checked">{{userInfo.checked?$t('lang.lang130'):$t('lang.lang129')}}</h3>
+                                    <h3 v-show="beginFcfs">{{$t('lang.lang131')}}</h3>
+                                    <div v-if="round==1&&!userInfo.checked">
+                                        <p>{{userInfo.uAmount}} USDT</p>
+                                        <p>{{userInfo.amount}} {{symbol}}</p>
+                                    </div>
+                                    <div v-else-if="round==1&&userInfo.checked">
+                                        <p>{{userInfo.claimedUsdt}} USDT</p>
+                                        <p>{{userInfo.claimed}} {{symbol}}</p>
+                                    </div>
+                                    <div v-else>
+                                        <p>{{userInfo2.uAmount}} USDT</p>
+                                        <p>{{userInfo2.amount}} {{symbol}}</p>
+                                    </div>
+                                    
                                 </div>
                                 <div class="texts">
-                                    <h3>{{$t('lang.lang38')}}</h3>
-                                    <p>{{(tokensLeft-r2boughtNum).toFixed(2)}} {{symbol}}</p>
+                                    <!-- <h3>{{$t('lang.lang38')}}</h3> -->
+                                    <h3 v-if="beginPro && !beginClaim">{{$t('lang.lang132')}}</h3>
+                                    <h3 v-else>{{$t('lang.lang133')}}</h3>
+                                    <p>{{beginPro && !beginClaim?totalSupply:(beginFcfs?(totalSupply-claimedNum-r2boughtNum).toFixed(2):(totalSupply-claimedNum).toFixed(2))}} {{symbol}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>{{beginClaim?$t('lang.lang39'):(fcfsBtn?$t('lang.lang40'):'')}}</h3>
-                                    <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuota:'')}}</p>
+                                    <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +122,9 @@
                                     <span>{{totalVol}} USDT</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>{{$t('lang.lang33')}}</h3>
+                                    <h3 v-show="beginPro">{{$t('lang.lang33')}}</h3>
+                                    <h3 v-show="beginClaim">领取额度人数</h3>
+                                    <h3 v-show="beginFcfs">参与抢购人数</h3>
                                     <span>{{tiersNum}}</span>
                                 </div>
                             </div>
@@ -122,7 +140,7 @@
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang54')}}</h3>
-                                    <span>{{totalSupply}}</span>
+                                    <span>{{totalSupply1}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang55')}}</h3>
@@ -264,7 +282,10 @@ export default {
             isBuying:false,
             fcfsBtn:false,
             claimQ:0,
-            fcfsQuota:0
+            fcfsQuota:0,
+            fcfsQuotaUsdt:0,
+            fcfsQuotaNum:0,
+            totalSupply1:0
         }
     },
     created(){
@@ -326,7 +347,8 @@ export default {
                 amount:amount.toFixed(2),
                 uAmount:uAmount.toFixed(2),
                 claimed:claimed.toFixed(2),
-                claimedUsdt:claimedUsdt.toFixed(2)
+                claimedUsdt:claimedUsdt.toFixed(2),
+                checked:userInfo.checked
             }
             let isR2started = await this.IDOContract.methods.isR2started().call()
             this.isR2started = isR2started
@@ -336,10 +358,10 @@ export default {
             let uAmount2 = new BigNumber(userInfo2.u_paid)
             uAmount2 = uAmount2.div(Math.pow(10,this.usdtDecimals))
             this.userInfo2 = {
-                amount:amount2.plus(claimed).toFixed(2),
-                uAmount:uAmount2.plus(claimedUsdt).toFixed(2)
+                amount:amount2.toFixed(2),
+                uAmount:uAmount2.toFixed(2),
+                times:userInfo2.times
             }
-            console.log(userInfo2)
         },
         async checkApprove(){
             this.isBuying = true
@@ -353,7 +375,7 @@ export default {
             }
         },
         async getQuota(){
-            let R2ForSale = await this.IDOContract.methods.R2ForSale().call()
+            let R2ForSale = await this.IDOContract.methods.getR2ForSale().call()
             R2ForSale = new BigNumber(R2ForSale)
             R2ForSale = R2ForSale.div(Math.pow(10,this.tokenDecimals))
             let quota = 0
@@ -372,13 +394,13 @@ export default {
             this.fcfsPop = false
             let preNum = new BigNumber(this.fcfsNum)
             preNum = preNum.div(this.price)
-            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
+            // preNum = preNum.times(Math.pow(10,this.tokenDecimals))
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let quota = await this.getQuota()
-            if(this.fcfsNum>quota){
+            if(preNum.toFixed(2)>quota){
                 this.$message({
-                    message: this.$t('lang.lang92')+quota,
+                    message: this.$t('lang.lang92')+quota.toFixed(2),
                     type: 'warning'
                 })
                 return
@@ -386,13 +408,6 @@ export default {
             if(!isR2started){
                 this.$message({
                     message: this.$t('lang.lang93'),
-                    type: 'warning'
-                }) 
-                return
-            }
-            if(this.tier<1){
-                this.$message({
-                    message: this.$t('lang.lang94'),
                     type: 'warning'
                 }) 
                 return
@@ -479,7 +494,7 @@ export default {
                 })
                 return
             }
-            if(parseFloat(this.preNum)>parseFloat(this.tokensLeft)){
+            if(parseFloat(this.preNum)>parseFloat(this.totalSupply)){
                 this.$message({
                     message: this.$t('lang.lang101'),
                     type: 'warning'
@@ -588,13 +603,13 @@ export default {
                 
             }
         },
-        async getTokensLeft(){
-            let res = await this.IDOContract.methods.tokensLeft().call()
-            if(res){
-                let balance = new BigNumber(res)
-                this.tokensLeft = balance.div(Math.pow(10,this.tokenDecimals))
-            }
-        },
+        // async getTokensLeft(){
+        //     let res = await this.IDOContract.methods.tokensLeft().call()
+        //     if(res){
+        //         let balance = new BigNumber(res)
+        //         this.tokensLeft = balance.div(Math.pow(10,this.tokenDecimals))
+        //     }
+        // },
         async getToken(){
             let res = await this.IDOContract.methods.token().call()
             if(res){
@@ -607,7 +622,7 @@ export default {
             let res = await this.SALETOKENContract.methods.decimals().call()
             if(res){
                 this.tokenDecimals = res
-                this.getTokensLeft()
+                // this.getTokensLeft()
                 this.getName()
             }
         },
@@ -674,12 +689,14 @@ export default {
                 this.beginFcfs = true 
                 this.fcfsBtn = true
                 this.getQuota().then(res=>{
-                    this.fcfsQuota = res
+                    this.fcfsQuota = res.toFixed(2)
+                    this.fcfsQuotaNum = (res-this.userInfo2.amount).toFixed(2)
+                    this.fcfsQuotaUsdt = res*this.price
                 })
             }
         },
         async getClaimQ(){
-            let res = await this.IDOContract.methods.getClaimQ(this.defaultAccount).call()
+            let res = await this.IDOContract.methods.getClaimable(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
                 this.claimQ = balance.div(Math.pow(10,this.tokenDecimals)).toFixed(2)
@@ -689,10 +706,12 @@ export default {
             this.name = await this.SALETOKENContract.methods.name().call()
             this.symbol = await this.SALETOKENContract.methods.symbol().call()
             let totalSupply = await this.IDOContract.methods.tokensForSale().call() 
-            // let totalSupply = await this.SALETOKENContract.methods.totalSupply().call()
+            let totalSupply1 = await this.SALETOKENContract.methods.totalSupply().call()
             if(totalSupply){
                 let total = new BigNumber(totalSupply)
+                let total1 = new BigNumber(totalSupply1)
                 this.totalSupply = total.div(Math.pow(10,this.tokenDecimals))
+                this.totalSupply1 = total1.div(Math.pow(10,this.tokenDecimals))
             }
         },
         add0(m){return m<10?'0'+m:m },
@@ -848,7 +867,7 @@ export default {
     .projectDetail{
         .nameInfo{
             padding:130px 0 56px;
-            width:1080px;
+            width:1200px;
             margin:0 auto;
             overflow:hidden;
             .projectName{
@@ -902,7 +921,7 @@ export default {
             background:#874FEC;
             padding:30px 0 0;
             .content{
-                width:1080px;
+                width:1200px;
                 margin:0 auto;
                 overflow:hidden;
                 .fl{
@@ -911,13 +930,14 @@ export default {
                         padding-bottom:40px;
                         .texts{
                             width:160px;
-                            margin-right:70px;
+                            margin-right:90px;
                             display: inline-block;
                             vertical-align: top;
                             h3{
                                 font-size:24px;
                                 color:#EDD9FF;
                                 line-height:33px;
+                                white-space: nowrap;
                             }
                             p{
                                 font-size:24px;
@@ -956,7 +976,7 @@ export default {
             }
         }
         .infoPanel{
-            width:1080px;
+            width:1200px;
             margin:80px auto;
             .tabs{
                 border-bottom:1px solid #DADADA;
@@ -994,6 +1014,12 @@ export default {
                             font-size:24px;
                             color:#fff;
                             line-height:50px;
+                            &:first-child{
+                                width:25%;
+                            }
+                            &:nth-child(2){
+                                width:40%;
+                            }
                         }
                     }
                     .roundBody{
@@ -1007,6 +1033,12 @@ export default {
                                 font-size:24px;
                                 color:#333333;
                                 line-height:60px;
+                                &:first-child{
+                                    width:25%;
+                                }
+                                &:nth-child(2){
+                                    width:40%;
+                                }
                             }
                         }
                     }
@@ -1170,6 +1202,7 @@ export default {
                                     color:#333333;
                                     line-height:14px;
                                     padding-bottom:8px;
+                                    white-space: nowrap;
                                 }
                                 p{
                                     font-size:14px;

@@ -523,7 +523,7 @@ export default {
     }
 }
 .address{
-    padding:80px 0;
+    padding:80px 0 0;
     &.mobiles{
         display:none;
     }
@@ -625,7 +625,7 @@ export default {
             }
         }
         &.border{
-            border-bottom:1px solid #DADADA;
+            border-bottom:1px solid #979797;
             padding-bottom:80px;
         }
     }

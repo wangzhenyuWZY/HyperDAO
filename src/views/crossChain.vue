@@ -292,7 +292,7 @@ export default {
                 text-align:center;
                 width:390px;
                 margin:57px auto;
-                height:180px;
+                height:130px;
             }
         }
     }
