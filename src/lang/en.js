@@ -71,7 +71,7 @@ export const lang = {
     "lang70":"Input Stake Amount",
     "lang71":"Ballot active",
     "lang72":"Ballot closed",
-    "lang73":"IDO Members Only",
+    "lang73":"IDO Members",
     "lang74":"Pro",
     "lang75":"Con",
     "lang76":"Polygon is a protocol and a framework for building and connecting Ethereum-compatible blockchain networks. It is a network that aggregates scalable solutions on Ethereum and supports a multi-chain Ethereum ecosystem that covers DeFi, NFT, Games, DEX projects.",

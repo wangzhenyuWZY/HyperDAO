@@ -10,11 +10,15 @@
                             <div class="voteHead">
                                 <div class="proName">
                                     <img :src="item.logo_url">
-                                    {{item.name}}
+                                    <div class="nameandpotic">
+                                        <p>{{isCn?item.name_zh:item.name_en}}</p>
+                                        <p>{{isCn?item.topic_zh:item.topic_en}}</p>
+                                    </div>
+                                    
                                 </div>
                                 <p class="access">Access<br>{{$t('lang.lang73')}}</p>
                             </div>
-                            <h3 class="votetodo">{{item.topic}}</h3>
+                            <h3 class="votetodo">{{item.amount}}</h3>
                             <p class="todoInfo">
                                 {{isCn?item.description_zh:item.description_en}}
                             </p>
@@ -49,11 +53,15 @@
                             <div class="voteHead">
                                 <div class="proName">
                                     <img :src="item.logo_url">
-                                    {{item.name}}
+                                    <div class="nameandpotic">
+                                        <p>{{isCn?item.name_zh:item.name_en}}</p>
+                                        <p>{{isCn?item.topic_zh:item.topic_en}}</p>
+                                    </div>
+                                    
                                 </div>
                                 <p class="access">Access<br>{{$t('lang.lang73')}}</p>
                             </div>
-                            <h3 class="votetodo">{{item.topic}}</h3>
+                            <h3 class="votetodo">{{item.amount}}</h3>
                             <p class="todoInfo">
                                 {{isCn?item.description_zh:item.description_en}}
                             </p>
@@ -333,6 +341,14 @@ export default {
                         margin-right:38px;
                         vertical-align: middle;
                     }
+                    .nameandpotic{
+                        display:inline-block;
+                        vertical-align: middle;
+                        p{
+                            font-size:28px;
+                            line-height:36px;
+                        }
+                    }
                 }
                 .access{
                     float:right;
@@ -402,10 +418,12 @@ export default {
                     height:30px;
                     background:#DADADA;
                     border-radius:33px;
+                    overflow:hidden;
                     p{
                         background:#fff;
                         height:100%;
                         border-radius:33px;
+                        width:0;
                     }
                 }
             }

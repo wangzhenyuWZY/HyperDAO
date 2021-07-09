@@ -623,10 +623,14 @@ export default {
     .stakeBtns{
         padding-top:40px;
         overflow:hidden;
-        margin-bottom:118px;
+        margin-bottom:60px;
         text-align:center;
         &.dobbuleBtn{
             margin-bottom:0;
+            &.border{
+                border-bottom:none;
+                padding-bottom:10px;
+            }
             .btn{
                 float:left;
                 &:last-child{
@@ -641,8 +645,11 @@ export default {
     }
     .rules{
         font-size:18px;
-        padding-bottom:60px;
-        padding-top:20px;
+        line-height:24px;
+        padding-bottom:20px;
+        padding-top:40px;
+        margin-bottom:40px;
+        border-bottom:1px dashed rgba(0,0,0,0.5);
     }
     .btn{
         min-width:260px;
@@ -763,9 +770,10 @@ export default {
         height:auto;
         .rules{
             margin-top:-10px;
-            font-size:14px;
+            font-size:12px;
             padding-top:0;
-            padding-bottom:40px;
+            padding-bottom:20px;
+            line-height:16px;
         }
         .stakeTitle{
             padding-top:0;
