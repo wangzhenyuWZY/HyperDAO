@@ -37,7 +37,7 @@
                 <span class="myStakeVal">{{staticReward.toFixed(4)}}</span>
             </div>
             <div class="stakeBtns border">
-                <el-button class="btn" @click="getStaticRewards" :loading='isClaimStatic' :disabled="isClaimStatic">{{$t('lang.lang63')}}</el-button>
+                <el-button class="btn width" @click="getStaticRewards" :loading='isClaimStatic' :disabled="isClaimStatic">{{$t('lang.lang63')}}</el-button>
             </div>
             <div class="dobble">
                 <p class="withdrawIn">{{$t('lang.lang64')}}</p>
@@ -48,7 +48,7 @@
                 <span class="myStakeVal center">{{userInfo.num_invitor}}</span>
             </div>
             <div class="stakeBtns border">
-                <el-button class="btn" @click="getDynamicRewards" :loading="isClaimDynamic" :disabled="isClaimDynamic">{{$t('lang.lang66')}}</el-button>
+                <el-button class="btn width" @click="getDynamicRewards" :loading="isClaimDynamic" :disabled="isClaimDynamic">{{$t('lang.lang66')}}</el-button>
             </div>
             <div class="address">
                 <h2>{{$t('lang.lang58')}}</h2>
@@ -743,6 +743,9 @@ export default {
             padding-bottom:10px;
             word-break: break-all;
         }
+        p{
+            font-size:8px;
+        }
     }
     .stakedCon{
         margin:53px 16px;
@@ -795,6 +798,9 @@ export default {
                 }
                 &:last-child{
                     margin:0;
+                }
+                &.width{
+                    width:165px;
                 }
             }
         }

@@ -7,7 +7,7 @@
                     <div class="projectName">
                         <img :src="detailInfo.logo_url">
                         <div class="nameContect">
-                            <h2>{{detailInfo.name}}</h2>
+                            <h2>{{isCn?detailInfo.name_zh:detailInfo.name_en}}</h2>
                             <div class="types">
                                 <a :href="detailInfo.url"><img src="../assets/img/icon10.png"></a>
                                 <a :href="detailInfo.medium_account"><img src="../assets/img/icon11.png"></a>
@@ -71,7 +71,7 @@
                                     <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
                                 </div>
                             </div>
-                            <div class="textbox">
+                            <div class="textbox pcnone">
                                 <div class="texts">
                                     <h3>{{$t('lang.lang33')}}</h3>
                                     <p>{{tiersNum}}</p>
@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang55')}}</h3>
-                                    <span>{{detailInfo.description}}</span>
+                                    <span>{{isCn?detailInfo.description_zh:detailInfo.description_en}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang128')}}</h3>
@@ -228,9 +228,10 @@
             <div class="popPanel">
                 <i class="close" @click="fcfsPop=false"></i>
                 <div class="idoput">
-                    <input :placeholder="$t('lang.lang90')" v-model="fcfsNum">
+                    <input :placeholder="$t('lang.lang90')" @input="changeu=fcfsNum*price" v-model="fcfsNum">
                     <span>{{symbol}}</span>
                 </div>
+                <p class="toUsdt">≈{{changeu}} USDT</p>
                 <div class="btnbox">
                     <el-button class="btn" @click="fcfsPop=false">{{$t('lang.lang67')}}</el-button>
                     <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkApprove">{{isApprove?$t('lang.lang68'):$t('lang.lang91')}}</el-button>
@@ -314,7 +315,9 @@ export default {
             fcfsQuota:0,
             fcfsQuotaUsdt:0,
             fcfsQuotaNum:0,
-            totalSupply1:0
+            totalSupply1:0,
+            isCn:false,
+            changeu:0
         }
     },
     created(){
@@ -329,6 +332,15 @@ export default {
             }
         })
     },
+    watch: {
+        '$i18n.locale' (newValue) {
+            if (this.$i18n.locale === 'en') {
+                this.isCn = false
+            } else if (this.$i18n.locale === 'zh') {
+                this.isCn = true
+            }
+        }
+    },
     mounted() {
         
     },
@@ -336,14 +348,15 @@ export default {
     
     },
     methods: {
-        init(){
-            this.getPrice()
-            this.getPrice2()
-            this.getUserTier()
-            this.getIsOpen()
-            this.getUsdtDecimails()
-            this.getToken()
-            this.getRound2start()
+        async init(){
+            await this.getToken()
+            await this.getPrice()
+            await this.getPrice2()
+            await this.getUserTier()
+            await this.getIsOpen()
+            await this.getUsdtDecimails()
+            
+            await this.getRound2start()
             this.getTiers()
             this.web3.eth.getBalance(this.defaultAccount).then(res=>{
                 let balance = new BigNumber(res)
@@ -423,7 +436,7 @@ export default {
             this.fcfsPop = false
             let preNum = new BigNumber(this.fcfsNum)
             // preNum = preNum.div(this.price)
-            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
+            
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let quota = await this.getQuota()
@@ -432,6 +445,7 @@ export default {
                     message: this.$t('lang.lang92')+quota.toFixed(2),
                     type: 'warning'
                 })
+                this.isBuying = false
                 return
             }
             if(!isR2started){
@@ -439,6 +453,7 @@ export default {
                     message: this.$t('lang.lang93'),
                     type: 'warning'
                 }) 
+                this.isBuying = false
                 return
             }
             
@@ -447,8 +462,10 @@ export default {
                     message: this.$t('lang.lang95'),
                     type: 'warning'
                 })
+                this.isBuying = false
                 return
             }
+            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
             let res = await this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
@@ -732,8 +749,6 @@ export default {
             }
         },
         async getName(){
-            this.name = await this.SALETOKENContract.methods.name().call()
-            this.symbol = await this.SALETOKENContract.methods.symbol().call()
             let totalSupply = await this.IDOContract.methods.tokensForSale().call() 
             let totalSupply1 = await this.SALETOKENContract.methods.totalSupply().call()
             if(totalSupply){
@@ -742,6 +757,8 @@ export default {
                 this.totalSupply = total.div(Math.pow(10,this.tokenDecimals))
                 this.totalSupply1 = total1.div(Math.pow(10,this.tokenDecimals))
             }
+            this.name = await this.SALETOKENContract.methods.name().call()
+            this.symbol = await this.SALETOKENContract.methods.symbol().call()
         },
         add0(m){return m<10?'0'+m:m },
         format(shijianchuo)
@@ -821,6 +838,11 @@ export default {
             top:52px;
             cursor: pointer;
         }
+        .toUsdt{
+            width:600px;
+            margin:10px auto;
+            text-align:right;
+        }
         .idoput{
             width:600px;
             height:80px;
@@ -885,6 +907,7 @@ export default {
             text-align:center;
             cursor: pointer;
             float:right;
+            
             &:first-child{
                 float:left;
             }
@@ -958,6 +981,9 @@ export default {
                     float:left;
                     .textbox{
                         padding-bottom:40px;
+                        &.pcnone{
+                            display:none;
+                        }
                         .texts{
                             width:160px;
                             margin-right:90px;
@@ -996,7 +1022,7 @@ export default {
                             background:#BC98FE;
                             cursor:initial;
                         }
-                        &:nth-child(2){
+                        &:nth-child(1){
                             margin-left:10px;
                         }
                     }
@@ -1103,6 +1129,13 @@ export default {
                         h4{
                             display:none;
                         }
+                        &.none{
+                            .infoItem{
+                                h3{
+                                    width:250px;
+                                }
+                            }
+                        }
                         .infoItem{
                             padding-bottom:30px;
                             h3{
@@ -1121,6 +1154,7 @@ export default {
                                 color:#333333;
                                 line-height:33px;
                             }
+                            
                         }
                     }
                 }
@@ -1140,6 +1174,10 @@ export default {
                 height:20px;
                 right:20px;
                 top:20px;
+            }
+            .toUsdt{
+                width:90%;
+                margin:10px auto;
             }
             .idoput{
                 width:90%;
@@ -1232,6 +1270,9 @@ export default {
                     .fl{
                         float:initial;
                         .textbox{
+                            &.pcnone{
+                                display:block;
+                            }
                             padding-bottom:0;
                             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
                             .texts{

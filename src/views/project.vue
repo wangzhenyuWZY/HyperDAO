@@ -11,7 +11,7 @@
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
-                                    <p>{{item.name}}</p>
+                                    <p>{{isCn?item.name_zh:item.name_en}}</p>
                                 </div>
                             </div>
                             <div class="types">
@@ -54,7 +54,7 @@
                                 <img :src="item.logo_url">
                                 <div class="time">
                                     <p>{{item.tasks[0].begin_time}}</p>
-                                    <p>{{item.name}}</p>
+                                    <p>{{isCn?item.name_zh:item.name_en}}</p>
                                 </div>
                             </div>
                             <div class="types">
@@ -104,7 +104,7 @@
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
-                                    <p>{{item.name}}</p>
+                                    <p>{{isCn?item.name_zh:item.name_en}}</p>
                                 </div>
                             </div>
                             <div class="types">
@@ -134,7 +134,7 @@
                             <div class="progress">
                                 <p class="title">{{$t('lang.lang34')}}</p>
                                 <div class="all">
-                                    <span></span>
+                                    <span :style="'width:'+item.progress+'%'"></span>
                                 </div>
                                 <p class="info">
                                     <span >{{item.progress}}%</span>
@@ -170,7 +170,8 @@ export default {
             closeItem:0,
             openCenter:false,
             readyCenter:false,
-            closeCenter:false
+            closeCenter:false,
+            isCn:false
         }
     },
     computed : {
@@ -185,6 +186,15 @@ export default {
     },
     beforeDestroy () {
     
+    },
+    watch: {
+        '$i18n.locale' (newValue) {
+            if (this.$i18n.locale === 'en') {
+                this.isCn = false
+            } else if (this.$i18n.locale === 'zh') {
+                this.isCn = true
+            }
+        }
     },
     methods: {
         getList(){
@@ -409,9 +419,14 @@ export default {
                     background:#fff;
                     height:18px;
                     border-radius:11px;
+                    position:relative;
                     span{
                         height:100%;
-                        background:#77FF7C;
+                        background:#DADADA;
+                        position:absolute;
+                        left:0;
+                        top:0;
+                        border-radius:11px;
                     }
                 }
                 .info{
