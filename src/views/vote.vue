@@ -4,8 +4,8 @@
         <div class="voteContainer">
             <div class="votePanel">
                 <h2>{{$t('lang.lang71')}}</h2>
-                <div class="voteListWrap">
-                    <div class="voteList">
+                <div class="voteListWrap" :class="openCenter?'openCenter':''">
+                    <div class="voteList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
                         <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==1">
                             <div class="voteHead">
                                 <div class="proName">
@@ -16,19 +16,35 @@
                             </div>
                             <h3 class="votetodo">{{item.topic}}</h3>
                             <p class="todoInfo">
-                                {{item.description}}
+                                {{isCn?item.description_zh:item.description_en}}
                             </p>
+                            
                             <a class="voteBtn" @click="toVote(item,0)">{{$t('lang.lang74')}}</a>
                             <a class="voteBtn" @click="toVote(item,1)">{{$t('lang.lang75')}}</a>
                             <div class="downtime">{{item.djs}}</div>
+                            <div class="voteProgress" style="margin-top:60px;">
+                                <div class="progressInfo">
+                                    <div class="infoItem">
+                                        <p>{{$t('lang.lang74')}}</p>
+                                        <p>{{item.counts.favor}}</p>
+                                    </div>
+                                    <div class="infoItem">
+                                        <p>{{$t('lang.lang75')}}</p>
+                                        <p>{{item.counts.oppos}}</p>
+                                    </div>
+                                </div>
+                                <div class="all">
+                                    <p :style="'width:'+item.counts.progress+'%'"></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="votePanel over">
                 <h2>{{$t('lang.lang72')}}</h2>
-                <div class="voteListWrap">
-                    <div class="voteList">
+                <div class="voteListWrap" :class="overCenter?'overCenter':''">
+                    <div class="voteList" :style="'width:'+overItem+'rem'" :class="_isMobile?'':'pclist'" >
                         <div class="voteItem" v-for="(item,index) in taskList" :key="index" v-if="item.status==2">
                             <div class="voteHead">
                                 <div class="proName">
@@ -39,16 +55,16 @@
                             </div>
                             <h3 class="votetodo">{{item.topic}}</h3>
                             <p class="todoInfo">
-                                {{item.description}}
+                                {{isCn?item.description_zh:item.description_en}}
                             </p>
                             <div class="voteProgress">
                                 <div class="progressInfo">
                                     <div class="infoItem">
-                                        <p>赞成</p>
+                                        <p>{{$t('lang.lang74')}}</p>
                                         <p>{{item.counts.favor}}</p>
                                     </div>
                                     <div class="infoItem">
-                                        <p>反对</p>
+                                        <p>{{$t('lang.lang75')}}</p>
                                         <p>{{item.counts.oppos}}</p>
                                     </div>
                                 </div>
@@ -97,8 +113,19 @@ export default {
             web3:null,
             defaultAccount:'',
             IDOContract:null,
-            taskList:[]
+            taskList:[],
+            isCn:false,
+            openItem:0,
+            openCenter:false,
+            overItem:0,
+            overCenter:false
         }
+    },
+    computed : {
+        _isMobile() {
+            let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+            return flag;
+        } 
     },
     created(){
         this.$initWeb3().then((web3)=>{
@@ -108,6 +135,15 @@ export default {
                 this.init()
             }
         })
+    },
+    watch: {
+        '$i18n.locale' (newValue) {
+            if (this.$i18n.locale === 'en') {
+                this.isCn = false
+            } else if (this.$i18n.locale === 'zh') {
+                this.isCn = true
+            }
+        }
     },
     mounted() {
          
@@ -140,6 +176,23 @@ export default {
                     this.taskList = res.data.data
                     this.setDownTime()
                     this.getVoteInfo()
+                    res.data.data.forEach((item,index)=>{
+                        if(item.status==1){
+                            this.openItem += 1.5
+                            if(this.openItem<2){
+                                this.openCenter = true
+                            }else{
+                                this.openCenter = false
+                            }
+                        }else if(item.status==2){
+                            this.overItem += 1.5
+                            if(this.overItem<2){
+                                this.overCenter = true
+                            }else{
+                                this.overCenter = false
+                            }
+                        }
+                    })
                     res.data.data.map( (obj,index)=>{
                         if(obj.status==1){
                             let endTime = new Date(obj.end_time).getTime()
@@ -157,14 +210,13 @@ export default {
                 this.$set(obj,"IDOContract",IDOContract)
                 if(obj.status==1){
                     this.getUserInfo(obj)
-                }else if(obj.status==2){
-                    this.getVoteCount(obj)
                 }
+                this.getVoteCount(obj)
             })
         },
         async getVoteCount(obj){
-            let favorCounts = await obj.IDOContract.methods.voteCounts(1).call()
-            let oppositionCounts = await obj.IDOContract.methods.voteCounts(2).call()
+            let favorCounts = await obj.IDOContract.methods.voteCounts(0).call()
+            let oppositionCounts = await obj.IDOContract.methods.voteCounts(1).call()
             favorCounts = new BigNumber(favorCounts)
             favorCounts = favorCounts.div(Math.pow(10,18))
             oppositionCounts = new BigNumber(oppositionCounts)
@@ -191,19 +243,19 @@ export default {
         async toVote(item,unit){
             if(!item.isVote){
                 this.$message({
-                    message: '投票未开启',
+                    message: this.$t('lang.lang103'),
                     type: 'warning'
                 })
             }else if(item.userVote.voted){
                 this.$message({
-                    message: '已投票',
+                    message: this.$t('lang.lang104'),
                     type: 'warning'
                 })
             }else{
                 let res = await item.IDOContract.methods.vote(unit).send({ from: this.defaultAccount })
                 if(res){
                     this.$message({
-                        message: '投票成功',
+                        message: this.$t('lang.lang105'),
                         type: 'success'
                     })
                 }
@@ -225,6 +277,7 @@ export default {
         }
         .voteList{
             .voteItem{
+                height:800px;
                 background:#999999;
                 border:none;
                 .voteHead{
@@ -250,6 +303,9 @@ export default {
         padding-bottom:90px;
     }
     .voteList{
+        &.pclist{
+                width:auto !important;
+            }
         font-size:0;
         text-align:center;
         .voteItem{
@@ -260,7 +316,7 @@ export default {
             border:2px solid #874FEC;
             border-radius:20px;
             width:680px;
-            height:800px;
+            height:1000px;
             text-align:left;
             .voteHead{
                 overflow:hidden;
@@ -344,10 +400,10 @@ export default {
                 .all{
                     margin-top:12px;
                     height:30px;
-                    background:#fff;
+                    background:#DADADA;
                     border-radius:33px;
                     p{
-                        background:#DADADA;
+                        background:#fff;
                         height:100%;
                         border-radius:33px;
                     }
@@ -364,10 +420,47 @@ export default {
         &.over{
             .voteList{
                 .voteItem{
+                    height:300px;
                     .todoInfo{
                         height:130px;
                     }
-                    .voteProgress{
+                    
+                }
+            }
+        }
+        padding-top:30px;
+        h2{
+            font-size:16px;
+            color:#333;
+            line-height:22px;
+            padding-bottom:10px;
+        }
+        .voteListWrap{
+            overflow-y: scroll;
+            &.openCenter,&.overCenter{
+
+                .voteList{
+                    width:100% !important;
+                    text-align:center;
+                    .voteItem{
+                        display:inline-block;
+                        float:initial;
+                    }
+                }
+            }
+        }
+        .voteList{
+            text-align:left;
+            overflow:hidden;
+            .voteItem{
+                border:1px solid #874FEC;
+                border-radius:10px;
+                padding:15px;
+                width:260px;
+                height:380px;
+                margin:0 10px;
+                float:left;
+                .voteProgress{
                         .progressInfo{
                             .infoItem{
                                 p{
@@ -382,29 +475,6 @@ export default {
                             margin-top:0;
                         }
                     }
-                }
-            }
-        }
-        padding-top:30px;
-        h2{
-            font-size:16px;
-            color:#333;
-            line-height:22px;
-            padding-bottom:10px;
-        }
-        .voteListWrap{
-            overflow-y: scroll;
-        }
-        .voteList{
-            width:1000px;
-            text-align:left;
-            .voteItem{
-                border:1px solid #874FEC;
-                border-radius:10px;
-                padding:15px;
-                width:260px;
-                height:280px;
-                margin:0 10px;
                 .voteHead{
                     padding-bottom:14px;
                     .proName{
@@ -430,7 +500,7 @@ export default {
                 .todoInfo{
                     font-size:10px;
                     line-height:14px;
-                    height:70px;
+                    height:100px;
                 }
                 .voteBtn{
                     width:120px;

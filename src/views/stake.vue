@@ -32,6 +32,7 @@
                 <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">{{$t('lang.lang61')}}</el-button>
                 <el-button class="btn" :class="(frozen_amount==0 || !hasWithdraw)?'desibled':''" :disabled="(frozen_amount==0 || !hasWithdraw)?true:false" @click="withdraw">{{$t('lang.lang62')}}</el-button>
             </div>
+            <div><p class="rules">{{$t('lang.lang136')}}</p></div>
             <p class="withdrawIn">{{$t('lang.lang113')}}</p>
             <div class="myStake">
                 <span class="myStakeVal">{{staticReward.toFixed(4)}}</span>
@@ -227,20 +228,6 @@ export default {
             }
         },
         async checkApproved(){
-            if(!this.stakeNum || this.stakeNum==0){
-                this.$message({
-                    message: this.$t('lang.lang120'),
-                    type: 'warning'
-                })
-                return
-            }
-            if(!this.inviter){
-                this.$message({
-                    message: this.$t('lang.lang121'),
-                    type: 'warning'
-                })
-                return
-            }
             this.isDoing = true
             if(this.isApprove){
                 this.toStake()
@@ -252,6 +239,22 @@ export default {
             }
         },
         async toStake(){
+            if(!this.stakeNum || this.stakeNum==0){
+                this.$message({
+                    message: this.$t('lang.lang120'),
+                    type: 'warning'
+                })
+                this.isDoing = false
+                return
+            }
+            if(!this.inviter){
+                this.$message({
+                    message: this.$t('lang.lang121'),
+                    type: 'warning'
+                })
+                this.isDoing = false
+                return
+            }
             this.popShow = false
             this.isStaking = true
             let amount = new BigNumber(this.stakeNum)
@@ -582,7 +585,6 @@ export default {
     }
     .dobble{
         overflow:hidden;
-        padding-top:30px;
         .withdrawIn{
             float:left;
             width:250px;
@@ -624,6 +626,7 @@ export default {
         margin-bottom:118px;
         text-align:center;
         &.dobbuleBtn{
+            margin-bottom:0;
             .btn{
                 float:left;
                 &:last-child{
@@ -632,9 +635,14 @@ export default {
             }
         }
         &.border{
-            border-bottom:1px dashed #E5E5E5;
+            border-bottom:1px dashed rgba(0,0,0,0.5);
             padding-bottom:60px;
         }
+    }
+    .rules{
+        font-size:18px;
+        padding-bottom:60px;
+        padding-top:20px;
     }
     .btn{
         min-width:260px;
@@ -753,6 +761,12 @@ export default {
         width:auto;
         padding:16px 32px 0;
         height:auto;
+        .rules{
+            margin-top:-10px;
+            font-size:14px;
+            padding-top:0;
+            padding-bottom:40px;
+        }
         .stakeTitle{
             padding-top:0;
             font-size:14px;

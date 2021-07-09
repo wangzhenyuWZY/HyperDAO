@@ -138,7 +138,7 @@
                                 </div>
                                 <p class="info">
                                     <span >{{item.progress}}%</span>
-                                    <span>{{item.ido_asset_collect}}/{{item.ido_asset_total}}</span>   
+                                    <span>{{item.usdt_asset_collect}}/{{item.ido_asset_total}}</span>   
                                 </p>
                             </div>
                         </li>
@@ -222,7 +222,7 @@ export default {
                             }else{
                                 this.closeCenter = false
                             }
-                            item.progress = item.ido_asset_collect!==0?(item.ido_asset_collect/item.ido_asset_total*100).toFixed(2):0
+                            item.progress = item.ido_asset_collect!==0?(item.usdt_asset_collect/item.ido_asset_total*100).toFixed(2):0
                         }
                     })
                     this.proList = res.data.data
@@ -252,7 +252,9 @@ export default {
     }
     &.doing{
         .projectList{
+            
             li{
+                height:750px;
                 .time{
                     p{
                         font-size:30px;
@@ -287,7 +289,7 @@ export default {
                 }
                 .time{
                     p{
-                        font-size:30px;
+                        font-size:18px;
                         padding-top:15px;
                     }
                 }
@@ -421,6 +423,7 @@ export default {
                     border-radius:11px;
                     position:relative;
                     span{
+                        max-width:100%;
                         height:100%;
                         background:#DADADA;
                         position:absolute;

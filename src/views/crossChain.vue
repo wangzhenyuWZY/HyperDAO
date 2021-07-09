@@ -263,7 +263,7 @@ export default {
     .chainInfo{
         width:1110px;
         margin:0 auto;
-        font-size:12px;
+        font-size:24px;
         color:#333;
         line-height:33px;
         &.info1{

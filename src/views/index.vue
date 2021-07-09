@@ -15,7 +15,7 @@
         </div>
         <div class="hdaoinfo">
             <h2><span>{{$t('lang.lang3')}}</span></h2>
-            <p class="infotext1">{{$t('lang.lang4')}}</p>
+            <p class="infotext1" :class="isCn?'isCn':''">{{$t('lang.lang4')}}</p>
             <p class="infotext2">{{$t('lang.lang5')}}</p>
             <p class="infotext3">{{$t('lang.lang6')}}</p>
         </div>
@@ -67,7 +67,8 @@
                         <p class="flowtext1">{{$t('lang.lang17')}}</p>
                         <p class="flowtext1">{{$t('lang.lang18')}}</p>
                     </div>
-                    <img src="../assets/img/infoimg1.png">
+                    <div><img src="../assets/img/infoimg1.png"></div>
+                    
                 </div>
                 
                 <h3>{{$t('lang.lang19')}}</h3>
@@ -80,7 +81,8 @@
                         <p class="weight">{{$t('lang.lang24')}}</p>
                         <p class="flowtext2" v-show="false">{{$t('lang.lang25')}}</p>
                     </div>
-                    <img src="../assets/img/infoimg2.png">
+                    <div><img src="../assets/img/infoimg2.png"></div>
+                    
                 </div>
                 
             </div>
@@ -158,7 +160,7 @@ export default {
         margin:0 auto;
         background:url(../assets/img/bg.png) no-repeat right bottom;
         background-size:650px 420px;
-        margin-bottom:170px;
+        margin-bottom:100px;
         h2{
             font-size:36px;
             color:#874FEC;
@@ -190,14 +192,19 @@ export default {
             
         }
         p{
-            font-size:14px;
+            font-size:18px;
             color:#333;
             line-height:40px;
             padding-bottom:40px;
             width:548px;
             &.infotext3{
                 width:548px;
-                font-weight: 600;
+            }
+            &.infotext1{
+                width:100%;
+            }
+            &.isCn{
+                width:548px;
             }
         }
     }
@@ -229,7 +236,7 @@ export default {
                 display:inline-block;
             }
             .title{
-                font-size:12px;
+                font-size:16px;
                 color:#FFF;
                 line-height:25px;
                 text-align:center;
@@ -290,7 +297,7 @@ export default {
             margin:0 auto 40px;
         }
         p{
-            font-size:14px;
+            font-size:18px;
             color:#333;
             line-height:24px;
             padding-bottom:30px;

@@ -124,15 +124,15 @@
                                 </div>
                                 <div class="infoItem">
                                     <h3 v-show="beginPro">{{$t('lang.lang33')}}</h3>
-                                    <h3 v-show="beginClaim">领取额度人数</h3>
-                                    <h3 v-show="beginFcfs">参与抢购人数</h3>
+                                    <h3 v-show="beginClaim">{{$t('lang.lang134')}}</h3>
+                                    <h3 v-show="beginFcfs">{{$t('lang.lang135')}}</h3>
                                     <span>{{tiersNum}}</span>
                                 </div>
                             </div>
                             <div class="infoDetail none">
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang52')}}</h3>
-                                    <span>{{detailInfo.name}}</span>
+                                    <span>{{isCn?detailInfo.name_zh:detailInfo.name_en}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang53')}}</h3>
@@ -143,12 +143,12 @@
                                     <span>{{totalSupply1}}</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>{{$t('lang.lang55')}}</h3>
-                                    <span>{{isCn?detailInfo.description_zh:detailInfo.description_en}}</span>
-                                </div>
-                                <div class="infoItem">
                                     <h3>{{$t('lang.lang128')}}</h3>
                                     <span>{{detailInfo.asset_retention_ratio}}%</span>
+                                </div>
+                                <div class="infoItem">
+                                    <h3>{{$t('lang.lang55')}}</h3>
+                                    <span>{{isCn?detailInfo.description_zh:detailInfo.description_en}}</span>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                             <div class="infoDetail">
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang52')}}</h3>
-                                    <span>{{detailInfo.name}}</span>
+                                    <span>{{isCn?detailInfo.name_zh:detailInfo.name_en}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang53')}}</h3>
@@ -172,12 +172,12 @@
                                     <span>{{totalSupply1}}</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>{{$t('lang.lang55')}}</h3>
-                                    <span>{{detailInfo.description}}</span>
+                                    <h3>{{$t('lang.lang128')}}</h3>
+                                    <span style="padding-top: 0.08rem;">{{detailInfo.asset_retention_ratio}}%</span>
                                 </div>
                                 <div class="infoItem">
-                                    <h3>{{$t('lang.lang128')}}</h3>
-                                    <span>{{detailInfo.asset_retention_ratio}}%</span>
+                                    <h3>{{$t('lang.lang55')}}</h3>
+                                    <span style="padding: 0.08rem 0;">{{isCn?detailInfo.description_zh:detailInfo.description_en}}</span>
                                 </div>
                             </div>
                         </div>
@@ -727,7 +727,7 @@ export default {
                 this.getClaimQ()
             }else if(now>this.clearTime && now<this.round2Start){
                 this.isDowning = false
-                this.beginFcfs = true 
+                this.beginFcfs = false 
             }else if(now>this.round2Start && now<this.fcfsEndTime){
                 this.downTime = this.fcfsEndTime
                 this.countTime()
@@ -955,6 +955,8 @@ export default {
             .allcationn{
                 float:right;
                 padding-top:40px;
+                width:260px;
+                text-align:center;
                 .title{
                     font-size:24px;
                     color:#999999;
@@ -1132,7 +1134,7 @@ export default {
                         &.none{
                             .infoItem{
                                 h3{
-                                    width:250px;
+                                    width:180px;
                                 }
                             }
                         }
@@ -1246,12 +1248,13 @@ export default {
                     }
                 }
                 .allcationn{
+                    width:100%;
                     padding-top:16px;
                     .title{
                         font-size:10px;
                         line-height:14px;
                         color:#333333;
-                        text-align:right;
+                        text-align:center;
                     }
                     .val{
                         font-size:18px;
