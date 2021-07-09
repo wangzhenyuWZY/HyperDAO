@@ -2,7 +2,7 @@
     <div class="container">
         <Header></Header>
         <div class="projectContainer">
-            <div class="projectPanel doing">
+            <div class="projectPanel doing" :class="openCenter?'openCenter':''">
                 <h2>{{$t('lang.lang26')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
@@ -44,7 +44,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="projectPanel ready">
+            <div class="projectPanel ready" :class="readyCenter?'readyCenter':''">
                 <h2>{{$t('lang.lang27')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+readyItem+'rem'">
@@ -95,7 +95,7 @@
                     </ul>
                 </div>    
             </div>
-            <div class="projectPanel over">
+            <div class="projectPanel over" :class="closeCenter?'closeCenter':''">
                 <h2>{{$t('lang.lang28')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+closeItem+'rem'" >
@@ -167,7 +167,10 @@ export default {
             proList:[],
             readyItem:0,
             openItem:0,
-            closeItem:0 
+            closeItem:0,
+            openCenter:false,
+            readyCenter:false,
+            closeCenter:false
         }
     },
     computed : {
@@ -190,10 +193,25 @@ export default {
                     res.data.data.forEach((item,index)=>{
                         if(item.status==1){
                             this.openItem += 1.51
+                            if(this.openItem<2){
+                                this.openCenter = true
+                            }else{
+                                this.openCenter = false
+                            }
                         }else if(item.status==0){
                             this.readyItem += 1.51
+                            if(this.readyItem<2){
+                                this.readyCenter = true
+                            }else{
+                                this.readyCenter = false
+                            }
                         }else if(item.status==2){
                             this.closeItem += 1.54
+                            if(this.closeItem<2){
+                                this.closeCenter = true
+                            }else{
+                                this.closeCenter = false
+                            }
                             item.progress = item.ido_asset_collect!==0?(item.ido_asset_collect/item.ido_asset_total*100).toFixed(2):0
                         }
                     })
@@ -242,6 +260,7 @@ export default {
         .projectList{
             li{
                 background:#999999;
+                box-shadow:none;
                 .statubtn{
                     background:#DADADA;
                     color:#999999;
@@ -282,7 +301,8 @@ export default {
         li{
             display:inline-block;
             vertical-align: middle;
-            background:#874FEC;
+            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            box-shadow: 0px 2px 0px 0px #7249BA;
             width:420px;
             height:680px;
             border-radius:20px;
@@ -419,6 +439,16 @@ export default {
     }
     .projectPanel{
         overflow:hidden;
+        &.openCenter,&.readyCenter,&.closeCenter{
+            .projectList{
+                width:100% !important;
+                text-align:center;
+                li{
+                    float:initial;
+                    display:inline-block;
+                }
+            }
+        }
         &.doing{
             .projectList{
                 li{

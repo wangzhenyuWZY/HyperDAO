@@ -1,10 +1,6 @@
 <template>
     <div class="stakePanel">
         <Header></Header>
-        <div class="address mobiles">
-            <h2>{{$t('lang.lang58')}}</h2>
-            <p>{{idoAddress}}</p>
-        </div>
         <div class="stakeInfo">
             <div class="stakeItem">
                 <p class="title">{{$t('lang.lang56')}}</p>
@@ -19,14 +15,10 @@
                 <p class="val">{{APR}}%</p>
             </div>
         </div>
-        <div class="address">
-            <h2>{{$t('lang.lang58')}}</h2>
-            <p>{{idoAddress}}</p>
-        </div>
         <div class="stakedCon">
-            <p class="withdrawIn mtop">{{$t('lang.lang59')}}</p>
+            <p class="withdrawIn mtop origin">{{$t('lang.lang59')}}</p>
             <div class="myStake">
-                <span class="myStakeVal">{{stake_amount?stake_amount:0}} HDAO</span>
+                <span class="myStakeVal origin">{{stake_amount?stake_amount:0}} HDAO</span>
             </div>
             <div class="stakeBtns">
                 <el-button class="btn" @click="popShow=true" :loading="isStaking" :disabled='isStaking'>{{$t('lang.lang60')}}</el-button>
@@ -55,8 +47,12 @@
                 <span class="myStakeVal center">{{dynamicRewards.toFixed(4)}}</span>
                 <span class="myStakeVal center">{{userInfo.num_invitor}}</span>
             </div>
-            <div class="stakeBtns">
+            <div class="stakeBtns border">
                 <el-button class="btn" @click="getDynamicRewards" :loading="isClaimDynamic" :disabled="isClaimDynamic">{{$t('lang.lang66')}}</el-button>
+            </div>
+            <div class="address">
+                <h2>{{$t('lang.lang58')}}</h2>
+                <p>{{idoAddress}}</p>
             </div>
         </div>
         <div class="popWrap" v-show="popShow">
@@ -494,6 +490,9 @@ export default {
         
     }
 }
+.stakePanel{
+    background:#F6F7FA;
+}
 .stakeInfo{
     font-size:0;
     text-align:center;
@@ -501,7 +500,8 @@ export default {
     .stakeItem{
         display:inline-block;
         vertical-align: middle;
-        background:#874FEC;
+        background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+        box-shadow: 0px 4px 0px 0px #7249BA;
         width:350px;
         height:120px;
         border-radius:10px;
@@ -523,31 +523,32 @@ export default {
     }
 }
 .address{
-    padding:80px 0 0;
+    padding:0 0 60px;
     &.mobiles{
         display:none;
     }
     h2{
         font-size:24px;
-        color:#333333;
+        color:#874FEC;
         line-height:33px;
         text-align:center;
         padding-bottom:12px;
     }
     p{
         font-size:24px;
-        color:#333;
+        color:#874FEC;
         line-height:33px;
         text-align:center;
     }
 }
 .stakedCon{
     margin:80px auto;
-    width:760px;
+    width:1130px;
     border:2px solid #874FEC;
     border-radius:20px;
-    padding:0 90px;
+    padding:0 200px;
     position:relative;
+    box-sizing: border-box;
     .stakeTitle{
         font-size:24px;
         color:#999999;
@@ -564,16 +565,19 @@ export default {
         font-weight:bold;
     }
     .withdrawIn{
-        font-size:24px;
+        font-size:18px;
         color:#999999;
         line-height:33px;
         padding-bottom:7px;
         text-align:center;
+        &.origin{
+            color:#874FEC;
+        }
         &.left{
             text-align:left;
         }
         &.mtop{
-            padding-top:58px;
+            padding-top:55px;
         }
     }
     .dobble{
@@ -604,17 +608,20 @@ export default {
             }
         }
         .myStakeVal{
-            font-size:30px;
+            font-size:28px;
             color:#333333;
             line-height:42px;
             font-weight: bold;
             width:240px;
+            &.origin{
+                color:#874FEC;
+            }
         }
     }
     .stakeBtns{
-        padding-top:50px;
+        padding-top:40px;
         overflow:hidden;
-        margin-bottom:80px;
+        margin-bottom:118px;
         text-align:center;
         &.dobbuleBtn{
             .btn{
@@ -625,13 +632,13 @@ export default {
             }
         }
         &.border{
-            border-bottom:1px solid #979797;
-            padding-bottom:80px;
+            border-bottom:1px dashed #E5E5E5;
+            padding-bottom:60px;
         }
     }
     .btn{
-        min-width:250px;
-        height:78px;
+        min-width:260px;
+        height:60px;
         background:#874FEC;
         border-radius:10px;
         box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
@@ -700,15 +707,18 @@ export default {
 
     }
     .stakeInfo{
-        padding-top:0;
+        padding-top:36px;
         .stakeItem{
-            display:block;
-            width:170px;
+            width:108px;
             height:70px;
             border-radius:6px;
-            margin:0 auto 20px;
+            margin:0;
+            margin-right:8px;
+            &:last-child{
+                margin-right:0;
+            }
             .title{
-                font-size:14px;
+                font-size:11px;
                 line-height:14px;
                 padding-top:18px;
                 padding-bottom:6px;
@@ -721,7 +731,7 @@ export default {
         }
     }
     .address{
-        display:none;
+        padding-bottom:24px;
         &.mobiles{
             display:block;
             padding:80px 0 20px;
@@ -731,13 +741,14 @@ export default {
             line-height:17px;
             padding:0;
             padding-bottom:10px;
+            word-break: break-all;
         }
     }
     .stakedCon{
-        margin:100px 25px;
+        margin:53px 16px;
         border:1px solid  #874FEC;
         width:auto;
-        padding:16px 32px;
+        padding:16px 32px 0;
         height:auto;
         .stakeTitle{
             padding-top:0;
@@ -777,9 +788,13 @@ export default {
                 margin-bottom:30px;
             }
             .btn{
-                width:100%;
+                width:134px;
+                min-width:auto;
                 &:first-child{
                     margin-bottom:15px;
+                }
+                &:last-child{
+                    margin:0;
                 }
             }
         }
