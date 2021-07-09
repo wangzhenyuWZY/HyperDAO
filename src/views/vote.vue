@@ -338,14 +338,14 @@ export default {
                     img{
                         width:115px;
                         height:115px;
-                        margin-right:38px;
+                        margin-right:20px;
                         vertical-align: middle;
                     }
                     .nameandpotic{
                         display:inline-block;
                         vertical-align: middle;
                         p{
-                            font-size:28px;
+                            font-size:24px;
                             line-height:36px;
                         }
                     }
@@ -473,7 +473,7 @@ export default {
             .voteItem{
                 border:1px solid #874FEC;
                 border-radius:10px;
-                padding:15px;
+                padding:15px 10px;
                 width:260px;
                 height:380px;
                 margin:0 10px;
@@ -502,6 +502,12 @@ export default {
                             width:34px;
                             height:34px;
                             margin-right:4px;
+                        }
+                        .nameandpotic{
+                            p{
+                                font-size:12px;
+                                line-height:16px;
+                            }
                         }
                     }
                     .access{
