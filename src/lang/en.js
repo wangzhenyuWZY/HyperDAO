@@ -71,7 +71,7 @@ export const lang = {
     "lang70":"Input Stake Amount",
     "lang71":"Ballot active",
     "lang72":"Ballot closed",
-    "lang73":"IDO Members Only",
+    "lang73":"IDO Members",
     "lang74":"Pro",
     "lang75":"Con",
     "lang76":"Polygon is a protocol and a framework for building and connecting Ethereum-compatible blockchain networks. It is a network that aggregates scalable solutions on Ethereum and supports a multi-chain Ethereum ecosystem that covers DeFi, NFT, Games, DEX projects.",
@@ -127,12 +127,14 @@ export const lang = {
     "lang125":"Language",
     "lang126":"My Wallet",
     "lang127":"Details",
-    "lang128":"IDO fund withdrawable amount allowed",
+    "lang128":"IDO Fund Withdrawable Ratio",
     "lang129":"My Registered Amount",
     "lang130":"My Claimed Amount",
     "lang131":"My Received Amount",
     "lang132":"IDO Total Amount",
     "lang133":"IDO Remaining Amount",
     "lang134":"Total Received  Users",
-    "lang135":"Total Claimed Users"
+    "lang135":"Total Claimed Users",
+    "lang136":"The staked funds can be withdrawn after 3 days of pre-unstake. Note: Each pre-unstake action will refresh the countdown. It is recommended to withdraw it before each pre-unstake.",
+    "lang137":"withdrawn num"
 }

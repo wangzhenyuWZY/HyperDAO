@@ -2,7 +2,7 @@
     <div class="container">
         <Header></Header>
         <div class="projectContainer">
-            <div class="projectPanel doing">
+            <div class="projectPanel doing" :class="openCenter?'openCenter':''">
                 <h2>{{$t('lang.lang26')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+openItem+'rem'">
@@ -11,7 +11,7 @@
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
-                                    <p>{{item.name}}</p>
+                                    <p>{{isCn?item.name_zh:item.name_en}}</p>
                                 </div>
                             </div>
                             <div class="types">
@@ -44,7 +44,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="projectPanel ready">
+            <div class="projectPanel ready" :class="readyCenter?'readyCenter':''">
                 <h2>{{$t('lang.lang27')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+readyItem+'rem'">
@@ -54,7 +54,7 @@
                                 <img :src="item.logo_url">
                                 <div class="time">
                                     <p>{{item.tasks[0].begin_time}}</p>
-                                    <p>{{item.name}}</p>
+                                    <p>{{isCn?item.name_zh:item.name_en}}</p>
                                 </div>
                             </div>
                             <div class="types">
@@ -95,7 +95,7 @@
                     </ul>
                 </div>    
             </div>
-            <div class="projectPanel over">
+            <div class="projectPanel over" :class="closeCenter?'closeCenter':''">
                 <h2>{{$t('lang.lang28')}}</h2>
                 <div class="projectWrap">
                     <ul class="projectList" :class="_isMobile?'':'pclist'" :style="'width:'+closeItem+'rem'" >
@@ -104,7 +104,7 @@
                             <div class="name">
                                 <img :src="item.logo_url">
                                 <div class="time">
-                                    <p>{{item.name}}</p>
+                                    <p>{{isCn?item.name_zh:item.name_en}}</p>
                                 </div>
                             </div>
                             <div class="types">
@@ -134,11 +134,11 @@
                             <div class="progress">
                                 <p class="title">{{$t('lang.lang34')}}</p>
                                 <div class="all">
-                                    <span></span>
+                                    <span :style="'width:'+item.progress+'%'"></span>
                                 </div>
                                 <p class="info">
                                     <span >{{item.progress}}%</span>
-                                    <span>{{item.ido_asset_collect}}/{{item.ido_asset_total}}</span>   
+                                    <span>{{item.usdt_asset_collect}}/{{item.ido_asset_total}}</span>   
                                 </p>
                             </div>
                         </li>
@@ -167,7 +167,11 @@ export default {
             proList:[],
             readyItem:0,
             openItem:0,
-            closeItem:0 
+            closeItem:0,
+            openCenter:false,
+            readyCenter:false,
+            closeCenter:false,
+            isCn:false
         }
     },
     computed : {
@@ -183,6 +187,15 @@ export default {
     beforeDestroy () {
     
     },
+    watch: {
+        '$i18n.locale' (newValue) {
+            if (this.$i18n.locale === 'en') {
+                this.isCn = false
+            } else if (this.$i18n.locale === 'zh') {
+                this.isCn = true
+            }
+        }
+    },
     methods: {
         getList(){
             axios.get(process.env.VUE_APP_URL+"hdaos?scan=2").then((res)=>{
@@ -190,11 +203,26 @@ export default {
                     res.data.data.forEach((item,index)=>{
                         if(item.status==1){
                             this.openItem += 1.51
+                            if(this.openItem<2){
+                                this.openCenter = true
+                            }else{
+                                this.openCenter = false
+                            }
                         }else if(item.status==0){
                             this.readyItem += 1.51
+                            if(this.readyItem<2){
+                                this.readyCenter = true
+                            }else{
+                                this.readyCenter = false
+                            }
                         }else if(item.status==2){
                             this.closeItem += 1.54
-                            item.progress = item.ido_asset_collect!==0?(item.ido_asset_collect/item.ido_asset_total*100).toFixed(2):0
+                            if(this.closeItem<2){
+                                this.closeCenter = true
+                            }else{
+                                this.closeCenter = false
+                            }
+                            item.progress = item.ido_asset_collect!==0?(item.usdt_asset_collect/item.ido_asset_total*100).toFixed(2):0
                         }
                     })
                     this.proList = res.data.data
@@ -224,7 +252,9 @@ export default {
     }
     &.doing{
         .projectList{
+            
             li{
+                height:750px;
                 .time{
                     p{
                         font-size:30px;
@@ -242,6 +272,7 @@ export default {
         .projectList{
             li{
                 background:#999999;
+                box-shadow:none;
                 .statubtn{
                     background:#DADADA;
                     color:#999999;
@@ -258,7 +289,7 @@ export default {
                 }
                 .time{
                     p{
-                        font-size:30px;
+                        font-size:18px;
                         padding-top:15px;
                     }
                 }
@@ -282,7 +313,8 @@ export default {
         li{
             display:inline-block;
             vertical-align: middle;
-            background:#874FEC;
+            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            box-shadow: 0px 2px 0px 0px #7249BA;
             width:420px;
             height:680px;
             border-radius:20px;
@@ -389,9 +421,15 @@ export default {
                     background:#fff;
                     height:18px;
                     border-radius:11px;
+                    position:relative;
                     span{
+                        max-width:100%;
                         height:100%;
-                        background:#77FF7C;
+                        background:#DADADA;
+                        position:absolute;
+                        left:0;
+                        top:0;
+                        border-radius:11px;
                     }
                 }
                 .info{
@@ -419,6 +457,16 @@ export default {
     }
     .projectPanel{
         overflow:hidden;
+        &.openCenter,&.readyCenter,&.closeCenter{
+            .projectList{
+                width:100% !important;
+                text-align:center;
+                li{
+                    float:initial;
+                    display:inline-block;
+                }
+            }
+        }
         &.doing{
             .projectList{
                 li{

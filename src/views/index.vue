@@ -14,8 +14,8 @@
             <router-link to="/" class="btn">{{$t('lang.lang2')}}</router-link>
         </div>
         <div class="hdaoinfo">
-            <h2>{{$t('lang.lang3')}}</h2>
-            <p class="infotext1">{{$t('lang.lang4')}}</p>
+            <h2><span>{{$t('lang.lang3')}}</span></h2>
+            <p class="infotext1" :class="isCn?'isCn':''">{{$t('lang.lang4')}}</p>
             <p class="infotext2">{{$t('lang.lang5')}}</p>
             <p class="infotext3">{{$t('lang.lang6')}}</p>
         </div>
@@ -58,19 +58,33 @@
             </div>
         </div>
         <div class="hdaoinfo flowPanel">
-            <h2>{{$t('lang.lang14')}}</h2>
+            <h2><span>{{$t('lang.lang14')}}</span></h2>
             <div class="flowItem">
                 <h3>{{$t('lang.lang15')}}</h3>
-                <p class="flowtext1">{{$t('lang.lang16')}}</p>
-                <p class="flowtext1">{{$t('lang.lang17')}}</p>
-                <p class="flowtext1">{{$t('lang.lang18')}}</p>
+                <div class="infoscon">
+                    <div class="text">
+                        <p class="flowtext1">{{$t('lang.lang16')}}</p>
+                        <p class="flowtext1">{{$t('lang.lang17')}}</p>
+                        <p class="flowtext1">{{$t('lang.lang18')}}</p>
+                    </div>
+                    <div><img src="../assets/img/infoimg1.png"></div>
+                    
+                </div>
+                
                 <h3>{{$t('lang.lang19')}}</h3>
-                <p class="flowtext2">{{$t('lang.lang20')}}</p>
-                <p class="weight">{{$t('lang.lang21')}}</p>
-                <p class="weight">{{$t('lang.lang22')}}</p>
-                <p class="weight">{{$t('lang.lang23')}}</p>
-                <p class="weight">{{$t('lang.lang24')}}</p>
-                <p class="flowtext2" v-show="false">{{$t('lang.lang25')}}</p>
+                <div class="infoscon">
+                    <div class="text">
+                        <p class="flowtext2">{{$t('lang.lang20')}}</p>
+                        <p class="weight">{{$t('lang.lang21')}}</p>
+                        <p class="weight">{{$t('lang.lang22')}}</p>
+                        <p class="weight">{{$t('lang.lang23')}}</p>
+                        <p class="weight">{{$t('lang.lang24')}}</p>
+                        <p class="flowtext2" v-show="false">{{$t('lang.lang25')}}</p>
+                    </div>
+                    <div><img src="../assets/img/infoimg2.png"></div>
+                    
+                </div>
+                
             </div>
         </div>
         <Footer></Footer>
@@ -146,65 +160,83 @@ export default {
         margin:0 auto;
         background:url(../assets/img/bg.png) no-repeat right bottom;
         background-size:650px 420px;
-        margin-bottom:170px;
+        margin-bottom:100px;
         h2{
             font-size:36px;
-            color:#333333;
+            color:#874FEC;
             line-height:50px;
             text-align:center;
             position:relative;
             margin-bottom:50px;
-            &:after{
-                content:'';
-                position:absolute;
-                bottom:-10px;
-                left:50%;
-                width:60px;
-                height:1px;
-                margin-left:-30px;
-                background:#333;
+            span{
+                position:relative;
+                &:after{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    left:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#874FEC;
+                }
+                &:before{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    right:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#874FEC;
+                }
             }
+            
         }
         p{
-            font-size:24px;
+            font-size:18px;
             color:#333;
             line-height:40px;
             padding-bottom:40px;
-            &.infotext1{
-                width:1164px;
-            }
-            &.infotext2{
-                width:548px;
-            }
+            width:548px;
             &.infotext3{
                 width:548px;
-                font-weight: 600;
+            }
+            &.infotext1{
+                width:100%;
+            }
+            &.isCn{
+                width:548px;
             }
         }
     }
     .projectlist{
         font-size:0;
         text-align:center;
+        padding:60px 0;
+        background: rgba(135, 79, 236, 0.05);
         .projectItem{
             display:inline-block;
             vertical-align:middle;
-            width:400px;
-            height:440px;
-            padding:30px;
-            border-radius:20px;
-            background:#874FEC;
+            width:294px;
+            height:364px;
+            padding:0 30px;
+            border-radius:10px;
+            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            box-shadow: 0px 4px 0px 0px #7249BA;
             box-sizing:border-box;
             margin:0 20px;
             h2{
-                font-size:36px;
+                width:158px;
+                height:50px;
+                font-size:16px;
                 color:#fff;
                 line-height:50px;
                 text-align:center;
-                padding-bottom:10px;
-                border-bottom:1px solid #EDD9FF;
+                border-radius: 0px 0px 10px 10px;
+                background:#9052FF;
+                display:inline-block;
             }
             .title{
-                font-size:18px;
+                font-size:16px;
                 color:#FFF;
                 line-height:25px;
                 text-align:center;
@@ -214,7 +246,7 @@ export default {
                 } */
             }
             .val{
-                font-size:28px;
+                font-size:18px;
                 color:#EDD9FF;
                 line-height:40px;
                 text-align:center;
@@ -222,34 +254,65 @@ export default {
         }
     }
     .flowPanel{
-        background:url(../assets/img/bg2.png) no-repeat right 200px bottom;
-        background-size:310px 610px;
+        background:none;
+        h2{
+            
+            span{
+                font-size:36px;
+                position:relative;
+                &:after{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    left:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#874FEC;
+                }
+                &:before{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    right:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#874FEC;
+                }
+            }
+        }
     }
     .flowItem{
         text-align:left;
         h3{
-            font-size:24px;
-            color:#333;
-            line-height:40px;
-            font-weight:600;
-            padding-bottom:10px;
-            padding-top:60px;
+            width:280px;
+            height:48px;
+            background: linear-gradient(270deg, #874FEC 0%, #A467FE 100%);
+            box-shadow: 0px 2px 0px 0px #7249BA;
+            border-radius: 100px;
+            font-size:18px;
+            color:#fff;
+            line-height:48px;
+            font-weight:400;
+            text-align:center;
+            margin:0 auto 40px;
         }
         p{
-            font-size:24px;
+            font-size:18px;
             color:#333;
-            line-height:40px;
-            padding-bottom:5px;
-            &.weight{
-                font-weight:600;
-                padding-top:20px;
-                width:530px;
+            line-height:24px;
+            padding-bottom:30px;
+        }
+        .infoscon{
+            display:flex;
+            justify-content:space-between;
+            align-content: space-between;
+            flex-wrap: wrap;
+            padding:0 100px 60px;
+            .text{
+                width:50%;
             }
-            &.flowtext1{
-                width:1120px;
-            }
-            &.flowtext2{
-                width:530px;
+            img{
+                width:348px;
             }
         }
     }
@@ -268,41 +331,45 @@ export default {
             margin-top:16px;
             margin-bottom:16px;
             .btn{
-                width:102px;
-                height:34px;
-                line-height:34px;
-                font-size:14px;
-                border-radius:4px;
+                width:134px;
+                height:40px;
+                line-height:40px;
+                font-size:12px;
+                border-radius:10px;
                 margin:0 22px;
+                background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+                box-shadow: 0px 2px 0px 0px #7249BA;
             }
         }
         .hdaoinfo{
-           padding:0 15px 180px; 
+           padding:0 20px 40px; 
            width:100%;
-           background:url(../assets/img/mImg/bg.png) no-repeat bottom 25px center;
-           background-size:227px 146px;
+           background:url(../assets/img/bg1.png) no-repeat bottom -60px right;
+           background-size:225px 225px;
            margin-bottom:0;
            h2{
-               font-size:16px;
+               font-size:24px;
                line-height:22px;
+               margin-top:30px;
+               margin-bottom:10px;
            }
            p{
                &.infotext1{
                     width:100%;
-                    font-size:14px;
-                    line-height:24px;
+                    font-size:12px;
+                    line-height:20px;
                     padding-bottom:16px;
                 }
                 &.infotext2{
                     width:100%;
-                    font-size:14px;
-                    line-height:24px;
+                    font-size:12px;
+                    line-height:20px;
                     padding-bottom:16px;
                 }
                 &.infotext3{
                     width:100%;
-                    font-size:14px;
-                    line-height:24px;
+                    font-size:12px;
+                    line-height:20px;
                     padding-bottom:16px;
                 }
            }
@@ -322,43 +389,50 @@ export default {
                        padding-bottom:7px;
                        padding-top:20px;
                    }
-                   p{
-                       font-size:14px;
-                       line-height:24px;
-                       &.flowtext1{
-                           width:100%;
-                       }
-                       &.flowtext2{
-                           padding-bottom:0;
-                           width:60%;
-                       }
-                       &.weight{
-                           width:60%;
-                           padding-top:0;
-                           padding-bottom:0;
-                       }
+                   .text{
+                        p{
+                            font-size:14px;
+                            line-height:24px;
+                            &.flowtext1{
+                                width:100%;
+                                
+                            }
+                            &.flowtext2{
+                                padding-bottom:0;
+                                width:60%;
+                            }
+                            &.weight{
+                                width:60%;
+                                padding-top:0;
+                                padding-bottom:0;
+                            }
+                        }
                    }
+                   
                }
            }
         }
         .projectlist{
             padding:20px;
+            background:none;
             .projectItem{
                 width:49%;
                 height:200px;
                 margin:0;
-                padding:11px;
+                padding:0 11px;
                 border-radius:10px;
-                margin-bottom:10px;
+                margin-bottom:20px;
                 &:nth-child(2n){
                     margin-left:2%;
                 }
                 h2{
-                    font-size:16px;
-                    line-height:20px;
+                    font-size:12px;
+                    line-height:28px;
+                    width:86px;
+                    height:28px;
                 }
                 .title{
-                    font-size:14px;
+                    font-size:10px;
                     line-height:14px;
                     padding-top:14px;
                     padding-bottom:4px;
@@ -367,8 +441,53 @@ export default {
                     } */
                 }
                 .val{
-                    font-size:14px;
+                    font-size:10px;
                     line-height:14px;
+                }
+            }
+        }
+        .hdaoinfo{
+            &.flowPanel {
+                padding:0;
+                margin-bottom:0;
+                background:none;
+                h2{
+                    span{
+                        font-size:24px;
+                        color:#874FEC;
+                    }
+                }
+                .flowItem{
+                    background:url(../assets/img/bg4.png) no-repeat right bottom;
+                    background-size:102px 336px;
+                    h3{
+                        width:140px;
+                        height:24px;
+                        background: linear-gradient(270deg, #874FEC 0%, #A467FE 100%);
+                        box-shadow: 0px 2px 0px 0px #7249BA;
+                        border-radius: 0px 100px 100px 0px;
+                        line-height:24px;
+                        font-size:12px;
+                        padding:0;
+                        margin:0;
+                    }
+                    .infoscon{
+                        display:block;
+                        padding:20px;
+                        .text{
+                            width:100%;
+                            p{
+                                font-size:12px;
+                                padding-bottom:20px;
+                                &.flowtext2,&.weight{
+                                    width:100%;
+                                }
+                            }
+                        }
+                        img{
+                            display:none;
+                        }
+                    }
                 }
             }
         }

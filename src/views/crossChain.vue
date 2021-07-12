@@ -363,9 +363,9 @@ export default {
         .chainInfo{
             width:100%;
             margin-top:18px;
-            font-size:14px;
+            font-size:0.5em;
             line-height:24px;
-            padding:0 16px;
+            padding:0 30px;
             &.info1{
                 margin-top:18px;
 
@@ -381,7 +381,7 @@ export default {
                 border:1px solid #874FEC;
                 margin-bottom:20px;
                 p{
-                    margin:20px auto;
+                    margin:20px auto 0;
                     width:90%;
                     font-size:14px;
                     line-height:24px;

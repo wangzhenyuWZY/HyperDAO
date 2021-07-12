@@ -7,7 +7,7 @@
                     <div class="projectName">
                         <img :src="detailInfo.logo_url">
                         <div class="nameContect">
-                            <h2>{{detailInfo.name}}</h2>
+                            <h2>{{isCn?detailInfo.name_zh:detailInfo.name_en}}</h2>
                             <div class="types">
                                 <a :href="detailInfo.url"><img src="../assets/img/icon10.png"></a>
                                 <a :href="detailInfo.medium_account"><img src="../assets/img/icon11.png"></a>
@@ -36,7 +36,7 @@
                                     <h3>{{$t('lang.lang36')}}</h3>
                                     <p>{{tierName}}</p>
                                 </div>  
-                                <div class="texts">
+                                <div class="texts none">
                                     <h3>{{$t('lang.lang33')}}</h3>
                                     <p>{{tiersNum}}</p>
                                 </div>  
@@ -59,7 +59,6 @@
                                         <p>{{userInfo2.uAmount}} USDT</p>
                                         <p>{{userInfo2.amount}} {{symbol}}</p>
                                     </div>
-                                    
                                 </div>
                                 <div class="texts">
                                     <!-- <h3>{{$t('lang.lang38')}}</h3> -->
@@ -67,6 +66,16 @@
                                     <h3 v-else>{{$t('lang.lang133')}}</h3>
                                     <p>{{beginPro && !beginClaim?totalSupply:(beginFcfs?(totalSupply-claimedNum-r2boughtNum).toFixed(2):(totalSupply-claimedNum).toFixed(2))}} {{symbol}}</p>
                                 </div>
+                                <div class="texts none">
+                                    <h3>{{beginClaim?$t('lang.lang39'):(fcfsBtn?$t('lang.lang40'):'')}}</h3>
+                                    <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
+                                </div>
+                            </div>
+                            <div class="textbox pcnone">
+                                <div class="texts">
+                                    <h3>{{$t('lang.lang33')}}</h3>
+                                    <p>{{tiersNum}}</p>
+                                </div>  
                                 <div class="texts">
                                     <h3>{{beginClaim?$t('lang.lang39'):(fcfsBtn?$t('lang.lang40'):'')}}</h3>
                                     <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
@@ -74,12 +83,6 @@
                             </div>
                         </div>
                         <div class="fr">
-                            <div class="allcationn" v-show="isDowning">
-                                <p class="title" v-show="beginPro">{{$t('lang.lang106')}}</p>          
-                                <p class="title" v-show="beginClaim">{{$t('lang.lang107')}}</p>    
-                                <p class="title" v-show="beginFcfs">{{$t('lang.lang108')}}</p>                      
-                                <p class="val">{{day}}d {{hour}}h {{min}}m {{second}}s</p>
-                            </div>
                             <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">{{$t('lang.lang41')}}</el-button>
                             <el-button class="btn" :class="!beginClaim?'disabled':''" :disabled="!beginClaim" @click="claimQuota">{{$t('lang.lang42')}}</el-button>
                             <el-button class="btn" :class="!fcfsBtn?'disabled':''" :disabled="!fcfsBtn" @click="fcfsPop = true">{{$t('lang.lang43')}}</el-button>
@@ -94,12 +97,10 @@
                     <div class="infoCon" v-show="infoTabs==0">
                         <div class="infoHead">
                             <span>{{$t('lang.lang46')}}</span>
-                            <span>{{$t('lang.lang47')}}</span>
-                            <p>{{$t('lang.lang44')}}</p>
+                            <span class="none">{{$t('lang.lang47')}}</span>
                         </div>
                         <div class="infoBody">
                             <div class="infoDetail">
-                                <h4>{{$t('lang.lang46')}}</h4>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang48')}}</h3>
                                     <span v-show="beginPro">{{schedule.startTime1}} (UTC+8)</span>
@@ -123,16 +124,15 @@
                                 </div>
                                 <div class="infoItem">
                                     <h3 v-show="beginPro">{{$t('lang.lang33')}}</h3>
-                                    <h3 v-show="beginClaim">领取额度人数</h3>
-                                    <h3 v-show="beginFcfs">参与抢购人数</h3>
+                                    <h3 v-show="beginClaim">{{$t('lang.lang134')}}</h3>
+                                    <h3 v-show="beginFcfs">{{$t('lang.lang135')}}</h3>
                                     <span>{{tiersNum}}</span>
                                 </div>
                             </div>
-                            <div class="infoDetail">
-                                <h4>{{$t('lang.lang47')}}</h4>
+                            <div class="infoDetail none">
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang52')}}</h3>
-                                    <span>{{detailInfo.name}}</span>
+                                    <span>{{isCn?detailInfo.name_zh:detailInfo.name_en}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang53')}}</h3>
@@ -143,12 +143,41 @@
                                     <span>{{totalSupply1}}</span>
                                 </div>
                                 <div class="infoItem">
+                                    <h3>{{$t('lang.lang128')}}</h3>
+                                    <span>{{detailInfo.asset_retention_ratio}}%</span>
+                                </div>
+                                <div class="infoItem">
                                     <h3>{{$t('lang.lang55')}}</h3>
-                                    <span>{{detailInfo.description}}</span>
+                                    <span>{{isCn?detailInfo.description_zh:detailInfo.description_en}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="infoCon martop" v-show="infoTabs==0">
+                        <div class="infoHead">
+                            <span>{{$t('lang.lang47')}}</span>
+                        </div>
+                        <div class="infoBody">
+                            <div class="infoDetail">
+                                <div class="infoItem">
+                                    <h3>{{$t('lang.lang52')}}</h3>
+                                    <span>{{isCn?detailInfo.name_zh:detailInfo.name_en}}</span>
+                                </div>
+                                <div class="infoItem">
+                                    <h3>{{$t('lang.lang53')}}</h3>
+                                    <span>{{symbol}}</span>
+                                </div>
+                                <div class="infoItem">
+                                    <h3>{{$t('lang.lang54')}}</h3>
+                                    <span>{{totalSupply1}}</span>
                                 </div>
                                 <div class="infoItem">
                                     <h3>{{$t('lang.lang128')}}</h3>
-                                    <span>{{detailInfo.asset_retention_ratio}}%</span>
+                                    <span style="padding-top: 0.08rem;">{{detailInfo.asset_retention_ratio}}%</span>
+                                </div>
+                                <div class="infoItem">
+                                    <h3>{{$t('lang.lang55')}}</h3>
+                                    <span style="padding: 0.08rem 0;">{{isCn?detailInfo.description_zh:detailInfo.description_en}}</span>
                                 </div>
                             </div>
                         </div>
@@ -199,9 +228,10 @@
             <div class="popPanel">
                 <i class="close" @click="fcfsPop=false"></i>
                 <div class="idoput">
-                    <input :placeholder="$t('lang.lang90')" v-model="fcfsNum">
-                    <span>USDT</span>
+                    <input :placeholder="$t('lang.lang90')" @input="changeu=fcfsNum*price" v-model="fcfsNum">
+                    <span>{{symbol}}</span>
                 </div>
+                <p class="toUsdt">≈{{changeu}} USDT</p>
                 <div class="btnbox">
                     <el-button class="btn" @click="fcfsPop=false">{{$t('lang.lang67')}}</el-button>
                     <el-button :disabled="isBuying" :loading="isBuying" class="btn" @click="checkApprove">{{isApprove?$t('lang.lang68'):$t('lang.lang91')}}</el-button>
@@ -285,7 +315,9 @@ export default {
             fcfsQuota:0,
             fcfsQuotaUsdt:0,
             fcfsQuotaNum:0,
-            totalSupply1:0
+            totalSupply1:0,
+            isCn:false,
+            changeu:0
         }
     },
     created(){
@@ -300,6 +332,15 @@ export default {
             }
         })
     },
+    watch: {
+        '$i18n.locale' (newValue) {
+            if (this.$i18n.locale === 'en') {
+                this.isCn = false
+            } else if (this.$i18n.locale === 'zh') {
+                this.isCn = true
+            }
+        }
+    },
     mounted() {
         
     },
@@ -307,14 +348,15 @@ export default {
     
     },
     methods: {
-        init(){
-            this.getPrice()
-            this.getPrice2()
-            this.getUserTier()
-            this.getIsOpen()
-            this.getUsdtDecimails()
-            this.getToken()
-            this.getRound2start()
+        async init(){
+            await this.getToken()
+            await this.getPrice()
+            await this.getPrice2()
+            await this.getUserTier()
+            await this.getIsOpen()
+            await this.getUsdtDecimails()
+            
+            await this.getRound2start()
             this.getTiers()
             this.web3.eth.getBalance(this.defaultAccount).then(res=>{
                 let balance = new BigNumber(res)
@@ -393,8 +435,8 @@ export default {
         async R2purchase(){
             this.fcfsPop = false
             let preNum = new BigNumber(this.fcfsNum)
-            preNum = preNum.div(this.price)
-            // preNum = preNum.times(Math.pow(10,this.tokenDecimals))
+            // preNum = preNum.div(this.price)
+            
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let quota = await this.getQuota()
@@ -403,6 +445,7 @@ export default {
                     message: this.$t('lang.lang92')+quota.toFixed(2),
                     type: 'warning'
                 })
+                this.isBuying = false
                 return
             }
             if(!isR2started){
@@ -410,6 +453,7 @@ export default {
                     message: this.$t('lang.lang93'),
                     type: 'warning'
                 }) 
+                this.isBuying = false
                 return
             }
             
@@ -418,9 +462,11 @@ export default {
                     message: this.$t('lang.lang95'),
                     type: 'warning'
                 })
+                this.isBuying = false
                 return
             }
-            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed(0)).send({ from: this.defaultAccount })
+            preNum = preNum.times(Math.pow(10,this.tokenDecimals))
+            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
                 this.$message({
                     message: this.$t('lang.lang96'),
@@ -681,7 +727,7 @@ export default {
                 this.getClaimQ()
             }else if(now>this.clearTime && now<this.round2Start){
                 this.isDowning = false
-                this.beginFcfs = true 
+                this.beginFcfs = false 
             }else if(now>this.round2Start && now<this.fcfsEndTime){
                 this.downTime = this.fcfsEndTime
                 this.countTime()
@@ -703,8 +749,6 @@ export default {
             }
         },
         async getName(){
-            this.name = await this.SALETOKENContract.methods.name().call()
-            this.symbol = await this.SALETOKENContract.methods.symbol().call()
             let totalSupply = await this.IDOContract.methods.tokensForSale().call() 
             let totalSupply1 = await this.SALETOKENContract.methods.totalSupply().call()
             if(totalSupply){
@@ -713,6 +757,8 @@ export default {
                 this.totalSupply = total.div(Math.pow(10,this.tokenDecimals))
                 this.totalSupply1 = total1.div(Math.pow(10,this.tokenDecimals))
             }
+            this.name = await this.SALETOKENContract.methods.name().call()
+            this.symbol = await this.SALETOKENContract.methods.symbol().call()
         },
         add0(m){return m<10?'0'+m:m },
         format(shijianchuo)
@@ -792,6 +838,11 @@ export default {
             top:52px;
             cursor: pointer;
         }
+        .toUsdt{
+            width:600px;
+            margin:10px auto;
+            text-align:right;
+        }
         .idoput{
             width:600px;
             height:80px;
@@ -856,6 +907,7 @@ export default {
             text-align:center;
             cursor: pointer;
             float:right;
+            
             &:first-child{
                 float:left;
             }
@@ -903,6 +955,8 @@ export default {
             .allcationn{
                 float:right;
                 padding-top:40px;
+                width:260px;
+                text-align:center;
                 .title{
                     font-size:24px;
                     color:#999999;
@@ -918,7 +972,8 @@ export default {
             }
         }
         .mydetail{
-            background:#874FEC;
+            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            box-shadow: 0px 6px 0px 0px #7249BA;
             padding:30px 0 0;
             .content{
                 width:1200px;
@@ -928,19 +983,22 @@ export default {
                     float:left;
                     .textbox{
                         padding-bottom:40px;
+                        &.pcnone{
+                            display:none;
+                        }
                         .texts{
                             width:160px;
                             margin-right:90px;
                             display: inline-block;
                             vertical-align: top;
                             h3{
-                                font-size:24px;
-                                color:#EDD9FF;
-                                line-height:33px;
+                                font-size:18px;
+                                color:#DBC7FF;
+                                line-height:25px;
                                 white-space: nowrap;
                             }
                             p{
-                                font-size:24px;
+                                font-size:28px;
                                 color:#fff;
                                 line-height:33px;
                                 white-space: nowrap;
@@ -951,8 +1009,8 @@ export default {
                 .fr{
                     float:right;
                     .btn{
-                        width:282px;
-                        height:66px;
+                        width:260px;
+                        height:60px;
                         display:block;
                         border-radius:10px;
                         background:#fff;
@@ -961,11 +1019,12 @@ export default {
                         color:#874FEC;
                         margin-bottom:40px;
                         cursor: pointer;
+                        border:none;
                         &.disabled{
-                            background:#EDD9FF;
+                            background:#BC98FE;
                             cursor:initial;
                         }
-                        &:nth-child(2){
+                        &:nth-child(1){
                             margin-left:10px;
                         }
                     }
@@ -979,19 +1038,19 @@ export default {
             width:1200px;
             margin:80px auto;
             .tabs{
-                border-bottom:1px solid #DADADA;
                 font-size:0;
                 span{
                     display:inline-block;
                     vertical-align: middle;
-                    margin-right:88px;
-                    font-size:30px;
-                    color:#DADADA;
-                    line-height:42px;
+                    margin-right:40px;
+                    font-size:28px;
+                    color:#B994FB;
+                    line-height:50px;
                     cursor: pointer;
                     &.active{
                         color:#874FEC;
                         font-weight:bold;
+                        font-size:36px;
                         border-bottom:8px solid #874FEC;
                     }
                 }
@@ -1000,6 +1059,9 @@ export default {
                 border:1px solid #874FEC;
                 border-radius:16px;
                 margin-top:40px;
+                &.martop{
+                    display:none;
+                }
                 .roundTable{
                     overflow:hidden;
                     .roundHead{
@@ -1044,7 +1106,7 @@ export default {
                     }
                 }
                 .infoHead{
-                    height:50px;
+                    height:66px;
                     border-radius: 16px 16px 0px 0px;
                     overflow:hidden;
                     background:#874FEC;
@@ -1054,8 +1116,7 @@ export default {
                         width:50%;
                         font-size:24px;
                         color:#fff;
-                        line-height:50px;
-                        font-weight:bold;
+                        line-height:66px;
                     }
                     p{
                         display:none;
@@ -1070,15 +1131,24 @@ export default {
                         h4{
                             display:none;
                         }
+                        &.none{
+                            .infoItem{
+                                h3{
+                                    width:180px;
+                                }
+                            }
+                        }
                         .infoItem{
                             padding-bottom:30px;
                             h3{
                                 display:inline-block;
                                 vertical-align: top;
                                 font-size:24px;
-                                color:#999999;
+                                color:#AEAEAE;
                                 line-height:33px;
                                 padding-right:20px;
+                                font-weight:400;
+                                width:180px;
                             }
                             span{
                                 vertical-align: top;
@@ -1086,6 +1156,7 @@ export default {
                                 color:#333333;
                                 line-height:33px;
                             }
+                            
                         }
                     }
                 }
@@ -1105,6 +1176,10 @@ export default {
                 height:20px;
                 right:20px;
                 top:20px;
+            }
+            .toUsdt{
+                width:90%;
+                margin:10px auto;
             }
             .idoput{
                 width:90%;
@@ -1173,41 +1248,54 @@ export default {
                     }
                 }
                 .allcationn{
-                    display:none !important;
+                    width:100%;
                     padding-top:16px;
                     .title{
                         font-size:10px;
                         line-height:14px;
+                        color:#333333;
+                        text-align:center;
                     }
                     .val{
-                        font-size:10px;
+                        font-size:18px;
                         line-height:14px;
+                        color:#874FEC;
                     }
                 }
             }
             .mydetail{
-                background:none;
-                padding:0;
+                background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+                box-shadow: 0px 2px 0px 0px #7249BA;
+                border-radius: 10px;
+                padding:0 24px;
                 .content{
                     width:auto;
                     .fl{
                         float:initial;
                         .textbox{
-                            padding-bottom:26px;
+                            &.pcnone{
+                                display:block;
+                            }
+                            padding-bottom:0;
+                            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
                             .texts{
-                                width:96px;
+                                width:50%;
                                 margin-right:0;
+                                padding:15px 0;
                                 h3{
-                                    font-size:14px;
-                                    color:#333333;
-                                    line-height:14px;
+                                    font-size:11px;
+                                    color:#DBC7FF;
+                                    line-height:16px;
                                     padding-bottom:8px;
                                     white-space: nowrap;
                                 }
                                 p{
                                     font-size:14px;
-                                    line-height:14px;
-                                    color:#333333;
+                                    line-height:16px;
+                                    color:#fff;
+                                }
+                                &.none{
+                                    display:none;
                                 }
                             }
                         }
@@ -1216,18 +1304,21 @@ export default {
                         float:initial;
                         padding-top:24px;
                         .btn{
-                            width:184px;
-                            height:42px;
-                            background:#874FEC;
+                            width:168px;
+                            height:40px;
+                            background:#FFFFFF;
                             border-radius:6px;
                             font-size:14px;
-                            color:#fff;
-                            margin:0 auto 26px;
+                            color:#874FEC;
+                            margin:0 auto 20px;
                             &:first-child{
                                 margin-left:auto;
                             }
                             &:nth-child(2){
-                                margin: 0 auto 0.2rem;
+                                margin: 0 auto 20px;
+                            }
+                            &.disabled{
+                                background:#BC98FE;
                             }
                         }
                         .allcationn{
@@ -1259,6 +1350,10 @@ export default {
                 .infoCon{
                     display:block !important;
                     border-radius:10px 10px 0 0;
+                    &.martop{
+                        margin-top:-10px;
+                    }
+                    
                     .roundTable{
                         .roundHead{
                             border-radius:10px 10px 0 0;
@@ -1287,8 +1382,14 @@ export default {
                     .infoHead{
                         border-radius:10px 10px 0 0;
                         height:26px;
+                        padding:0 17px;
                         span{
-                            display:none;
+                           font-size:12px;
+                           color:#fff;
+                           line-height:26px;
+                           &.none{
+                               display:none;
+                           }
                         }
                         p{
                             display:block;
@@ -1309,6 +1410,9 @@ export default {
                             &:first-child{
                                 border-top:none;
                             }
+                            &.none{
+                                display:none;
+                            }
                             h4{
                                 font-size:14px;
                                 color:#333;
@@ -1321,9 +1425,11 @@ export default {
                                 h3{
                                     font-size:12px;
                                     line-height:20px;
+                                    width:35%;
+                                    padding:0;
                                 }
                                 span{
-                                    font-size:12px;
+                                    font-size:14px;
                                     line-height:20px;
                                     float:right;
                                 }
