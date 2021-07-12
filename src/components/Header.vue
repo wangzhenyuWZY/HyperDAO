@@ -24,7 +24,7 @@
         <div class="utils clearfix">
             <a class="wallet">{{defaultAccount?defaultAccount:$t('lang.lang126')}}</a>
             <i class="data" @click="toDatepiker"></i>
-            <i class="language" @click="toggleLang"></i>
+            <i class="language" :class="isCn?'isEn':'isCn'" @click="toggleLang"></i>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
             <ul class="mobelNavlist">
@@ -64,7 +64,13 @@
             Datepiker
         },
         watch: {
-            
+            '$i18n.locale' (newValue) {
+                if (this.$i18n.locale === 'en') {
+                    this.isCn = false
+                } else if (this.$i18n.locale === 'zh') {
+                    this.isCn = true
+                }
+            }
         },
         data() {
             return {
@@ -72,7 +78,8 @@
                 drawer:false,
                 defaultAccount:null,
                 active:0,
-                isDate:false
+                isDate:false,
+                isCn:true
             }
         },
         created(){
@@ -122,6 +129,7 @@
 <style lang="less" scoped>
 .header{
     height:100px;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
     .mobelNavlist{
         li{
             margin-bottom:20px;
@@ -214,10 +222,16 @@
             width:30px;
             height:30px;
             margin-left:30px;
-            background: url(../assets/img/icon8.png) no-repeat center;
-            background-size:100% 100%;
             margin-top:30px;
             cursor: pointer;
+            &.isCn{
+                background: url(../assets/img/icon8.png) no-repeat center;
+                background-size:100% 100%;
+            }
+            &.isEn{
+                background: url(../assets/img/icon4.png) no-repeat center;
+                background-size:100% 100%;
+            }
         }
     }
 }   

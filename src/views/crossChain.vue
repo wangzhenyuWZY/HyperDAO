@@ -2,7 +2,8 @@
     <div class="container">
         <Header></Header>
         <div class="chainPanel">
-            <img class="banner" src="../assets/img/banner2.png">
+            <img class="banner" v-show="isCn" src="../assets/img/banner2.png">
+            <img class="banner" v-show="!isCn" src="../assets/img/banner22.png">
             <p class="chainInfo info1">
                 {{$t('lang.lang76')}}
             </p>
@@ -14,7 +15,7 @@
                     <p class="chainInfo info3">
                         {{$t('lang.lang78')}}
                     </p>
-                    <a class="stakeBtn" @click="mintPop=true">{{$t('lang.lang80')}}</a>
+                    <a class="stakeBtn" @click="checkChain">{{$t('lang.lang80')}}</a>
                 </div>
                 <div class="proItem">
                     <p class="chainInfo info3">
@@ -30,10 +31,11 @@
                 <i class="close" @click="mintPop=false"></i>
                 <div class="idoput">
                     <input :placeholder="$t('lang.lang82')" v-model="mintNum">
+                    <p>{{oldBalance}}<span>/ HDAO</span></p>
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="mintPop=false">{{$t('lang.lang67')}}</a>
-                    <a class="btn" @click="toMint">{{$t('lang.lang68')}}</a>
+                    <el-button class="btn" @click="mintPop=false">{{$t('lang.lang67')}}</el-button>
+                    <el-button class="btn" @click="toMint">{{isApprove?$t('lang.lang68'):$t('lang.lang91')}}</el-button>
                 </div>
             </div>
         </div>
@@ -53,6 +55,15 @@ export default {
     watch: {
         
     },
+    watch: {
+            '$i18n.locale' (newValue) {
+                if (this.$i18n.locale === 'en') {
+                    this.isCn = false
+                } else if (this.$i18n.locale === 'zh') {
+                    this.isCn = true
+                }
+            }
+        },
     data() {
         return {
             web3:null,
@@ -64,7 +75,8 @@ export default {
             mintNum:'',
             oldDecimals:18,
             oldBalance:0,
-            isApprove:false
+            isApprove:false,
+            isCn:false
         }
     },
     created(){
@@ -96,10 +108,21 @@ export default {
                 this.isApprove = res > 0 ? true : false
             }
         },
+        async checkChain(){
+            const chainId = await this.web3.eth.getChainId()
+            if (chainId === 1) {
+                this.mintPop = true
+            }else{
+                this.$message({
+                    message: '请切换到Ethereum主网络',
+                    type: 'warning'
+                })
+            }
+        },
         async toMint(){
             if(!this.mintNum || this.mintNum==0){
                 this.$message({
-                    message: '请填写质押数量',
+                    message: '请填写数量',
                     type: 'warning'
                 })
                 return
@@ -117,13 +140,16 @@ export default {
             let mintNum = new BigNumber(this.mintNum)
             mintNum = mintNum.times(Math.pow(10,this.oldDecimals))
             let oldBalance = new BigNumber(this.oldBalance)
-            if(mintNum>oldBalance){
-                this.$message({
-                    message: '余额不足',
-                    type: 'warning'
-                })
-                return
-            }
+            oldBalance = oldBalance.times(Math.pow(10,this.oldDecimals))
+            console.log(mintNum.toFixed())
+            console.log(oldBalance.toFixed())
+            // if(parseInt(mintNum)>parseInt(oldBalance)){
+            //     this.$message({
+            //         message: '余额不足',
+            //         type: 'warning'
+            //     })
+            //     return
+            // }
             this.mintPop = false
             let res = await this.CONVERTContract.methods.swap(mintNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
@@ -135,7 +161,9 @@ export default {
         },
         async getOldHdaoDecimails(){
             this.oldDecimals = await this.OLDHDAOContract.methods.decimals().call()
-            this.oldBalance = await this.OLDHDAOContract.methods.balanceOf(this.defaultAccount).call()
+            let oldBalance = await this.OLDHDAOContract.methods.balanceOf(this.defaultAccount).call()
+            oldBalance = new BigNumber(oldBalance)
+            this.oldBalance = oldBalance.div(Math.pow(10,this.oldDecimals)).toFixed(4)
         },    
     }
 }
@@ -182,7 +210,7 @@ export default {
                 }
             }
             input{
-                width:90%;
+                width:50%;
                 line-height:80px;
                 text-indent:25px;
                 font-size:24px;
@@ -198,7 +226,6 @@ export default {
                 color:#333;
                 line-height:80px;
                 font-weight:bold;
-                padding-right:40px;
                 span{
                     font-size:20px;
                 }
@@ -214,7 +241,6 @@ export default {
             display:block;
             width:250px;
             height:80px;
-            line-height:80px;
             box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
             background:#874FEC;
             border-radius:10px;
@@ -266,7 +292,7 @@ export default {
                 text-align:center;
                 width:390px;
                 margin:57px auto;
-                height:180px;
+                height:130px;
             }
         }
     }
@@ -326,7 +352,6 @@ export default {
                 .btn{
                     width:140px;
                     height:40px;
-                    line-height:40px;
                     font-size:16px;
 
                 }

@@ -52,7 +52,7 @@
                 <p class="withdrawIn">{{$t('lang.lang65')}}</p>
             </div>
             <div class="myStake dobbuleVal">
-                <span class="myStakeVal center">{{dynamicRewards}}</span>
+                <span class="myStakeVal center">{{dynamicRewards.toFixed(4)}}</span>
                 <span class="myStakeVal center">{{userInfo.num_invitor}}</span>
             </div>
             <div class="stakeBtns">
@@ -67,7 +67,7 @@
                     <p>{{hdaoBalance}}<span>/ HDAO</span></p>
                 </div>
                 <div class="idoput" v-show="userInfo.deposit_times==0">
-                    <input :placeholder="$t('lang.lang14')" v-model="inviter">
+                    <input :placeholder="$t('lang.lang114')" v-model="inviter">
                 </div>
                 <div class="btnbox">
                     <el-button class="btn" @click="popShow=false">{{$t('lang.lang67')}}</el-button>
@@ -193,7 +193,7 @@ export default {
             this.isUnstake = true
             let unstakeNum = new BigNumber(this.unstakeNum)
             unstakeNum = unstakeNum.times(Math.pow(10,this.hdaDecimals))
-            let res = await this.STAKEContract.methods.unstake(unstakeNum).send({ from: this.defaultAccount })
+            let res = await this.STAKEContract.methods.unstake(unstakeNum.toFixed()).send({ from: this.defaultAccount })
             if(res){
                 this.isUnstake = false
                 this.$message({
@@ -477,7 +477,7 @@ export default {
         }
         .btn{
             display:block;
-            width:250px;
+            padding:0 15px;
             height:80px;
             box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
             background:#874FEC;
@@ -523,7 +523,7 @@ export default {
     }
 }
 .address{
-    padding:80px 0;
+    padding:80px 0 0;
     &.mobiles{
         display:none;
     }
@@ -625,12 +625,12 @@ export default {
             }
         }
         &.border{
-            border-bottom:1px solid #DADADA;
+            border-bottom:1px solid #979797;
             padding-bottom:80px;
         }
     }
     .btn{
-        width:250px;
+        min-width:250px;
         height:78px;
         background:#874FEC;
         border-radius:10px;
@@ -776,7 +776,12 @@ export default {
                 padding-bottom:30px;
                 margin-bottom:30px;
             }
-            
+            .btn{
+                width:100%;
+                &:first-child{
+                    margin-bottom:15px;
+                }
+            }
         }
         .btn{
             width:120px;
