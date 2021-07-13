@@ -24,7 +24,8 @@
         <div class="utils clearfix">
             <a class="wallet">{{defaultAccount?defaultAccount:$t('lang.lang126')}}</a>
             <i class="data" @click="toDatepiker"></i>
-            <i class="language" :class="isCn?'isEn':'isCn'" @click="toggleLang"></i>
+            <span class="language" @click="toggleLang">中/En</span>
+            <!-- <i class="language" :class="isCn?'isEn':'isCn'" @click="toggleLang"></i> -->
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
             <ul class="mobelNavlist">
@@ -221,6 +222,8 @@
             float:left;
             width:30px;
             height:30px;
+            font-size:20px;
+            line-height:30px;
             margin-left:30px;
             margin-top:30px;
             cursor: pointer;

@@ -18,7 +18,7 @@
                                 </div>
                                 <p class="access">Access<br>{{$t('lang.lang73')}}</p>
                             </div>
-                            <h3 class="votetodo">{{item.amount}}</h3>
+                            <h3 class="votetodo">{{item.amount}}  USDT</h3>
                             <p class="todoInfo">
                                 {{isCn?item.description_zh:item.description_en}}
                             </p>
@@ -420,6 +420,7 @@ export default {
                     background:#DADADA;
                     border-radius:33px;
                     overflow:hidden;
+                    border: 1px solid #DADADA;
                     p{
                         background:#fff;
                         height:100%;

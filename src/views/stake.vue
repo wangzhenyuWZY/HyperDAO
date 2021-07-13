@@ -26,7 +26,7 @@
             <p class="withdrawIn left">{{$t('lang.lang112')}}<span>{{$t('lang.lang137')}}</span></p>
             <div class="myStake dobbuleVal">
                 <div class="myStakeVal">{{day}}d {{hour}}：{{min}}：{{second}}</div>
-                <div class="myStakeVal">{{frozen_amount}} HDAO</div>
+                <div class="myStakeVal">{{frozen_amount>0&&hasWithdraw?frozen_amount:0}} HDAO</div>
             </div>
             <div class="stakeBtns border dobbuleBtn">
                 <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">{{$t('lang.lang61')}}</el-button>
@@ -354,7 +354,7 @@ export default {
             let res = await this.HDAOContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
-                this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals))
+                this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals)).toFixed(2)
             }
         },
         async getReward(){
@@ -455,14 +455,18 @@ export default {
                 border:none;
                 background:none;
                 outline:none;
+                box-sizing: border-box;
             }
             p{
                 float:right;
+                width:49%;
                 font-size:24px;
                 color:#333;
                 line-height:80px;
                 font-weight:bold;
                 padding-right:40px;
+                text-align:right;
+                box-sizing: border-box;
                 span{
                     font-size:20px;
                 }
@@ -568,7 +572,7 @@ export default {
         font-weight:bold;
     }
     .withdrawIn{
-        font-size:18px;
+        font-size:16px;
         color:#999999;
         line-height:33px;
         padding-bottom:7px;
@@ -775,10 +779,11 @@ export default {
         height:auto;
         .rules{
             margin-top:-10px;
-            font-size:12px;
+            font-size:10px;
             padding-top:0;
             padding-bottom:20px;
             line-height:16px;
+            font-weight:100;
         }
         .stakeTitle{
             padding-top:0;
@@ -796,9 +801,12 @@ export default {
             }
         }
         .withdrawIn{
-           font-size:14px;
+           font-size:11px;
            line-height:14px; 
            padding-bottom:6px;
+           span{
+               padding-top:3px;
+           }
            &.mtop{
                padding-top:20px;
            }

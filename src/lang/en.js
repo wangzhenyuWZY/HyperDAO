@@ -72,8 +72,8 @@ export const lang = {
     "lang71":"Ballot active",
     "lang72":"Ballot closed",
     "lang73":"IDO Members",
-    "lang74":"Pro",
-    "lang75":"Con",
+    "lang74":"Agree",
+    "lang75":"Disagree",
     "lang76":"Polygon is a protocol and a framework for building and connecting Ethereum-compatible blockchain networks. It is a network that aggregates scalable solutions on Ethereum and supports a multi-chain Ethereum ecosystem that covers DeFi, NFT, Games, DEX projects.",
     "lang77":"Polygon Layer 2 network is widely used with over 7 million on-chain transactions and over 200 000 independent account addresses. ",
     "lang78":"HyperDAO has upgraded and supports Polygon network now, original HDAO holders can swap for new HDAO tokens at a 1:1 ratio.",
@@ -111,7 +111,7 @@ export const lang = {
     "lang110":"Comming Soon",
     "lang111":"Closed",
     "lang112":"Project Active",
-    "lang112":"Withdrawable in",
+    "lang112":"Unstake in",
     "lang113":"Staking Rewards",
     "lang114":"Input Referal Address",
     "lang115":"Current HDAO stakable",
@@ -136,5 +136,5 @@ export const lang = {
     "lang134":"Total Received  Users",
     "lang135":"Total Claimed Users",
     "lang136":"The staked funds can be withdrawn after 3 days of pre-unstake. Note: Each pre-unstake action will refresh the countdown. It is recommended to withdraw it before each pre-unstake.",
-    "lang137":"withdrawn num"
+    "lang137":"Withdrawable"
 }
