@@ -166,7 +166,7 @@ export default {
             this.getTotalStaked()
             this.getApr()
             this.getReward()
-            this.getPeriod()
+            
         },
         checkUnstake(){
             if(this.stake_amount==0){
@@ -307,6 +307,7 @@ export default {
                 this.frozen_amount = parseFloat(frozen_amount.div(Math.pow(10,this.hdaDecimals)))
                 let dynamicRewards = new BigNumber(res.dynamicRewards)
                 this.dynamicRewards = dynamicRewards.div(Math.pow(10,this.hdaDecimals))
+                this.getPeriod()
             }
         },
         async getPeriod(){
