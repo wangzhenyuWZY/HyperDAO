@@ -88,6 +88,7 @@
                                     <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
                                 </div>
                             </div>
+                            <p class="tips">{{$t('lang.lang138')}}</p>
                         </div>
                         <div class="fr">
                             <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">{{$t('lang.lang41')}}</el-button>
@@ -485,7 +486,7 @@ export default {
                     .once('confirmation', function(confirmationNumber, receipt){
                         that.isBuying = false
                         that.$message({
-                            message: this.$t('lang.lang96'),
+                            message: that.$t('lang.lang96'),
                             type: 'success'
                         }) 
                         that.refresh()
@@ -589,7 +590,7 @@ export default {
                     .once('confirmation', function(confirmationNumber, receipt){
                         that.isBuying = false
                         that.$message({
-                            message: this.$t('lang.lang96'),
+                            message: that.$t('lang.lang96'),
                             type: 'success'
                         }) 
                         that.refresh()
@@ -1012,6 +1013,7 @@ export default {
                 overflow:hidden;
                 .fl{
                     float:left;
+                    width:77%;
                     .textbox{
                         padding-bottom:40px;
                         &.pcnone{
@@ -1038,6 +1040,11 @@ export default {
                                 white-space: nowrap;
                             }
                         }
+                    }
+                    .tips{
+                        color:#fff;
+                        text-align:center;
+                        padding-bottom:10px;
                     }
                 }
                 .fr{
@@ -1304,8 +1311,16 @@ export default {
                 padding:0 24px;
                 .content{
                     width:auto;
+                    
                     .fl{
                         float:initial;
+                        width:100%;
+                        line-height:18px;
+                        .tips{
+                            font-size:11px;
+                            padding-top:10px;
+                            padding-bottom:0;
+                        }
                         .textbox{
                             &.pcnone{
                                 display:block;
