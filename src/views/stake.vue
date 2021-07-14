@@ -185,19 +185,26 @@ export default {
             }
             this.toUnstake()
         },
-        async toUnstake(){
+        toUnstake(){
             this.unstakePop = false
             this.isUnstake = true
             let unstakeNum = new BigNumber(this.unstakeNum)
             unstakeNum = unstakeNum.times(Math.pow(10,this.hdaDecimals))
-            let res = await this.STAKEContract.methods.unstake(unstakeNum.toFixed()).send({ from: this.defaultAccount })
-            if(res){
-                this.isUnstake = false
-                this.$message({
-                    message: this.$t('lang.lang116'),
-                    type: 'success'
-                })
-            }
+            let that = this
+            this.STAKEContract.methods.unstake(unstakeNum.toFixed()).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isUnstake = false
+                        that.$message({
+                            message: this.$t('lang.lang116'),
+                            type: 'success'
+                        }) 
+                    })
+                    .once('error', function(){
+                        that.isUnstake = false
+                    });
         },
         async withdraw(){
             let date = new Date()
@@ -238,7 +245,7 @@ export default {
                 this.isDoing = false
             }
         },
-        async toStake(){
+        toStake(){
             if(!this.stakeNum || this.stakeNum==0){
                 this.$message({
                     message: this.$t('lang.lang120'),
@@ -255,42 +262,66 @@ export default {
                 this.isDoing = false
                 return
             }
+            let that = this
             this.popShow = false
             this.isStaking = true
             let amount = new BigNumber(this.stakeNum)
             amount = amount.times(Math.pow(10,this.hdaDecimals))
             let inviter = this.inviter?this.inviter:TIERSYSTEM.address
-            let apr1 = await this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
-            this.$message({
-                message: this.$t('lang.lang122'),
-                type: 'success'
-            })
-            this.isStaking = false
-            this.isDoing = false
+            this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isStaking = false
+                        that.isDoing = false
+                        that.$message({
+                            message: this.$t('lang.lang122'),
+                            type: 'success'
+                        }) 
+                    })
+                    .once('error', function(){
+                        that.isStaking = false
+                        that.isDoing = false
+                    });
         },
-        async getStaticRewards(){
+        getStaticRewards(){
             this.isClaimStatic = true
-            let res = await this.STAKEContract.methods.getStaticRewards().send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang123'),
-                    type: 'success'
-                }) 
-                this.isClaimStatic = false
-                this.getUserinfo()
-            }
+            let that = this
+            this.STAKEContract.methods.getStaticRewards().send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isClaimStatic = false
+                        that.$message({
+                            message: this.$t('lang.lang123'),
+                            type: 'success'
+                        }) 
+                        that.getUserinfo()
+                    })
+                    .once('error', function(){
+                        that.isClaimStatic = false
+                    });
         },
-        async getDynamicRewards(){
+        getDynamicRewards(){
             this.isClaimDynamic = true
-            let res = await this.STAKEContract.methods.getDynamicRewards().send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang123'),
-                    type: 'success'
-                })
-                this.isClaimDynamic = false
-                this.getUserinfo() 
-            }
+            let that = this
+            this.STAKEContract.methods.getDynamicRewards().send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isClaimDynamic = false
+                        that.$message({
+                            message: this.$t('lang.lang123'),
+                            type: 'success'
+                        }) 
+                        that.getUserinfo() 
+                    })
+                    .once('error', function(){
+                        that.isClaimDynamic = false
+                    });
         },
         async getUserinfo (Spender) {
             let res = await this.STAKEContract.methods.userInfo(this.defaultAccount).call()

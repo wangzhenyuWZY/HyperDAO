@@ -451,7 +451,7 @@ export default {
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let quota = await this.getQuota()
-            if(preNum.toFixed(2)>quota){
+            if(parseFloat(preNum.toFixed(2))>parseFloat(quota.toFixed(2))){
                 this.$message({
                     message: this.$t('lang.lang92')+quota.toFixed(2),
                     type: 'warning'
@@ -476,15 +476,23 @@ export default {
                 this.isBuying = false
                 return
             }
+            let that = this
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang96'),
-                    type: 'success'
-                }) 
-                this.refresh()
-            }
+            this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isBuying = false
+                        that.$message({
+                            message: this.$t('lang.lang96'),
+                            type: 'success'
+                        }) 
+                        that.refresh()
+                    })
+                    .once('error', function(){
+                        that.isBuying = false
+                    });
         },
         //认领额度
         async claimQuota(){
@@ -569,20 +577,26 @@ export default {
             }
             this.toPreAlloc()
         },
-        async doPurchase(){
+        doPurchase(){
             this.stakePop = false
             let preNum = new BigNumber(this.preNum)
             preNum = preNum.div(this.r1Price)
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang96'),
-                    type: 'success'
-                })
-            }
-            this.isBuying = false
-            this.refresh()
+            this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isBuying = false
+                        that.$message({
+                            message: this.$t('lang.lang96'),
+                            type: 'success'
+                        }) 
+                        that.refresh()
+                    })
+                    .once('error', function(){
+                        that.isBuying = false
+                    });
         },
         async toPreAlloc(){
             this.isBuying = true
