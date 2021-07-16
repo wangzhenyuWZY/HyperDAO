@@ -71,7 +71,7 @@
                 } else if (this.$i18n.locale === 'zh') {
                     this.isCn = true
                 }
-            }
+            },
         },
         data() {
             return {
@@ -80,12 +80,14 @@
                 defaultAccount:null,
                 active:0,
                 isDate:false,
-                isCn:true
+                isCn:true,
+                web3:null
             }
         },
         created(){
             this.$initWeb3().then((web3)=>{
                 if(web3.eth.defaultAccount){
+                    this.web3 = web3
                     this.defaultAccount = this.plusXing(web3.eth.defaultAccount,5,5)
                 }
             })
@@ -105,6 +107,8 @@
             }else if(path=='/chain'){
                 this.active = 4
             }
+
+            
         },
         beforeDestroy () {
         
