@@ -26,7 +26,7 @@
             <p class="withdrawIn left">{{$t('lang.lang112')}}<span>{{$t('lang.lang137')}}</span></p>
             <div class="myStake dobbuleVal">
                 <div class="myStakeVal">{{day}}d {{hour}}：{{min}}：{{second}}</div>
-                <div class="myStakeVal">{{frozen_amount}} HDAO</div>
+                <div class="myStakeVal">{{frozen_amount>0&&hasWithdraw?frozen_amount:0}} HDAO</div>
             </div>
             <div class="stakeBtns border dobbuleBtn">
                 <el-button class="btn" @click="unstakePop=true" :loading="isUnstake" :disabled="isUnstake">{{$t('lang.lang61')}}</el-button>
@@ -166,7 +166,7 @@ export default {
             this.getTotalStaked()
             this.getApr()
             this.getReward()
-            this.getPeriod()
+            
         },
         checkUnstake(){
             if(this.stake_amount==0){
@@ -185,19 +185,26 @@ export default {
             }
             this.toUnstake()
         },
-        async toUnstake(){
+        toUnstake(){
             this.unstakePop = false
             this.isUnstake = true
             let unstakeNum = new BigNumber(this.unstakeNum)
             unstakeNum = unstakeNum.times(Math.pow(10,this.hdaDecimals))
-            let res = await this.STAKEContract.methods.unstake(unstakeNum.toFixed()).send({ from: this.defaultAccount })
-            if(res){
-                this.isUnstake = false
-                this.$message({
-                    message: this.$t('lang.lang116'),
-                    type: 'success'
-                })
-            }
+            let that = this
+            this.STAKEContract.methods.unstake(unstakeNum.toFixed()).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isUnstake = false
+                        that.$message({
+                            message: this.$t('lang.lang116'),
+                            type: 'success'
+                        }) 
+                    })
+                    .once('error', function(){
+                        that.isUnstake = false
+                    });
         },
         async withdraw(){
             let date = new Date()
@@ -247,6 +254,7 @@ export default {
                 this.isDoing = false
                 return
             }
+            // let isAddress = this.web3.utils.isAddress(this.inviter)
             if(!this.inviter){
                 this.$message({
                     message: this.$t('lang.lang121'),
@@ -255,42 +263,77 @@ export default {
                 this.isDoing = false
                 return
             }
+            let inviterData = await this.STAKEContract.methods.userInfo(this.inviter).call()
+            let stakenum = new BigNumber(inviterData.stake_amount)
+            stakenum = stakenum.div(Math.pow(10,this.hdaDecimals))
+            if(parseInt(stakenum)<10000){
+                this.$message({
+                    message: this.$t('lang.lang139'),
+                    type: 'warning'
+                })
+                this.isDoing = false
+                return
+            }
+            let that = this
             this.popShow = false
             this.isStaking = true
             let amount = new BigNumber(this.stakeNum)
             amount = amount.times(Math.pow(10,this.hdaDecimals))
             let inviter = this.inviter?this.inviter:TIERSYSTEM.address
-            let apr1 = await this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
-            this.$message({
-                message: this.$t('lang.lang122'),
-                type: 'success'
-            })
-            this.isStaking = false
-            this.isDoing = false
+            this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isStaking = false
+                        that.isDoing = false
+                        that.$message({
+                            message: this.$t('lang.lang122'),
+                            type: 'success'
+                        }) 
+                    })
+                    .once('error', function(){
+                        that.isStaking = false
+                        that.isDoing = false
+                    });
         },
-        async getStaticRewards(){
+        getStaticRewards(){
             this.isClaimStatic = true
-            let res = await this.STAKEContract.methods.getStaticRewards().send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang123'),
-                    type: 'success'
-                }) 
-                this.isClaimStatic = false
-                this.getUserinfo()
-            }
+            let that = this
+            this.STAKEContract.methods.getStaticRewards().send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isClaimStatic = false
+                        that.$message({
+                            message: this.$t('lang.lang123'),
+                            type: 'success'
+                        }) 
+                        that.getUserinfo()
+                    })
+                    .once('error', function(){
+                        that.isClaimStatic = false
+                    });
         },
-        async getDynamicRewards(){
+        getDynamicRewards(){
             this.isClaimDynamic = true
-            let res = await this.STAKEContract.methods.getDynamicRewards().send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang123'),
-                    type: 'success'
-                })
-                this.isClaimDynamic = false
-                this.getUserinfo() 
-            }
+            let that = this
+            this.STAKEContract.methods.getDynamicRewards().send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isClaimDynamic = false
+                        that.$message({
+                            message: this.$t('lang.lang123'),
+                            type: 'success'
+                        }) 
+                        that.getUserinfo() 
+                    })
+                    .once('error', function(){
+                        that.isClaimDynamic = false
+                    });
         },
         async getUserinfo (Spender) {
             let res = await this.STAKEContract.methods.userInfo(this.defaultAccount).call()
@@ -307,6 +350,7 @@ export default {
                 this.frozen_amount = parseFloat(frozen_amount.div(Math.pow(10,this.hdaDecimals)))
                 let dynamicRewards = new BigNumber(res.dynamicRewards)
                 this.dynamicRewards = dynamicRewards.div(Math.pow(10,this.hdaDecimals))
+                this.getPeriod()
             }
         },
         async getPeriod(){
@@ -354,7 +398,7 @@ export default {
             let res = await this.HDAOContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
-                this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals))
+                this.hdaoBalance = balance.div(Math.pow(10,this.hdaDecimals)).toFixed(2)
             }
         },
         async getReward(){
@@ -455,14 +499,18 @@ export default {
                 border:none;
                 background:none;
                 outline:none;
+                box-sizing: border-box;
             }
             p{
                 float:right;
+                width:49%;
                 font-size:24px;
                 color:#333;
                 line-height:80px;
                 font-weight:bold;
                 padding-right:40px;
+                text-align:right;
+                box-sizing: border-box;
                 span{
                     font-size:20px;
                 }
@@ -568,7 +616,7 @@ export default {
         font-weight:bold;
     }
     .withdrawIn{
-        font-size:18px;
+        font-size:16px;
         color:#999999;
         line-height:33px;
         padding-bottom:7px;
@@ -775,10 +823,11 @@ export default {
         height:auto;
         .rules{
             margin-top:-10px;
-            font-size:12px;
+            font-size:10px;
             padding-top:0;
             padding-bottom:20px;
             line-height:16px;
+            font-weight:100;
         }
         .stakeTitle{
             padding-top:0;
@@ -796,9 +845,12 @@ export default {
             }
         }
         .withdrawIn{
-           font-size:14px;
+           font-size:11px;
            line-height:14px; 
            padding-bottom:6px;
+           span{
+               padding-top:3px;
+           }
            &.mtop{
                padding-top:20px;
            }

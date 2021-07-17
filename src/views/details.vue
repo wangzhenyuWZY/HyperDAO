@@ -71,6 +71,13 @@
                                     <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
                                 </div>
                             </div>
+                            <div class="textbox" v-show="fcfsBtn">
+                                <div class="texts">
+                                    <h3>{{$t('lang.lang130')}}</h3>
+                                    <p>{{userInfo.claimedUsdt}} USDT</p>
+                                    <p>{{userInfo.claimed}} {{symbol}}</p>
+                                </div>
+                            </div>
                             <div class="textbox pcnone">
                                 <div class="texts">
                                     <h3>{{$t('lang.lang33')}}</h3>
@@ -81,6 +88,7 @@
                                     <p>{{beginClaim?claimQ:(fcfsBtn?fcfsQuotaNum+'  '+symbol:'')}}</p>
                                 </div>
                             </div>
+                            <p class="tips">{{$t('lang.lang138')}}</p>
                         </div>
                         <div class="fr">
                             <el-button class="btn" :class="!beginPro?'disabled':''" :disabled="!isOpen" @click="stakePop = true">{{$t('lang.lang41')}}</el-button>
@@ -349,19 +357,23 @@ export default {
     },
     methods: {
         async init(){
+            this.getIsOpen()
+            this.getUsdtBalance()
+            this.getTiers()
+            this.getUserTier()
             await this.getToken()
             await this.getPrice()
             await this.getPrice2()
-            await this.getUserTier()
-            await this.getIsOpen()
-            await this.getUsdtDecimails()
-            
             await this.getRound2start()
-            this.getTiers()
             this.web3.eth.getBalance(this.defaultAccount).then(res=>{
                 let balance = new BigNumber(res)
                 this.maticBalance = balance.div(Math.pow(10,18)).toFixed(4)
             })
+        },
+        refresh(){
+            this.getUsdtBalance()
+            this.getRound2start()
+            this.getUserTier()
         },
         getDetails(){
             axios.get(process.env.VUE_APP_URL+"hdao/"+this.$route.query.id).then((res)=>{
@@ -440,7 +452,7 @@ export default {
             let isR2started = await this.IDOContract.methods.isR2started().call()
             let isR2begin = await this.IDOContract.methods.isR2begin().call()
             let quota = await this.getQuota()
-            if(preNum.toFixed(2)>quota){
+            if(parseFloat(preNum.toFixed(2))>parseFloat(quota.toFixed(2))){
                 this.$message({
                     message: this.$t('lang.lang92')+quota.toFixed(2),
                     type: 'warning'
@@ -465,14 +477,23 @@ export default {
                 this.isBuying = false
                 return
             }
+            let that = this
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang96'),
-                    type: 'success'
-                }) 
-            }
+            this.IDOContract.methods.R2purchase(preNum.toFixed()).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isBuying = false
+                        that.$message({
+                            message: that.$t('lang.lang96'),
+                            type: 'success'
+                        }) 
+                        that.refresh()
+                    })
+                    .once('error', function(){
+                        that.isBuying = false
+                    });
         },
         //认领额度
         async claimQuota(){
@@ -498,6 +519,7 @@ export default {
                     message: this.$t('lang.lang99'),
                     type: 'success'
                 })
+                this.refresh()
             }
         },
         //已经完成结算认领的数量
@@ -525,7 +547,7 @@ export default {
                 this.getTokensClaimed()
             }
         },
-        checkPurchase(){
+        async checkPurchase(){
             if(this.tier<1 || !this.tier){
                 this.$message({
                     message: this.$t('lang.lang94'),
@@ -556,19 +578,26 @@ export default {
             }
             this.toPreAlloc()
         },
-        async doPurchase(){
+        doPurchase(){
             this.stakePop = false
             let preNum = new BigNumber(this.preNum)
             preNum = preNum.div(this.r1Price)
             preNum = preNum.times(Math.pow(10,this.tokenDecimals))
-            let res = await this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
-            if(res){
-                this.$message({
-                    message: this.$t('lang.lang96'),
-                    type: 'success'
-                })
-            }
-            this.isBuying = false
+            this.IDOContract.methods.preAlloc(preNum.toFixed(0)).send({ from: this.defaultAccount })
+                    .once('transactionHash', function(hash){
+                        
+                    })
+                    .once('confirmation', function(confirmationNumber, receipt){
+                        that.isBuying = false
+                        that.$message({
+                            message: that.$t('lang.lang96'),
+                            type: 'success'
+                        }) 
+                        that.refresh()
+                    })
+                    .once('error', function(){
+                        that.isBuying = false
+                    });
         },
         async toPreAlloc(){
             this.isBuying = true
@@ -672,18 +701,18 @@ export default {
                 this.getName()
             }
         },
-        async getUsdtDecimails(){
-            let res = await this.USDTContract.methods.decimals().call()
-            if(res){
-                this.usdtDecimals = res
-                this.getUsdtBalance()
-            }
-        },
+        // async getUsdtDecimails(){
+        //     let res = await this.USDTContract.methods.decimals().call()
+        //     if(res){
+        //         this.usdtDecimals = res
+        //         this.getUsdtBalance()
+        //     }
+        // },
         async getUsdtBalance () {
             let res = await this.USDTContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
                 let balance = new BigNumber(res)
-                this.usdtBalance = balance.div(Math.pow(10,this.usdtDecimals)).toFixed(2)
+                this.usdtBalance = balance.div(Math.pow(10,6)).toFixed(2)
             }
         },
         async getStartTime(){
@@ -724,10 +753,12 @@ export default {
                 this.countTime()
                 this.isDowning = true
                 this.beginClaim = true
+                this.beginPro = false
                 this.getClaimQ()
             }else if(now>this.clearTime && now<this.round2Start){
                 this.isDowning = false
                 this.beginFcfs = false 
+                this.beginClaim = false
             }else if(now>this.round2Start && now<this.fcfsEndTime){
                 this.downTime = this.fcfsEndTime
                 this.countTime()
@@ -801,6 +832,7 @@ export default {
             // 等于0的时候不调用
             if (Number(this.hour) === 0 && Number(this.day) === 0 && Number(this.min) === 0 && Number(this.second) === 0) {
                 // this.getDownTime()
+                this.refresh()
                 return
             } else {
             // 递归每秒调用countTime方法，显示动态时间效果,
@@ -981,16 +1013,20 @@ export default {
                 overflow:hidden;
                 .fl{
                     float:left;
+                    width:77%;
                     .textbox{
                         padding-bottom:40px;
                         &.pcnone{
                             display:none;
                         }
                         .texts{
-                            width:160px;
+                            width:240px;
                             margin-right:90px;
                             display: inline-block;
                             vertical-align: top;
+                            &:last-child{
+                                margin-right:0;
+                            }
                             h3{
                                 font-size:18px;
                                 color:#DBC7FF;
@@ -1004,6 +1040,11 @@ export default {
                                 white-space: nowrap;
                             }
                         }
+                    }
+                    .tips{
+                        color:#fff;
+                        text-align:center;
+                        padding-bottom:10px;
                     }
                 }
                 .fr{
@@ -1270,8 +1311,16 @@ export default {
                 padding:0 24px;
                 .content{
                     width:auto;
+                    
                     .fl{
                         float:initial;
+                        width:100%;
+                        line-height:18px;
+                        .tips{
+                            font-size:11px;
+                            padding-top:10px;
+                            padding-bottom:0;
+                        }
                         .textbox{
                             &.pcnone{
                                 display:block;

@@ -24,7 +24,8 @@
         <div class="utils clearfix">
             <a class="wallet">{{defaultAccount?defaultAccount:$t('lang.lang126')}}</a>
             <i class="data" @click="toDatepiker"></i>
-            <i class="language" :class="isCn?'isEn':'isCn'" @click="toggleLang"></i>
+            <span class="language" @click="toggleLang">中/En</span>
+            <!-- <i class="language" :class="isCn?'isEn':'isCn'" @click="toggleLang"></i> -->
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
             <ul class="mobelNavlist">
@@ -70,7 +71,7 @@
                 } else if (this.$i18n.locale === 'zh') {
                     this.isCn = true
                 }
-            }
+            },
         },
         data() {
             return {
@@ -79,12 +80,14 @@
                 defaultAccount:null,
                 active:0,
                 isDate:false,
-                isCn:true
+                isCn:true,
+                web3:null
             }
         },
         created(){
             this.$initWeb3().then((web3)=>{
                 if(web3.eth.defaultAccount){
+                    this.web3 = web3
                     this.defaultAccount = this.plusXing(web3.eth.defaultAccount,5,5)
                 }
             })
@@ -104,6 +107,8 @@
             }else if(path=='/chain'){
                 this.active = 4
             }
+
+            
         },
         beforeDestroy () {
         
@@ -221,6 +226,8 @@
             float:left;
             width:30px;
             height:30px;
+            font-size:20px;
+            line-height:30px;
             margin-left:30px;
             margin-top:30px;
             cursor: pointer;
