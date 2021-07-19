@@ -245,7 +245,7 @@ export default {
                 this.isDoing = false
             }
         },
-        toStake(){
+        async toStake(){
             if(!this.stakeNum || this.stakeNum==0){
                 this.$message({
                     message: this.$t('lang.lang120'),
@@ -254,9 +254,21 @@ export default {
                 this.isDoing = false
                 return
             }
+            // let isAddress = this.web3.utils.isAddress(this.inviter)
             if(!this.inviter){
                 this.$message({
                     message: this.$t('lang.lang121'),
+                    type: 'warning'
+                })
+                this.isDoing = false
+                return
+            }
+            let inviterData = await this.STAKEContract.methods.userInfo(this.inviter).call()
+            let stakenum = new BigNumber(inviterData.stake_amount)
+            stakenum = stakenum.div(Math.pow(10,this.hdaDecimals))
+            if(parseInt(stakenum)<10000){
+                this.$message({
+                    message: this.$t('lang.lang139'),
                     type: 'warning'
                 })
                 this.isDoing = false
