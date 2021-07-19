@@ -127,6 +127,7 @@
             },
             toggleLang () {
                 this.$i18n.locale = this.$i18n.locale === 'en' ? 'zh' : 'en'
+                localStorage.setItem('lang',this.$i18n.locale)
             },   
         }
     }

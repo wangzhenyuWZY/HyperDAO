@@ -76,7 +76,7 @@ export default {
             oldDecimals:18,
             oldBalance:0,
             isApprove:false,
-            isCn:false
+            isCn:localStorage.getItem('lang')=='zh'
         }
     },
     created(){
