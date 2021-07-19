@@ -198,9 +198,11 @@ export default {
                     .once('confirmation', function(confirmationNumber, receipt){
                         that.isUnstake = false
                         that.$message({
-                            message: this.$t('lang.lang116'),
+                            message: that.$t('lang.lang116'),
                             type: 'success'
                         }) 
+                        that.getUserinfo()
+                        that.getTotalStaked()
                     })
                     .once('error', function(){
                         that.isUnstake = false
@@ -263,16 +265,18 @@ export default {
                 this.isDoing = false
                 return
             }
-            let inviterData = await this.STAKEContract.methods.userInfo(this.inviter).call()
-            let stakenum = new BigNumber(inviterData.stake_amount)
-            stakenum = stakenum.div(Math.pow(10,this.hdaDecimals))
-            if(parseInt(stakenum)<10000){
-                this.$message({
-                    message: this.$t('lang.lang139'),
-                    type: 'warning'
-                })
-                this.isDoing = false
-                return
+            if(this.inviter!==this.idoAddress){
+                let inviterData = await this.STAKEContract.methods.userInfo(this.inviter).call()
+                let stakenum = new BigNumber(inviterData.stake_amount)
+                stakenum = stakenum.div(Math.pow(10,this.hdaDecimals))
+                if(parseInt(stakenum)<10000){
+                    this.$message({
+                        message: this.$t('lang.lang139'),
+                        type: 'warning'
+                    })
+                    this.isDoing = false
+                    return
+                }
             }
             let that = this
             this.popShow = false
@@ -288,9 +292,11 @@ export default {
                         that.isStaking = false
                         that.isDoing = false
                         that.$message({
-                            message: this.$t('lang.lang122'),
+                            message: that.$t('lang.lang122'),
                             type: 'success'
                         }) 
+                        that.getUserinfo()
+                        that.getTotalStaked()
                     })
                     .once('error', function(){
                         that.isStaking = false
@@ -307,7 +313,7 @@ export default {
                     .once('confirmation', function(confirmationNumber, receipt){
                         that.isClaimStatic = false
                         that.$message({
-                            message: this.$t('lang.lang123'),
+                            message: that.$t('lang.lang123'),
                             type: 'success'
                         }) 
                         that.getUserinfo()
@@ -326,7 +332,7 @@ export default {
                     .once('confirmation', function(confirmationNumber, receipt){
                         that.isClaimDynamic = false
                         that.$message({
-                            message: this.$t('lang.lang123'),
+                            message: that.$t('lang.lang123'),
                             type: 'success'
                         }) 
                         that.getUserinfo() 

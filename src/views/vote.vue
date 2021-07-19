@@ -18,7 +18,16 @@
                                 </div>
                                 <p class="access">Access<br>{{$t('lang.lang73')}}</p>
                             </div>
-                            <h3 class="votetodo">{{item.amount}}  USDT</h3>
+                            <div class="votedatas">
+                                <div class="dataitem">
+                                    <h3 class="votetodo">{{$t('lang.lang140')}}</h3>
+                                    <p class="votenums">{{item.userVote.voted?0:item.myVoteNums}}</p>
+                                </div>
+                                <div class="dataitem">
+                                    <h3 class="votetodo">{{$t('lang.lang141')}}</h3>
+                                    <p class="votenums">{{item.amount}}  USDT</p>
+                                </div>
+                            </div>
                             <p class="todoInfo">
                                 {{isCn?item.description_zh:item.description_en}}
                             </p>
@@ -106,7 +115,7 @@ function InitTime(endtime){
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import axios from "axios"
-import { HDAO_MATIC,IDO_TOKEN} from '../utils/contract'
+import { HDAO_MATIC,IDO_TOKEN,TIERSYSTEM} from '../utils/contract'
 import BigNumber from 'bignumber.js'
 export default {
     components:{ 
@@ -122,11 +131,12 @@ export default {
             defaultAccount:'',
             IDOContract:null,
             taskList:[],
-            isCn:false,
+            isCn:localStorage.getItem('lang')=='zh',
             openItem:0,
             openCenter:false,
             overItem:0,
-            overCenter:false
+            overCenter:false,
+            STAKEContract:null
         }
     },
     computed : {
@@ -140,6 +150,7 @@ export default {
             if(web3.eth.defaultAccount){
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
+                this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
                 this.init()
             }
         })
@@ -240,6 +251,22 @@ export default {
                 progress:progress.toFixed(2)
             }
             this.$set(obj,"counts",counts)
+            let inviterData = await this.STAKEContract.methods.userInfo(this.defaultAccount).call()
+            let myVoteNums = new BigNumber(inviterData.stake_amount)
+                myVoteNums = myVoteNums.div(Math.pow(10,18))
+            let tier = await this.STAKEContract.methods.getUserTier(this.defaultAccount).call()
+            if(tier==1){
+                myVoteNums = myVoteNums*10
+            }else if(tier==2){
+                myVoteNums = myVoteNums*145
+            }else if(tier==3){
+                myVoteNums = myVoteNums*925
+            }else if(tier==4){
+                myVoteNums = myVoteNums*2500
+            }else {
+                myVoteNums = 0
+            }
+            this.$set(obj,"myVoteNums",myVoteNums)
         },
         async getUserInfo(obj){
             let isVote = await obj.IDOContract.methods.isVote().call()
@@ -263,6 +290,7 @@ export default {
             }else{
                 let res = await item.IDOContract.methods.vote(unit).send({ from: this.defaultAccount })
                 if(res){
+                    this.getVoteInfo()
                     this.$message({
                         message: this.$t('lang.lang105'),
                         type: 'success'
@@ -325,7 +353,7 @@ export default {
             border:2px solid #874FEC;
             border-radius:20px;
             width:680px;
-            height:1000px;
+            height:1050px;
             text-align:left;
             .voteHead{
                 overflow:hidden;
@@ -365,6 +393,22 @@ export default {
                 color:#333333;
                 line-height:50px;
                 font-weight:bold;
+            }
+            .votedatas{
+                display:flex;
+                .dataitem{
+                    width:50%;
+                    text-align:center;
+                    h3{
+                        font-size:22px;
+                    }
+                }
+            }
+            .votenums{
+                font-size:18px;
+                color:#333;
+                line-height:100%;
+                padding-bottom:20px;
             }
             .todoInfo{
                 font-size:24px;
@@ -422,7 +466,7 @@ export default {
                     overflow:hidden;
                     border: 1px solid #DADADA;
                     p{
-                        background:#fff;
+                        background:#4B376E;
                         height:100%;
                         border-radius:33px;
                         width:0;
@@ -477,7 +521,7 @@ export default {
                 border-radius:10px;
                 padding:15px 10px;
                 width:260px;
-                height:380px;
+                height:440px;
                 margin:0 10px;
                 float:left;
                 .voteProgress{
@@ -527,6 +571,21 @@ export default {
                     font-size:10px;
                     line-height:14px;
                     height:100px;
+                }
+                .votedatas{
+                    .dataitem{
+                        width:50%;
+                        text-align:center;
+                        h3{
+                            font-size:12px;
+                            width:80%;
+                            line-height:120%;
+                            margin:0 auto;
+                        }
+                        p{
+                            font-size:14px;
+                        }
+                    }
                 }
                 .voteBtn{
                     width:120px;

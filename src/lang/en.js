@@ -138,5 +138,7 @@ export const lang = {
     "lang136":"The staked funds can be withdrawn after 3 days of pre-unstake. Note: Each pre-unstake action will refresh the countdown. It is recommended to withdraw it before each pre-unstake.",
     "lang137":"Withdrawable",
     "lang138":"After successfully participating in the Apply Alloction, all members need to click Claim Allocation within the specified time, otherwise, the smart contract will automatically deduct all the USDT paid!",
-    "lang139":"The address is not eligible for recommendation"
+    "lang139":"The address is not eligible for recommendation",
+    "lang140":"My number of votes",
+    "lang141":"Apply for withdrawal limit"
 }

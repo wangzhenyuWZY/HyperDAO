@@ -109,7 +109,7 @@ export default {
     },
     data() {
         return {
-            isCn:false
+            isCn:localStorage.getItem('lang')=='zh'
         }
     },
     mounted() {

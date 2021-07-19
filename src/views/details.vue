@@ -34,7 +34,10 @@
                                 </div>
                                 <div class="texts">
                                     <h3>{{$t('lang.lang36')}}</h3>
-                                    <p>{{tierName}}</p>
+                                    <p v-show="tier==1">{{$t('lang.lang7')}}</p>
+                                    <p v-show="tier==2">{{$t('lang.lang8')}}</p>
+                                    <p v-show="tier==3">{{$t('lang.lang9')}}</p>
+                                    <p v-show="tier==4">{{$t('lang.lang10')}}</p>
                                 </div>  
                                 <div class="texts none">
                                     <h3>{{$t('lang.lang33')}}</h3>
