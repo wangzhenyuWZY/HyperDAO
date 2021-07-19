@@ -1,11 +1,3 @@
-/*
- * @Descripttion: BLK
- * @version: 1.0
- * @Author: Wangye
- * @Date: 2021-05-29 15:56:31
- * @LastEditors: Wangye
- * @LastEditTime: 2021-05-29 16:06:20
- */
 //构建web3对象
 import Web3 from 'web3'
 
