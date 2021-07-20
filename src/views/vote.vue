@@ -466,7 +466,7 @@ export default {
                     overflow:hidden;
                     border: 1px solid #DADADA;
                     p{
-                        background:#4B376E;
+                        background:#874FEC;
                         height:100%;
                         border-radius:33px;
                         width:0;
