@@ -11,7 +11,7 @@
         </div> -->
         <div class="btnsbar">
             <router-link to="/project" class="btn">{{$t('lang.lang1')}}</router-link>
-            <router-link to="/" class="btn">{{$t('lang.lang2')}}</router-link>
+            <a href="https://forms.gle/ePUHK1QpmCcfTrSV8" target="_block" class="btn">{{$t('lang.lang2')}}</a>
         </div>
         <div class="hdaoinfo">
             <h2><span>{{$t('lang.lang3')}}</span></h2>
