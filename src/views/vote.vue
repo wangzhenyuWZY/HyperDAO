@@ -35,7 +35,7 @@
                             <a class="voteBtn" @click="toVote(item,0)">{{$t('lang.lang74')}}</a>
                             <a class="voteBtn" @click="toVote(item,1)">{{$t('lang.lang75')}}</a>
                             <div class="downtime">{{item.djs}}</div>
-                            <div class="voteProgress" style="margin-top:60px;">
+                            <div class="voteProgress" style="margin-top:30px;">
                                 <div class="progressInfo">
                                     <div class="infoItem">
                                         <p>{{$t('lang.lang74')}}</p>
@@ -414,7 +414,7 @@ export default {
                 font-size:24px;
                 color:#333333;
                 line-height:33px;
-                height:200px;
+                height:300px;
                 padding-bottom:30px;
             }
             .voteBtn{
@@ -452,7 +452,7 @@ export default {
                         }
                         p{
                             font-size:24px;
-                            color:#DADADA;
+                            color:#999;
                             line-height:33px;
                             padding-bottom:8px;
                         }
@@ -461,12 +461,12 @@ export default {
                 .all{
                     margin-top:12px;
                     height:30px;
-                    background:#DADADA;
+                    background:#999;
                     border-radius:33px;
                     overflow:hidden;
                     border: 1px solid #DADADA;
                     p{
-                        background:#4B376E;
+                        background:#874FEC;
                         height:100%;
                         border-radius:33px;
                         width:0;
@@ -570,7 +570,7 @@ export default {
                 .todoInfo{
                     font-size:10px;
                     line-height:14px;
-                    height:100px;
+                    height:110px;
                 }
                 .votedatas{
                     .dataitem{

@@ -10,8 +10,8 @@
             <img src="../assets/img/mImg/mImg1.png" width="100%">
         </div> -->
         <div class="btnsbar">
-            <router-link to="/project" class="btn">{{$t('lang.lang1')}}</router-link>
-            <router-link to="/" class="btn">{{$t('lang.lang2')}}</router-link>
+            <a href="https://info.quickswap.exchange/pair/0xBC08937FCAac78476266F25f1f75857e1c8aD2e2" target="_block" class="btn">{{$t('lang.lang1')}}</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScEb_nNOyzkGzkg2e3R5hhc-LGgCytF92mRNRb54rErfgdRmA/viewform?usp=sf_link" target="_block" class="btn">{{$t('lang.lang2')}}</a>
         </div>
         <div class="hdaoinfo">
             <h2><span>{{$t('lang.lang3')}}</span></h2>
