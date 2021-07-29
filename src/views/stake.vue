@@ -115,7 +115,7 @@ export default {
             inviter:null,
             totalStakeNum:0,
             idoAddress:null,
-            APR:18,
+            APR:'--',
             popShow:false,
             unstakePop:false,
             isApprove:false,
