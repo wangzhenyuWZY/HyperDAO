@@ -2,7 +2,7 @@
     <div class="container">
         <Header></Header>
         <div class="banner">
-            <img src="../assets/img/banner.png" v-show="isCn" width="100%">
+            <img src="../assets/img/banner.jpg" v-show="isCn" width="100%">
             <img src="../assets/img/banner11.png" v-show="!isCn" width="100%">
         </div>
         <!-- <div class="banner" v-show="!isCn">
