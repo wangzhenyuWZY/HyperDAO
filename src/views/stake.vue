@@ -203,6 +203,7 @@ export default {
                         }) 
                         that.getUserinfo()
                         that.getTotalStaked()
+                        that.getReward()
                     })
                     .once('error', function(){
                         that.isUnstake = false
@@ -234,6 +235,8 @@ export default {
                     type: 'success'
                 })
                 this.getUserinfo()
+                this.getReward()
+                this.getTotalStaked()
             }
         },
         async checkApproved(){
@@ -296,6 +299,7 @@ export default {
                             type: 'success'
                         }) 
                         that.getUserinfo()
+                        that.getReward()
                         that.getTotalStaked()
                     })
                     .once('error', function(){
@@ -317,6 +321,8 @@ export default {
                             type: 'success'
                         }) 
                         that.getUserinfo()
+                        that.getReward()
+                        that.getTotalStaked()
                     })
                     .once('error', function(){
                         that.isClaimStatic = false
@@ -336,6 +342,8 @@ export default {
                             type: 'success'
                         }) 
                         that.getUserinfo() 
+                        that.getReward()
+                        that.getTotalStaked()
                     })
                     .once('error', function(){
                         that.isClaimDynamic = false
