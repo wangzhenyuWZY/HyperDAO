@@ -27,15 +27,15 @@ module.exports = {
         //   hack: `true; @import "${themePath}";`
         // }
       },
-      postcss: {
-        plugins: [
-          require('postcss-px2rem')({
-             //lib-flexible 将屏幕分成10份(10rem)，这里设置表示设计图宽度为10*37.5=375px
-          // 配置成 37.5 是为了兼容 没有适配 rem 布局的第三方 ui 库
-              remUnit: 192
-          })
-        ]
-      }
+      // postcss: {
+      //   plugins: [
+      //     require('postcss-px2rem')({
+      //        //lib-flexible 将屏幕分成10份(10rem)，这里设置表示设计图宽度为10*37.5=375px
+      //     // 配置成 37.5 是为了兼容 没有适配 rem 布局的第三方 ui 库
+      //         remUnit: 192
+      //     })
+      //   ]
+      // }
     }
   },
 
@@ -117,13 +117,13 @@ module.exports = {
       proxy: {
           // 只要请求地址有'api'都会匹配上
           "/api": {
-              target: "http://47.243.58.107:9091/",
+              target: "http://47.242.187.3:81/",
               ws: true,
               // 允许跨域
               changeOrigin: true,
-              pathRewrite: {
-                  "^/api": "/" //通过pathRewrite重写地址，将前缀/api转为/
-              }
+              // pathRewrite: {
+              //     "^/api": "/" //通过pathRewrite重写地址，将前缀/api转为/
+              // }
           }
       }
   }

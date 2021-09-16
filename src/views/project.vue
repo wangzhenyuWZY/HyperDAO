@@ -198,7 +198,7 @@ export default {
     },
     methods: {
         getList(){
-            axios.get(process.env.VUE_APP_URL+"hdaos?scan=2").then((res)=>{
+            axios.get("/api/hdaos?scan=2").then((res)=>{
                 if(res.data.code==0){
                     res.data.data.forEach((item,index)=>{
                         if(item.status==1){
@@ -298,7 +298,7 @@ export default {
     }
     h2{
         font-size:36px;
-        color:#874FEC;
+        // color:#874FEC;
         line-height:50px;
         text-align:center;
         padding:90px 60px;
@@ -313,8 +313,8 @@ export default {
         li{
             display:inline-block;
             vertical-align: middle;
-            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
-            box-shadow: 0px 2px 0px 0px #7249BA;
+            // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            // box-shadow: 0px 2px 0px 0px #7249BA;
             width:420px;
             height:680px;
             border-radius:20px;

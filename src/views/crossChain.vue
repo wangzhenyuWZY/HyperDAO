@@ -2,29 +2,97 @@
     <div class="container">
         <Header></Header>
         <div class="chainPanel">
-            <img class="banner" v-show="isCn" src="../assets/img/banner2.png">
-            <img class="banner" v-show="!isCn" src="../assets/img/banner22.png">
-            <p class="chainInfo info1">
-                {{$t('lang.lang76')}}
-            </p>
-            <p class="chainInfo info2">
-                {{$t('lang.lang77')}}
-            </p>
-            <div class="proBox">
-                <div class="proItem">
-                    <p class="chainInfo info3">
-                        {{$t('lang.lang78')}}
-                    </p>
-                    <a class="stakeBtn" @click="checkChain">{{$t('lang.lang80')}}</a>
+            <template v-if="itemShow">
+                <img class="banner" v-show="isCn" src="../assets/img/banner2.png">
+                <img class="banner" v-show="!isCn" src="../assets/img/banner22.png">
+            </template>
+            <template v-else>
+                <img class="banner" v-show="isCn" src="../assets/img/banner-chain-zh-theme2.png">
+                <img class="banner" v-show="!isCn" src="../assets/img/banner-chain-en-theme2.png">
+            </template>
+            <template v-if="!itemShow">
+                <p class="chainInfo info1">
+                    {{$t('lang.lang76')}}
+                </p>
+                <p class="chainInfo info2">
+                    {{$t('lang.lang77')}}
+                </p>
+                <div class="proBox">
+                    <div class="proItem">
+                        <p class="chainInfo info3">
+                            {{$t('lang.lang78')}}
+                        </p>
+                        <a class="stakeBtn" @click="checkChain">{{$t('lang.lang80')}}</a>
+                    </div>
+                    <div class="proItem">
+                        <p class="chainInfo info3">
+                            {{$t('lang.lang79')}}
+                        </p>
+                        <a class="stakeBtn" href="https://wallet.matic.network/" target="_blank">{{$t('lang.lang81')}}</a>
+                    </div>
+                </div>    
+            </template>    
+            <template v-else>
+                <div class="block1">
+                    <div class="btns">
+                        <div @click="changeType('toMETIC')" :class="['btn', type === 'toMETIC' ? 'active' : '' ]">BSC TO METIC</div>
+                        <div @click="changeType('toBSC')" :class="['btn', type === 'toBSC' ? 'active' : '' ]">METIC TO BSC</div>
+                    </div>
+                    <div class="corNums">
+                        跨链数量
+                    </div>
+                    <input placeholder="请输入跨链数量" v-model="corCount" class="corInput">
+                    <div class="corCount">
+                        可用余额:
+                        <span>{{account}}</span>
+                    </div>
+                    <div class="line">
+                        <div>当前跨链Gas费</div>
+                        <div class="num">{{gas}}{{token}}</div>
+                    </div>
+                    <div class="launch" @click="authorize" v-show="!isAllowance">
+                        授权
+                    </div>
+                    <div class="launch" @click="launchCross" v-show="isAllowance">
+                        启动跨连
+                    </div>
                 </div>
-                <div class="proItem">
-                    <p class="chainInfo info3">
-                        {{$t('lang.lang79')}}
-                    </p>
-                    <a class="stakeBtn" href="https://wallet.matic.network/" target="_blank">{{$t('lang.lang81')}}</a>
+                <div class="block2">
+                    <div class="title">
+                        跨链记录
+                    </div>
+                    <div class="line">
+                        <div class="item">时间</div>
+                        <div class="item">方向</div>
+                        <div class="item">状态</div>
+                        <div class="item">链上查看</div>
+                    </div>
+                    <div class="lineInfo">
+                        <div class="item">2021-09-15 15:43:12</div>
+                        <div class="item">BSC TO ETH</div>
+                        <div class="item">已完成</div>
+                        <div class="item">
+                            <img class="item" src="../assets/img/share.png">
+                        </div>
+                    </div>
+                    <div class="lineInfo">
+                        <div class="item">2021-09-15 15:43:12</div>
+                        <div class="item">BSC TO ETH</div>
+                        <div class="item">已完成</div>
+                        <div class="item">
+                            <img class="item" src="../assets/img/share.png">
+                        </div>
+                    </div>
+                    <div class="lineInfo">
+                        <div class="item">2021-09-15 15:43:12</div>
+                        <div class="item">BSC TO ETH</div>
+                        <div class="item">已完成</div>
+                        <div class="item">
+                            <img class="item" src="../assets/img/share.png">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
+            </template>
         </div>
         <div class="popWrap" v-show="mintPop">
             <div class="popPanel">
@@ -45,15 +113,21 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { HDAO_TOKEN,OLD_HDAO,CONVERT} from '../utils/contract'
+import { HDAO_TOKEN, OLD_HDAO, CONVERT, CROSS_CHAIN, HDAO_MATIC } from '../utils/contract'
+import { BSC_HDAO_TOKEN, BSC_CONVERT, BSC_CROSS_CHAIN, BSC_HDAO_MATIC } from '../utils/bsc_contract'
 import BigNumber from 'bignumber.js'
+import { mapState } from 'vuex'
+import axios from "axios"
 export default {
     components:{ 
         Header,
         Footer
     },
-    watch: {
-        
+    computed: {
+        itemShow() {
+            return this.$store.state.theme === 'theme1'
+        },
+
     },
     watch: {
             '$i18n.locale' (newValue) {
@@ -71,12 +145,24 @@ export default {
             CONVERTContract:null,
             HDAOContract:null,
             OLDHDAOContract:null,
+            CROSSContract: null,
+            HDAOMATICContract: null,
             mintPop:false,
             mintNum:'',
             oldDecimals:18,
             oldBalance:0,
             isApprove:false,
-            isCn:localStorage.getItem('lang')=='zh'
+            isCn:localStorage.getItem('lang')=='zh',
+            type: 'toETH',
+            corCount: '',
+            // 以太坊网络余额
+            account: 0,
+            // 转账手续
+            gas: 0,
+            // 当前以太坊网络
+            token: '',
+            // 是否授权转账
+            isAllowance: false
         }
     },
     created(){
@@ -84,10 +170,31 @@ export default {
             if(web3.eth.defaultAccount){
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
-                this.CONVERTContract = new this.web3.eth.Contract(CONVERT.abi, CONVERT.address)
-                this.HDAOContract = new this.web3.eth.Contract(HDAO_TOKEN.abi, HDAO_TOKEN.address)
-                this.OLDHDAOContract = new this.web3.eth.Contract(OLD_HDAO.abi, OLD_HDAO.address)
-                this.init()
+                this.getCrossList(this.defaultAccount)
+                // 获取当前链id
+                web3.eth.getChainId().then(chainId => {
+                    console.log(chainId)
+                    this.chainId = chainId
+                    if (chainId === 137) { // matic 主网ID
+                        this.type = 'toBSC'
+                        this.CONVERTContract = new this.web3.eth.Contract(CONVERT.abi, CONVERT.address)
+                        this.HDAOContract = new this.web3.eth.Contract(HDAO_TOKEN.abi, HDAO_TOKEN.address)
+                        this.CROSSContract = new this.web3.eth.Contract(CROSS_CHAIN.abi, CROSS_CHAIN.address)
+                        this.HDAOMATICContract = new this.web3.eth.Contract(HDAO_MATIC.abi, HDAO_MATIC.address)
+                        this.token = 'MATIC'
+                    } else if (chainId === 56) { // bsc 主网ID
+                        this.type = 'toMETIC'
+                        this.CONVERTContract = new this.web3.eth.Contract(BSC_CONVERT.abi, BSC_CONVERT.address)
+                        this.HDAOContract = new this.web3.eth.Contract(BSC_HDAO_TOKEN.abi, BSC_HDAO_TOKEN.address)
+                        this.CROSSContract = new this.web3.eth.Contract(BSC_CROSS_CHAIN.abi, BSC_CROSS_CHAIN.address)
+                        this.HDAOMATICContract = new this.web3.eth.Contract(BSC_HDAO_MATIC.abi, BSC_HDAO_MATIC.address)
+                        this.token = 'BNB'
+                    } else if (chainId === 1) { // 以太坊 主网
+                        this.OLDHDAOContract = new this.web3.eth.Contract(OLD_HDAO.abi, OLD_HDAO.address)
+                        this.token = 'ETH'
+                    }
+                    this.init()
+                })
             }
         })
     },
@@ -99,9 +206,88 @@ export default {
     },
     methods: {
         init(){
-            this.getOldHdaoDecimails()
-            this.getAllowance()
+            if (this.chainId === 1) {
+                this.getOldHdaoDecimails()
+                this.getAllowance()
+            } else {
+                this.getBalance()
+                this.getPounge()
+                this.getISAllowance()
+                console.log(this.CROSSContract)
+            }
         },
+        // 获取跨链记录
+        getCrossList(address) {
+            axios.get(process.env.VUE_APP_URL + "user/bridge/" + address).then((res)=>{
+                if(res.data.code==0){
+                    console.log(res)
+                } else {
+
+                }
+            })    
+        },
+        // 授权转账
+        async authorize() {
+            const id = await this.web3.eth.getChainId()
+            if (this.chainId !== id) {
+                return this.$message({ message: '请切换到对应网络!', type: 'error' })
+            }
+            // 未同意 申请授权
+            // const MAX = this.web3.utils.toTwosComplement(-1)
+            let res = await this.HDAOMATICContract.methods.approve(this.CROSSContract.options.address, this.rowAccount).send({ from: this.defaultAccount })
+            console.log(res)
+            if (res) {
+                this.isAllowance = true
+                this.$message({ message: '授权成功！', type: 'success' })
+            } else {
+                this.$message({ message: '授权失败！', type: 'error' })
+            }
+        },
+        // 启动跨链
+        async launchCross() {
+            const id = await this.web3.eth.getChainId()
+            if (this.chainId !== id) {
+                return this.$message({ message: '请切换到对应网络!', type: 'error' })
+            }
+            if (this.isAllowance) {
+                // 同意授权 开启转账
+                let corCount = new BigNumber(this.corCount)
+                corCount = corCount.times(Math.pow(10,18))
+                let gas = this.gas * Math.pow(10,18)
+                let res = await this.CROSSContract.methods.cross(corCount.toFixed()).send({ from: this.defaultAccount, value: gas })
+                if (res) {
+                    this.$message({ message: '跨链成功！', type: 'success' })
+                }else {
+                    this.$message({ message: '跨链失败！', type: 'error' })
+                }
+            } else {
+                
+            }
+        },
+        // 查询当前网络是否授权跨链合约
+        async getISAllowance() {
+            console.log(this.defaultAccount, this.CROSSContract.options.address)
+            // 我的钱包地址 授权地址
+            let res = await this.HDAOMATICContract.methods.allowance(this.defaultAccount, this.CROSSContract.options.address).call()
+            this.isAllowance = !!Number(res)
+            console.log(res)
+        },
+        // 查询手续费
+        async getPounge() {
+            let res = await this.CROSSContract.methods.pounge().call()
+            if(res){
+                this.gas = res / Math.pow(10,18)
+            }
+        },
+        // 查询HDAO余额
+        async getBalance() {
+            let res = await this.HDAOMATICContract.methods.balanceOf(this.defaultAccount).call()
+            if(res){
+                this.rowAccount = res
+                this.account = res / Math.pow(10,18)
+            }
+        },
+        // 查询以太坊是否授权
         async getAllowance () {
             let res = await this.OLDHDAOContract.methods.allowance(this.defaultAccount, CONVERT.address).call()
             if(res){
@@ -165,6 +351,9 @@ export default {
             oldBalance = new BigNumber(oldBalance)
             this.oldBalance = oldBalance.div(Math.pow(10,this.oldDecimals)).toFixed(4)
         },    
+        changeType(type) {
+            this.type = type
+        }
     }
 }
 </script>
@@ -276,12 +465,12 @@ export default {
         }
     }
     .proBox{
-        width:1400px;
+        max-width:1400px;
         margin:110px auto 300px;
         overflow:hidden;
         .proItem{
             width:48%;
-            border:2px solid #874FEC;
+            // border:2px solid #874FEC;
             border-radius:20px;
             float:left;
             margin:0 1%;
@@ -300,15 +489,156 @@ export default {
         display:block;
         width:300px;
         height:100px;
-        background:#7937F0;
+        // background:#7937F0;
         border-radius:10px;
-        box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+        // box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
         text-align:center;
         line-height:100px;
         margin:0 auto 54px;
         font-size:30px;
         color:#fff;
         cursor: pointer;
+    }
+
+
+    .block1 {
+        max-width: 1046px;
+        height: 450px;
+        box-sizing: border-box;
+        padding: 0 140px;
+        border: 1px solid #874FEC;
+        border-radius: 20px;
+        margin: 0 auto;
+        margin-top: 100px;
+        overflow: hidden;
+        margin-bottom: 50px;
+        .btns {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            .btn {
+                width: 247px;
+                height: 48px;
+                line-height: 48px;
+                text-align: center;
+                background: white;
+                border: 1px solid #874FEC;
+                color: #874FEC;
+                border-radius: 20px 0px 0px 20px;
+                cursor: pointer;
+                &:last-child {
+                    border-radius: 0px 20px 20px 0px;
+                }
+                &.active {
+                    color: white;
+                    background: #874FEC;
+                }
+            }
+        }
+        .corNums {
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: 400;
+            color: #333333;
+            line-height: 25px;
+        }
+        .corInput {
+            width: 100%;
+            outline: none;
+            height: 40px;
+            font-size: 16px;
+            padding-left: 10px;
+            margin-top: 15px;
+            border: 1px solid #979797;
+        }
+        .corCount {
+            text-align: right;
+            font-size: 18px; 
+            margin-top: 14px;
+            span {
+                color: #874FEC;
+            }
+        }
+        .line {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 22px;
+            font-size: 18px;
+            .num {
+                color: #874FEC;
+            }
+        }
+        .launch {
+            width: 260px;
+            height: 60px;
+            font-size: 24px;
+            font-weight: 400;
+            color: #FFFFFF;
+            line-height: 60px;
+            border-radius: 10px;
+            text-align: center;
+            margin: auto;
+            margin-top: 80px;
+            cursor: pointer;
+            box-shadow: 0px 2px 0px 0px #7249BA;
+            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+        }
+    }
+    .block2 {
+        max-width: 1046px;
+        height: 450px;
+        box-sizing: border-box;
+        padding: 0 140px;
+        border: 1px solid #874FEC;
+        border-radius: 20px;
+        margin: 0 auto;
+        overflow: hidden;
+        margin-bottom: 50px;
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333333;
+            line-height: 40px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            .item {
+                width: 110px;
+                height: 25px;
+                font-size: 18px;
+                font-weight: 400;
+                color: #979797;
+                line-height: 25px;
+                text-align: center;
+                margin-top: 50px;
+            }
+        }
+        .lineInfo {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e5e5;
+            margin: 16px 0;
+            padding-bottom: 16px;
+            .item {
+                width: 110px;
+                font-size: 18px;
+                font-weight: 400;
+                color: #333333;
+                line-height: 25px;
+                text-align: center;
+                &:last-child {
+                    img {
+                        width: 24px;
+                        height: 24px;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
     }
 }
 @media screen and (max-width:1200px) {
@@ -378,7 +708,7 @@ export default {
             margin-bottom:60px;
             .proItem{
                 width:100%;
-                border:1px solid #874FEC;
+                // border:1px solid #874FEC;
                 margin-bottom:20px;
                 p{
                     margin:20px auto 0;

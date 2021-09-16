@@ -200,7 +200,7 @@
   .cc-calendar {
     width: 100%;
     height: 100%;
-    background: rgba(135, 79, 236, 0.1);
+    // background: rgba(135, 79, 236, 0.1);
     box-sizing: border-box;
     .calendar-week {
       display: flex;
@@ -208,7 +208,7 @@
       height: 80px;
       line-height: 80px;
       border-right: none;
-      background:#874FEC;
+      // background:#874FEC;
       .week-item {
         width: 14.285%;
         text-align: center;

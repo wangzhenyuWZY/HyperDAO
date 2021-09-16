@@ -30,7 +30,7 @@
                                 <div class="texts">
                                     <h3>{{$t('lang.lang35')}}</h3>
                                     <p>{{usdtBalance}} USDT</p>
-                                    <p>{{maticBalance}}MATIC</p>
+                                    <p>{{maticBalance}}{{chainId === 137?'MATIC':'BNB'}}</p>
                                 </div>
                                 <div class="texts">
                                     <h3>{{$t('lang.lang36')}}</h3>
@@ -257,6 +257,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import axios from "axios"
 import { IDO_TOKEN,TIERSYSTEM ,USDT_TOKEN} from '../utils/contract'
+import { BSC_IDO_TOKEN,BSC_TIERSYSTEM ,BSC_USDT_TOKEN} from '../utils/bsc_contract'
 import BigNumber from 'bignumber.js'
 export default {
     components:{ 
@@ -328,7 +329,8 @@ export default {
             fcfsQuotaNum:0,
             totalSupply1:0,
             isCn:false,
-            changeu:0
+            changeu:0,
+            chainId:56
         }
     },
     created(){
@@ -336,10 +338,20 @@ export default {
             if(web3.eth.defaultAccount){
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
-                // this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, IDO_TOKEN.address)
-                this.USDTContract = new this.web3.eth.Contract(USDT_TOKEN.abi, USDT_TOKEN.address)
-                this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
-                this.getDetails()
+                web3.eth.getChainId().then(chainId => {
+                    this.chainId = chainId
+                    if(chainId === 137) {
+                        // this.IDOContract = new this.web3.eth.Contract(IDO_TOKEN.abi, IDO_TOKEN.address)
+                        this.USDTContract = new this.web3.eth.Contract(USDT_TOKEN.abi, USDT_TOKEN.address)
+                        this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
+                        this.getDetails()
+                    } else {
+                        this.USDTContract = new this.web3.eth.Contract(BSC_USDT_TOKEN.abi, BSC_USDT_TOKEN.address)
+                        this.STAKEContract = new this.web3.eth.Contract(BSC_TIERSYSTEM.abi, BSC_TIERSYSTEM.address)
+                        this.getDetails()
+                    }
+                })
+                
             }
         })
     },
@@ -379,7 +391,7 @@ export default {
             this.getUserTier()
         },
         getDetails(){
-            axios.get(process.env.VUE_APP_URL+"hdao/"+this.$route.query.id).then((res)=>{
+            axios.get("/api/hdao/"+this.$route.query.id).then((res)=>{
                 if(res.data.code==0){
                     this.detailInfo = res.data.data
                     this.detailInfo.asset_retention_ratio = 100-parseFloat(res.data.data.asset_retention_ratio)
@@ -714,8 +726,9 @@ export default {
         async getUsdtBalance () {
             let res = await this.USDTContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
+                let dec = this.chainId === 137 ? 6 : 18
                 let balance = new BigNumber(res)
-                this.usdtBalance = balance.div(Math.pow(10,6)).toFixed(2)
+                this.usdtBalance = balance.div(Math.pow(10,dec)).toFixed(2)
             }
         },
         async getStartTime(){
@@ -1060,7 +1073,7 @@ export default {
                         background:#fff;
                         text-align:center;
                         font-size:24px;
-                        color:#874FEC;
+                        // color:#874FEC;
                         margin-bottom:40px;
                         cursor: pointer;
                         border:none;
@@ -1088,19 +1101,19 @@ export default {
                     vertical-align: middle;
                     margin-right:40px;
                     font-size:28px;
-                    color:#B994FB;
+                    // color:#B994FB;
                     line-height:50px;
                     cursor: pointer;
                     &.active{
-                        color:#874FEC;
+                        // color:#874FEC;
                         font-weight:bold;
                         font-size:36px;
-                        border-bottom:8px solid #874FEC;
+                        // border-bottom:8px solid #874FEC;
                     }
                 }
             }
             .infoCon{
-                border:1px solid #874FEC;
+                // border:1px solid #874FEC;
                 border-radius:16px;
                 margin-top:40px;
                 &.martop{
@@ -1109,7 +1122,7 @@ export default {
                 .roundTable{
                     overflow:hidden;
                     .roundHead{
-                        background:#874FEC;
+                        // background:#874FEC;
                         padding:0 40px;
                         overflow:hidden;
                         border-radius:16px 16px 0 0;
@@ -1153,7 +1166,7 @@ export default {
                     height:66px;
                     border-radius: 16px 16px 0px 0px;
                     overflow:hidden;
-                    background:#874FEC;
+                    // background:#874FEC;WW
                     padding:0 40px;
                     span{
                         float:left;
@@ -1303,13 +1316,13 @@ export default {
                     .val{
                         font-size:18px;
                         line-height:14px;
-                        color:#874FEC;
+                        // color:#874FEC;
                     }
                 }
             }
             .mydetail{
-                background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
-                box-shadow: 0px 2px 0px 0px #7249BA;
+                // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+                // box-shadow: 0px 2px 0px 0px #7249BA;
                 border-radius: 10px;
                 padding:0 24px;
                 .content{
@@ -1361,7 +1374,7 @@ export default {
                             background:#FFFFFF;
                             border-radius:6px;
                             font-size:14px;
-                            color:#874FEC;
+                            // color:#874FEC;
                             margin:0 auto 20px;
                             &:first-child{
                                 margin-left:auto;

@@ -74,7 +74,7 @@
         </div>
         <div class="popWrap" v-show="unstakePop">
             <div class="popPanel">
-                <i class="close" @click="unstakePop=false"></i>
+                <i class="close" @click="closePopPanel"></i>
                 <div class="idoput">
                     <input :placeholder="$t('lang.lang69')" v-model="unstakeNum">
                     <p>{{stake_amount}}<span>/ HDAO</span></p>
@@ -92,7 +92,10 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { HDAO_MATIC, TIERSYSTEM } from '../utils/contract'
+import { BSC_HDAO_MATIC, BSC_TIERSYSTEM } from '../utils/bsc_contract'
 import BigNumber from 'bignumber.js'
+import {mapState} from 'vuex'
+
 export default {
     components:{ 
         Header,
@@ -138,15 +141,28 @@ export default {
             isDoing:false
         }
     },
+    computed: {
+        ...mapState(['theme'])
+    },
     created(){
         this.$initWeb3().then((web3)=>{
             if(web3.eth.defaultAccount){
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
-                this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
-                this.HDAOContract = new this.web3.eth.Contract(HDAO_MATIC.abi, HDAO_MATIC.address)
-                this.idoAddress = TIERSYSTEM.address
-                this.init()
+                // 获取当前链id
+                web3.eth.getChainId().then(chainId => {
+                    this.chainId = chainId
+                    if (chainId === 137) {
+                        this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
+                        this.HDAOContract = new this.web3.eth.Contract(HDAO_MATIC.abi, HDAO_MATIC.address)
+                        this.idoAddress = TIERSYSTEM.address
+                    } else {
+                        this.STAKEContract = new this.web3.eth.Contract(BSC_TIERSYSTEM.abi, BSC_TIERSYSTEM.address)
+                        this.HDAOContract = new this.web3.eth.Contract(BSC_HDAO_MATIC.abi, BSC_HDAO_MATIC.address)
+                        this.idoAddress = BSC_TIERSYSTEM.address
+                    }
+                    this.init()
+                })
             }
         })
     },
@@ -166,7 +182,11 @@ export default {
             this.getTotalStaked()
             this.getApr()
             this.getReward()
-            
+        },
+        // 关闭弹窗
+        closePopPanel() {
+            this.unstakeNum = ''
+            this.unstakePop = false
         },
         checkUnstake(){
             if(this.stake_amount==0){
@@ -245,7 +265,7 @@ export default {
                 this.toStake()
             }else{
                 const MAX = this.web3.utils.toTwosComplement(-1)
-                let apr1 = await this.HDAOContract.methods.approve(TIERSYSTEM.address, MAX).send({ from: this.defaultAccount })
+                let apr1 = await this.HDAOContract.methods.approve(this.STAKEContract.options.address, MAX).send({ from: this.defaultAccount })
                 this.isApprove = true
                 this.isDoing = false
             }
@@ -286,7 +306,7 @@ export default {
             this.isStaking = true
             let amount = new BigNumber(this.stakeNum)
             amount = amount.times(Math.pow(10,this.hdaDecimals))
-            let inviter = this.inviter?this.inviter:TIERSYSTEM.address
+            let inviter = this.inviter?this.inviter:this.STAKEContract.options.address
             this.STAKEContract.methods.stake(amount.toFixed(), inviter).send({ from: this.defaultAccount })
                     .once('transactionHash', function(hash){
                         
@@ -403,7 +423,7 @@ export default {
             }
         },  
         async getAllowance () {
-            let res = await this.HDAOContract.methods.allowance(this.defaultAccount, TIERSYSTEM.address).call()
+            let res = await this.HDAOContract.methods.allowance(this.defaultAccount, this.STAKEContract.options.address).call()
             if(res){
                 this.isApprove = res > 0 ? true : false
             }
@@ -540,8 +560,8 @@ export default {
             display:block;
             padding:0 15px;
             height:80px;
-            box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
-            background:#874FEC;
+            // box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+            // background:#874FEC;
             border-radius:10px;
             font-size:28px;
             color:#fff;
@@ -565,15 +585,16 @@ export default {
     .stakeItem{
         display:inline-block;
         vertical-align: middle;
-        background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
-        box-shadow: 0px 4px 0px 0px #7249BA;
+        // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+        // box-shadow: 0px 4px 0px 0px #7249BA;
         width:350px;
         height:120px;
         border-radius:10px;
         margin:0 20px;
+
         .title{
             font-size:24px;
-            color:#EDD9FF;
+            // color:#EDD9FF;
             line-height:33px;
             text-align:center;
             padding-top:18px;
@@ -594,14 +615,14 @@ export default {
     }
     h2{
         font-size:24px;
-        color:#874FEC;
+        // color:#874FEC;
         line-height:33px;
         text-align:center;
         padding-bottom:12px;
     }
     p{
         font-size:24px;
-        color:#874FEC;
+        // color:#874FEC;
         line-height:33px;
         text-align:center;
     }
@@ -609,7 +630,7 @@ export default {
 .stakedCon{
     margin:80px auto;
     width:1130px;
-    border:2px solid #874FEC;
+    // border:2px solid #874FEC;
     border-radius:20px;
     padding:0 200px;
     position:relative;
@@ -641,7 +662,7 @@ export default {
             
         }
         &.origin{
-            color:#874FEC;
+            // color:#874FEC;
         }
         &.left{
             text-align:left;
@@ -682,9 +703,9 @@ export default {
             line-height:42px;
             font-weight: bold;
             width:240px;
-            &.origin{
-                color:#874FEC;
-            }
+            // &.origin{
+            //     // color:#874FEC;
+            // }
         }
     }
     .stakeBtns{
@@ -721,9 +742,9 @@ export default {
     .btn{
         min-width:260px;
         height:60px;
-        background:#874FEC;
+        // background:#874FEC;
         border-radius:10px;
-        box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+        // box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
         font-size:24px;
         color:#fff;
         text-align:center;
@@ -831,7 +852,7 @@ export default {
     }
     .stakedCon{
         margin:53px 16px;
-        border:1px solid  #874FEC;
+        // border:1px solid  #874FEC;
         width:auto;
         padding:16px 32px 0;
         height:auto;

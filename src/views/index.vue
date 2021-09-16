@@ -2,26 +2,38 @@
     <div class="container">
         <Header></Header>
         <div class="banner">
-            <img src="../assets/img/banner.jpg" v-show="isCn" width="100%">
-            <img src="../assets/img/banner11.png" v-show="!isCn" width="100%">
+            <!-- 紫色主题 -->
+            <template v-if="itemShow">
+                <img src="../assets/img/banner.jpg" v-show="isCn && isPc" width="100%">
+                <img src="../assets/img/banner11.png" v-show="!isCn && isPc" width="100%">
+                <img src="../assets/img/banner.jpg" v-show="isCn && !isPc" width="100%">
+                <img src="../assets/img/banner11.png" v-show="!isCn && !isPc" width="100%">
+            </template>
+            <!-- 蓝色主题 -->
+            <template v-else>
+                <img src="../assets/img/banner-index-zh-theme2.png" v-show="isCn && isPc" width="100%">
+                <img src="../assets/img/banner-index-en-theme2.png" v-show="!isCn && isPc" width="100%">
+                <img src="../assets/img/mImg/mImg1-theme2.png" v-show="isCn && !isPc" width="100%">
+                <img src="../assets/img/mImg/mImg1-en-theme2.png" v-show="!isCn && !isPc" width="100%">
+            </template>
         </div>
         <!-- <div class="banner" v-show="!isCn">
             <img src="../assets/img/banner11.png" width="100%">
             <img src="../assets/img/mImg/mImg1.png" width="100%">
         </div> -->
         <div class="btnsbar">
-            <a href="https://info.quickswap.exchange/pair/0xBC08937FCAac78476266F25f1f75857e1c8aD2e2" target="_block" class="btn">{{$t('lang.lang1')}}</a>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScEb_nNOyzkGzkg2e3R5hhc-LGgCytF92mRNRb54rErfgdRmA/viewform?usp=sf_link" target="_block" class="btn">{{$t('lang.lang2')}}</a>
+            <a :data-theme="theme" href="https://info.quickswap.exchange/pair/0xBC08937FCAac78476266F25f1f75857e1c8aD2e2" target="_block" class="btn">{{$t('lang.lang1')}}</a>
+            <a :data-theme="theme" href="https://docs.google.com/forms/d/e/1FAIpQLScEb_nNOyzkGzkg2e3R5hhc-LGgCytF92mRNRb54rErfgdRmA/viewform?usp=sf_link" target="_block" class="btn">{{$t('lang.lang2')}}</a>
         </div>
         <div class="hdaoinfo">
-            <h2><span>{{$t('lang.lang3')}}</span></h2>
+            <h2><span :data-theme="theme">{{$t('lang.lang3')}}</span></h2>
             <p class="infotext1" :class="isCn?'isCn':''">{{$t('lang.lang4')}}</p>
             <p class="infotext2">{{$t('lang.lang5')}}</p>
             <p class="infotext3">{{$t('lang.lang6')}}</p>
         </div>
-        <div class="projectlist">
-            <div class="projectItem">
-                <h2>{{$t('lang.lang7')}}</h2>
+        <div class="projectlist-t">
+            <div class="projectItem" :data-theme="theme">
+                <h2 :data-theme="theme">{{$t('lang.lang7')}}</h2>
                 <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">10000HDAO</p>
                 <p class="title">{{$t('lang.lang12')}}</p>
@@ -29,8 +41,8 @@
                 <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">10</p>
             </div>
-            <div class="projectItem">
-                <h2>{{$t('lang.lang8')}}</h2>
+            <div class="projectItem" :data-theme="theme">
+                <h2 :data-theme="theme">{{$t('lang.lang8')}}</h2>
                 <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">100000HDAO</p>
                 <p class="title">{{$t('lang.lang12')}}</p>
@@ -38,8 +50,8 @@
                 <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">145</p>
             </div>
-            <div class="projectItem">
-                <h2>{{$t('lang.lang9')}}</h2>
+            <div class="projectItem" :data-theme="theme">
+                <h2 :data-theme="theme">{{$t('lang.lang9')}}</h2>
                 <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">500000HDAO</p>
                 <p class="title">{{$t('lang.lang12')}}</p>
@@ -47,8 +59,8 @@
                 <p class="title mt200">{{$t('lang.lang13')}}</p>
                 <p class="val">925</p>
             </div>
-            <div class="projectItem">
-                <h2>{{$t('lang.lang10')}}</h2>
+            <div class="projectItem" :data-theme="theme">
+                <h2 :data-theme="theme">{{$t('lang.lang10')}}</h2>
                 <p class="title">{{$t('lang.lang11')}}</p>
                 <p class="val">1000000HDAO</p>
                 <p class="title">{{$t('lang.lang12')}}</p>
@@ -58,20 +70,23 @@
             </div>
         </div>
         <div class="hdaoinfo flowPanel">
-            <h2><span>{{$t('lang.lang14')}}</span></h2>
+            <h2><span :data-theme="theme">{{$t('lang.lang14')}}</span></h2>
             <div class="flowItem">
-                <h3>{{$t('lang.lang15')}}</h3>
+                <h3 :data-theme="theme">{{$t('lang.lang15')}}</h3>
                 <div class="infoscon">
                     <div class="text">
                         <p class="flowtext1">{{$t('lang.lang16')}}</p>
                         <p class="flowtext1">{{$t('lang.lang17')}}</p>
                         <p class="flowtext1">{{$t('lang.lang18')}}</p>
                     </div>
-                    <div><img src="../assets/img/infoimg1.png"></div>
+                    <div>
+                        <img v-if="itemShow" src="../assets/img/infoimg1.png">
+                        <img v-else src="../assets/img/infoimg1-theme2.png">
+                    </div>
                     
                 </div>
                 
-                <h3>{{$t('lang.lang19')}}</h3>
+                <h3 :data-theme="theme">{{$t('lang.lang19')}}</h3>
                 <div class="infoscon">
                     <div class="text">
                         <p class="flowtext2">{{$t('lang.lang20')}}</p>
@@ -93,10 +108,21 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import {mapState} from 'vuex'
 export default {
     components:{ 
         Header,
         Footer
+    },
+    computed: {
+        ...mapState(['theme']),
+        itemShow() {
+            return this.theme === 'theme1'
+        },
+        isPc() {
+            const ret = (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent))
+            return !ret
+        }
     },
     watch: {
         '$i18n.locale' (newValue) {
@@ -119,8 +145,7 @@ export default {
     
     },
     methods: {
-        
-            
+    
     }
 }
 </script>
@@ -144,31 +169,41 @@ export default {
             vertical-align: middle;
             width:300px;
             height:100px;
-            background:#874FEC;
             border-radius:50px;
-            box-shadow: 0px 10px 10px -4px rgba(141, 92, 231, 0.5);
             margin:0 65px;
             font-size:30px;
             color:#fff;
             line-height:100px;
             cursor: pointer;
+            &[data-theme="theme1"] {
+                background:#874FEC;
+                box-shadow: 0px 10px 10px -4px rgba(141, 92, 231, 0.5);
+            }
+            &[data-theme="theme2"] {
+                background: linear-gradient(360deg, #007DEE 0%, #00C8EE 100%);
+            }
         }
     }
     .hdaoinfo{
         padding-top:110px;
-        width:1200px;
+        max-width:1200px;
         margin:0 auto;
-        background:url(../assets/img/bg.png) no-repeat right bottom;
+        // background:url(../assets/img/bg.png) no-repeat right bottom;
         background-size:650px 420px;
         margin-bottom:100px;
         h2{
             font-size:36px;
-            color:#874FEC;
             line-height:50px;
             text-align:center;
             position:relative;
             margin-bottom:50px;
-            span{
+            & span[data-theme="theme1"] {
+                color:#874FEC;
+            }
+            & span[data-theme="theme2"] {
+                color:#00C8EE;
+            }
+            span[data-theme="theme1"]{
                 position:relative;
                 &:after{
                     content:'';
@@ -189,7 +224,27 @@ export default {
                     background:#874FEC;
                 }
             }
-            
+            span[data-theme="theme2"]{
+                position:relative;
+                &:after{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    left:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#00C8EE;
+                }
+                &:before{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    right:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#00C8EE;
+                }
+            }
         }
         p{
             font-size:18px;
@@ -208,11 +263,11 @@ export default {
             }
         }
     }
-    .projectlist{
+    .projectlist-t{
         font-size:0;
         text-align:center;
         padding:60px 0;
-        background: rgba(135, 79, 236, 0.05);
+        // background: rgba(135, 79, 236, 0.05);
         .projectItem{
             display:inline-block;
             vertical-align:middle;
@@ -220,10 +275,16 @@ export default {
             height:364px;
             padding:0 30px;
             border-radius:10px;
-            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
-            box-shadow: 0px 4px 0px 0px #7249BA;
             box-sizing:border-box;
             margin:0 20px;
+            margin-bottom: 15px;
+            &[data-theme="theme1"] {
+                background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+                box-shadow: 0px 4px 0px 0px #7249BA;
+            }
+            &[data-theme="theme2"] {
+                background: linear-gradient(360deg, #007DEE 0%, #00C8EE 100%);
+            }
             h2{
                 width:158px;
                 height:50px;
@@ -232,8 +293,13 @@ export default {
                 line-height:50px;
                 text-align:center;
                 border-radius: 0px 0px 10px 10px;
-                background:#9052FF;
                 display:inline-block;
+                &[data-theme="theme1"] {
+                    background:#9052FF;
+                }
+                &[data-theme="theme2"] {
+                    background:#4DE0FC;
+                }
             }
             .title{
                 font-size:16px;
@@ -247,7 +313,7 @@ export default {
             }
             .val{
                 font-size:18px;
-                color:#EDD9FF;
+                // color:#EDD9FF;
                 line-height:40px;
                 text-align:center;
             }
@@ -257,7 +323,7 @@ export default {
         background:none;
         h2{
             
-            span{
+            span[data-theme="theme1"]{
                 font-size:36px;
                 position:relative;
                 &:after{
@@ -279,6 +345,28 @@ export default {
                     background:#874FEC;
                 }
             }
+            span[data-theme="theme2"]{
+                font-size:36px;
+                position:relative;
+                &:after{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    left:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#00C8EE;
+                }
+                &:before{
+                    content:'';
+                    position:absolute;
+                    top:50%;
+                    right:-70px;
+                    width:60px;
+                    height:1px;
+                    background:#00C8EE;
+                }
+            }
         }
     }
     .flowItem{
@@ -286,8 +374,7 @@ export default {
         h3{
             width:280px;
             height:48px;
-            background: linear-gradient(270deg, #874FEC 0%, #A467FE 100%);
-            box-shadow: 0px 2px 0px 0px #7249BA;
+            
             border-radius: 100px;
             font-size:18px;
             color:#fff;
@@ -295,6 +382,14 @@ export default {
             font-weight:400;
             text-align:center;
             margin:0 auto 40px;
+            &[data-theme="theme1"] {
+                background: linear-gradient(270deg, #874FEC 0%, #A467FE 100%);
+                box-shadow: 0px 2px 0px 0px #7249BA;
+            }
+            &[data-theme="theme2"] {
+                background: linear-gradient(360deg, #007DEE 0%, #00C8EE 100%);
+                // box-shadow: 0px 2px 0px 0px #7249BA;
+            }
         }
         p{
             font-size:18px;
@@ -337,14 +432,14 @@ export default {
                 font-size:12px;
                 border-radius:10px;
                 margin:0 22px;
-                background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
-                box-shadow: 0px 2px 0px 0px #7249BA;
+                // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+                // box-shadow: 0px 2px 0px 0px #7249BA;
             }
         }
         .hdaoinfo{
            padding:0 20px 40px; 
            width:100%;
-           background:url(../assets/img/bg1.png) no-repeat bottom -60px right;
+           //  background:url(../assets/img/bg1.png) no-repeat bottom -60px right;
            background-size:225px 225px;
            margin-bottom:0;
            h2{
@@ -376,7 +471,7 @@ export default {
            &.flowPanel{
                padding-bottom:0;
                margin-bottom:45px;
-               background:url(../assets/img/mImg/bg2.png) no-repeat right 30px bottom;
+                background:url(../assets/img/mImg/bg2.png) no-repeat right 30px bottom;
                background-size:90px 177px;
                h2{
                    padding-bottom:0;
@@ -412,7 +507,7 @@ export default {
                }
            }
         }
-        .projectlist{
+        .projectlist-t{
             padding:20px;
             background:none;
             .projectItem{
@@ -454,17 +549,17 @@ export default {
                 h2{
                     span{
                         font-size:24px;
-                        color:#874FEC;
+                        // color:#874FEC;
                     }
                 }
                 .flowItem{
-                    background:url(../assets/img/bg4.png) no-repeat right bottom;
+                    // background:url(../assets/img/bg4.png) no-repeat right bottom;
                     background-size:102px 336px;
                     h3{
                         width:140px;
                         height:24px;
-                        background: linear-gradient(270deg, #874FEC 0%, #A467FE 100%);
-                        box-shadow: 0px 2px 0px 0px #7249BA;
+                        // background: linear-gradient(270deg, #874FEC 0%, #A467FE 100%);
+                        // box-shadow: 0px 2px 0px 0px #7249BA;
                         border-radius: 0px 100px 100px 0px;
                         line-height:24px;
                         font-size:12px;

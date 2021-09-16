@@ -116,6 +116,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import axios from "axios"
 import { HDAO_MATIC,IDO_TOKEN,TIERSYSTEM} from '../utils/contract'
+import { BSC_HDAO_MATIC,BSC_IDO_TOKEN,BSC_TIERSYSTEM} from '../utils/bsc_contract'
 import BigNumber from 'bignumber.js'
 export default {
     components:{ 
@@ -150,8 +151,15 @@ export default {
             if(web3.eth.defaultAccount){
                 this.web3 = web3
                 this.defaultAccount = web3.eth.defaultAccount
-                this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
-                this.init()
+                web3.eth.getChainId().then(chainId => {
+                    this.chainId = chainId
+                    if (chainId === 137) {
+                        this.STAKEContract = new this.web3.eth.Contract(TIERSYSTEM.abi, TIERSYSTEM.address)
+                    } else {
+                        this.STAKEContract = new this.web3.eth.Contract(BSC_TIERSYSTEM.abi, BSC_TIERSYSTEM.address)
+                    }
+                    this.init()
+                })
             }
         })
     },
@@ -342,7 +350,7 @@ export default {
     .voteList{
         &.pclist{
                 width:auto !important;
-            }
+        }
         font-size:0;
         text-align:center;
         .voteItem{
@@ -350,7 +358,7 @@ export default {
             vertical-align: middle;
             padding:50px;
             margin:0 35px 35px;
-            border:2px solid #874FEC;
+            // border:2px solid #874FEC;
             border-radius:20px;
             width:680px;
             height:1050px;
@@ -421,7 +429,7 @@ export default {
                 display:block;
                 width:282px;
                 height:66px;
-                background:#874FEC;
+                // background:#874FEC;
                 margin:0 auto 40px;
                 border-radius:10px;
                 font-size:24px;
@@ -466,7 +474,7 @@ export default {
                     overflow:hidden;
                     border: 1px solid #DADADA;
                     p{
-                        background:#874FEC;
+                        // background:#874FEC;
                         height:100%;
                         border-radius:33px;
                         width:0;

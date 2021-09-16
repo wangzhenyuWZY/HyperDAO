@@ -7,15 +7,17 @@ import "@/assets/style/index.less";
 // import $axios from "@/utils/request";
 import mixin from "./mixin/index";
 import store from "./store/index";
-import 'lib-flexible/flexible'
+// import 'lib-flexible/flexible'
 import "@/components/Vant";
 // rem
-import "amfe-flexible";
+// import "amfe-flexible";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'; 
 Vue.use(ElementUI)
 // 把变量挂载到vue的原型上
 // Vue.prototype.$axios = $axios;
+
+import "./assets/style/theme1.less";
 
 Vue.mixin(mixin);
 import initWeb3 from './utils/hecoFn'

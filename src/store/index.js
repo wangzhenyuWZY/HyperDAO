@@ -7,7 +7,9 @@ const config = {
     state: {
         isLogin: false,
         username: '',
-        token: ''
+        token: '',
+        theme: 'theme1',
+        // isPc: (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent))
     },
     getters: {
         isLogin: state => state.isLogin,
@@ -23,6 +25,9 @@ const config = {
         },
         updateUsername(state, payload) {
             state.username = payload;
+        },
+        updateTheme(state, payload) {
+            state.theme = payload
         }
     },
     actions: {}
