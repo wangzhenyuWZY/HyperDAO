@@ -67,27 +67,18 @@
                         <div class="item">状态</div>
                         <div class="item">链上查看</div>
                     </div>
-                    <div class="lineInfo">
+                    <div class="lineInfo" v-for="i in 3" :key="i">
                         <div class="item">2021-09-15 15:43:12</div>
                         <div class="item">BSC TO ETH</div>
                         <div class="item">已完成</div>
-                        <div class="item">
+                        <div class="item" @click="getCrossDetail">
                             <img class="item" src="../assets/img/share.png">
                         </div>
                     </div>
-                    <div class="lineInfo">
-                        <div class="item">2021-09-15 15:43:12</div>
-                        <div class="item">BSC TO ETH</div>
-                        <div class="item">已完成</div>
+                    <div class="mInfoLine" @click="getCrossDetail" v-for="i in 3" :key="i">
+                        <div class="item">时间: 2021-09-15 15:43:12</div>
                         <div class="item">
-                            <img class="item" src="../assets/img/share.png">
-                        </div>
-                    </div>
-                    <div class="lineInfo">
-                        <div class="item">2021-09-15 15:43:12</div>
-                        <div class="item">BSC TO ETH</div>
-                        <div class="item">已完成</div>
-                        <div class="item">
+                            <span>详情</span>
                             <img class="item" src="../assets/img/share.png">
                         </div>
                     </div>
@@ -215,6 +206,10 @@ export default {
                 this.getISAllowance()
                 console.log(this.CROSSContract)
             }
+        },
+        // 查看跨链记录详情
+        getCrossDetail() {
+
         },
         // 获取跨链记录
         getCrossList(address) {
@@ -352,7 +347,12 @@ export default {
             this.oldBalance = oldBalance.div(Math.pow(10,this.oldDecimals)).toFixed(4)
         },    
         changeType(type) {
-            this.type = type
+            if (this.type !== type) {
+                this.$message({
+                    message: '请切换网络后刷新',
+                    type: 'error'
+                })
+            }
         }
     }
 }
@@ -503,7 +503,6 @@ export default {
 
     .block1 {
         max-width: 1046px;
-        height: 450px;
         box-sizing: border-box;
         padding: 0 140px;
         border: 1px solid #874FEC;
@@ -549,6 +548,7 @@ export default {
             font-size: 16px;
             padding-left: 10px;
             margin-top: 15px;
+            box-sizing: border-box;
             border: 1px solid #979797;
         }
         .corCount {
@@ -579,6 +579,7 @@ export default {
             text-align: center;
             margin: auto;
             margin-top: 80px;
+            margin-bottom: 30px;
             cursor: pointer;
             box-shadow: 0px 2px 0px 0px #7249BA;
             background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
@@ -586,7 +587,6 @@ export default {
     }
     .block2 {
         max-width: 1046px;
-        height: 450px;
         box-sizing: border-box;
         padding: 0 140px;
         border: 1px solid #874FEC;
@@ -638,6 +638,9 @@ export default {
                     }
                 }
             }
+        }
+        .mInfoLine {
+            display: none;
         }
     }
 }
@@ -725,6 +728,86 @@ export default {
             border-radius:6px;
             font-size:14px;   
             margin:0 auto 40px;
+        }
+        .block1 {
+            margin: 40px 16px;
+            width: auto;
+            padding: 0 24px;
+            .btns {
+                margin-top: 20px;
+                .btn {
+                    width: 120px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    font-size: 12px;
+                }
+            }
+            .corNums {
+                margin-top: 20px;
+                font-size: 14px;
+            }
+            .corInput {
+                font-size: 14px;
+                height: 30px;
+            }
+            .corCount {
+                font-size: 14px; 
+            }
+            .line {
+                margin-top: 15px;
+                font-size: 14px;
+            }   
+            .launch {
+                margin-top: 40px;
+                width: 240px;
+            }
+        }
+        
+        .block2 {
+            margin: 40px 16px;
+            width: auto;
+            padding: 0 24px;
+            .title {
+                font-size: 20px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .line {
+                display: none;
+                margin-bottom: 12px;
+                .item {
+                    margin-top: 14px;
+                    font-size: 14px;
+                }
+            }
+            .lineInfo {
+                display: none;
+            }
+            .mInfoLine {
+                display: flex;
+                justify-content: space-between;
+                cursor: pointer;
+                padding-bottom: 12px;
+                margin-top: 5px;
+                border-bottom: 1px solid #E5E5E5;
+                .item {
+                    height: 28px;
+                    line-height: 28px;
+                    vertical-align: middle;
+                    font-size: 12px;
+                    span {
+                        display: inline-block;
+                        line-height: 28px;
+                        margin-right: 4px;
+                    }
+                    img {
+                        height: 16px;
+                        line-height: 20px;
+                        margin-bottom: 2px;
+                    }
+                }
+            }
         }
     }
 }

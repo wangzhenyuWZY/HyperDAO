@@ -20,8 +20,8 @@
             </li>
             <li class="navItem" :class="active==4?'active':''" :data-theme="theme">
                 <router-link to="chain">{{$t('lang.lang87')}}</router-link>
-                <img @click="showChooseChain" class="sel-icon" src="@/assets/img/select.png" alt="">
-                <div class="selections" v-show="selectionShow">
+                <img ref="trigger"  class="sel-icon" src="@/assets/img/select.png" alt="">
+                <div class="selections" ref="selection" v-show="selectionShow">
                     <div class="item" @click="chooseChain('bsc')">
                         <span>BSC</span>
                         <van-icon name="arrow" />
@@ -105,6 +105,19 @@
             }
         },
         created(){
+            document.addEventListener('click', e => {
+                if (e.target === this.$refs.trigger) {
+                    return this.selectionShow = !this.selectionShow
+                }
+                if (this.$refs.selection) {
+                    let isSelf = this.$refs.selection.contains(e.target)
+                    if (!isSelf) {
+                        console.log('close')
+                        this.selectionShow = false
+                    }
+                }
+            })
+
             this.$initWeb3().then((web3)=>{
                 if(web3.eth.defaultAccount){
                     this.web3 = web3
@@ -148,11 +161,14 @@
                 this.$i18n.locale = this.$i18n.locale === 'en' ? 'zh' : 'en'
                 localStorage.setItem('lang',this.$i18n.locale)
             },
-            showChooseChain() {
-                this.selectionShow = !this.selectionShow
-            },
+            // showChooseChain() {
+            //     // this.selectionShow = !this.selectionShow
+            //     setTimeout(() => {
+            //         this.selectionShow = !this.selectionShow
+            //     }, 0);
+            // },
             chooseChain(chain) {
-                this.showChooseChain()
+                this.selectionShow = false
                 if (chain === 'bsc') {
                     this.$store.commit('updateTheme', 'theme1')
                 } else {
@@ -222,6 +238,7 @@
             }
             &:last-child {
                 position: relative;
+                width: 150px;
                 .selections {
                     position: absolute;
                     right: 0;
@@ -319,7 +336,7 @@
             .navItem {
                 width: 110px;
                 &:last-child {
-                    width: 130px;     
+                    width: 150px;     
                 }
             }
         }

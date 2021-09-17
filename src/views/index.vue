@@ -6,8 +6,8 @@
             <template v-if="itemShow">
                 <img src="../assets/img/banner.jpg" v-show="isCn && isPc" width="100%">
                 <img src="../assets/img/banner11.png" v-show="!isCn && isPc" width="100%">
-                <img src="../assets/img/banner.jpg" v-show="isCn && !isPc" width="100%">
-                <img src="../assets/img/banner11.png" v-show="!isCn && !isPc" width="100%">
+                <img src="../assets/img/mImg/mImg-theme1.png" v-show="isCn && !isPc" width="100%">
+                <img src="../assets/img/mImg/mImg-en-theme1.png" v-show="!isCn && !isPc" width="100%">
             </template>
             <!-- 蓝色主题 -->
             <template v-else>

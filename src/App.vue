@@ -18,6 +18,17 @@ export default {
   },
   methods: {
     
+  },
+  beforeCreate() {
+    this.$initWeb3().then((web3)=>{
+      web3.eth.getChainId().then(chainId => {
+        if (chainId === 56) { // bsc
+          this.$store.commit('updateTheme', 'theme2')
+        } else { // 137 matic/polygon
+          this.$store.commit('updateTheme', 'theme1')
+        }
+      })
+    })
   }
 };
 </script>
