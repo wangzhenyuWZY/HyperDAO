@@ -584,7 +584,8 @@ export default {
                 })
                 return
             }
-            if(parseFloat(this.preNum)*parseFloat(this.price)>this.usdtBalance){
+            // if(parseFloat(this.preNum)*parseFloat(this.price)>this.usdtBalance){
+            if(parseFloat(this.preNum)*parseFloat(this.price)>this.totalVol){
                 this.$message({
                     message: this.$t('lang.lang95'),
                     type: 'warning'
@@ -1020,8 +1021,8 @@ export default {
             }
         }
         .mydetail{
-            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
-            box-shadow: 0px 6px 0px 0px #7249BA;
+            // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            // box-shadow: 0px 6px 0px 0px #7249BA;
             padding:30px 0 0;
             .content{
                 width:1200px;
@@ -1045,7 +1046,7 @@ export default {
                             }
                             h3{
                                 font-size:18px;
-                                color:#DBC7FF;
+                                // color:#DBC7FF;
                                 line-height:25px;
                                 white-space: nowrap;
                             }
@@ -1070,7 +1071,7 @@ export default {
                         height:60px;
                         display:block;
                         border-radius:10px;
-                        background:#fff;
+                        // background:#fff;
                         text-align:center;
                         font-size:24px;
                         // color:#874FEC;
@@ -1078,7 +1079,7 @@ export default {
                         cursor: pointer;
                         border:none;
                         &.disabled{
-                            background:#BC98FE;
+                            // background:#BC98FE;
                             cursor:initial;
                         }
                         &:nth-child(1){
@@ -1349,7 +1350,7 @@ export default {
                                 padding:15px 0;
                                 h3{
                                     font-size:11px;
-                                    color:#DBC7FF;
+                                    // color:#DBC7FF;
                                     line-height:16px;
                                     padding-bottom:8px;
                                     white-space: nowrap;
@@ -1371,7 +1372,7 @@ export default {
                         .btn{
                             width:168px;
                             height:40px;
-                            background:#FFFFFF;
+                            // background:#FFFFFF;
                             border-radius:6px;
                             font-size:14px;
                             // color:#874FEC;
@@ -1383,7 +1384,7 @@ export default {
                                 margin: 0 auto 20px;
                             }
                             &.disabled{
-                                background:#BC98FE;
+                                // background:#BC98FE;
                             }
                         }
                         .allcationn{

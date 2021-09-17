@@ -9,6 +9,7 @@ const config = {
         username: '',
         token: '',
         theme: 'theme1',
+        crossChain: 'polygon'
         // isPc: (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent))
     },
     getters: {
@@ -28,6 +29,9 @@ const config = {
         },
         updateTheme(state, payload) {
             state.theme = payload
+        },
+        updateCrossChain(state, payload) {
+            state.crossChain = payload
         }
     },
     actions: {}

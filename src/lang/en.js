@@ -140,5 +140,18 @@ export const lang = {
     "lang138":"After successfully participating in the Apply Alloction, all members need to click Claim Allocation within the specified time, otherwise, the smart contract will automatically deduct all the USDT paid!",
     "lang139":"The address is not eligible for recommendation",
     "lang140":"My number of votes",
-    "lang141":"Apply for withdrawal limit"
+    "lang141":"Apply for withdrawal limit",
+
+    // polygon 跨链切换
+    "lang142": "Numbers of cross-chain",
+    "lang143": "Enter numbers",
+    "lang144": "Available balance:",
+    "lang145": "Gas cost",
+    "lang146": "Authorize",
+    "lang147": "List of cross-chain",
+    "lang148": "Time",
+    "lang149": "Direction",
+    "lang150": "State",
+    "lang151": "Check",
+    "lang152": "Launch",
 }

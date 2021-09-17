@@ -14,7 +14,7 @@
                 <img class="banner" v-show="isCn && !isPc" src="../assets/img/mImg/mImg-theme2-cross.png">
                 <img class="banner" v-show="!isCn && !isPc" src="../assets/img/mImg/mImg-en-theme2-cross.png">
             </template>
-            <template v-if="!itemShow">
+            <template v-if="crossChain">
                 <p class="chainInfo info1">
                     {{$t('lang.lang76')}}
                 </p>
@@ -43,49 +43,52 @@
                         <div @click="changeType('toBSC')" :class="['btn', type === 'toBSC' ? 'active' : '' ]">METIC TO BSC</div>
                     </div>
                     <div class="corNums">
-                        跨链数量
+                        {{$t('lang.lang142')}}
                     </div>
-                    <input placeholder="请输入跨链数量" v-model="corCount" class="corInput">
+                    <input :placeholder="$t('lang.lang143')" v-model="corCount" class="corInput">
                     <div class="corCount">
-                        可用余额:
+                        {{$t('lang.lang144')}}
                         <span>{{account}}</span>
                     </div>
                     <div class="line">
-                        <div>当前跨链Gas费</div>
+                        <div>{{$t('lang.lang145')}}</div>
                         <div class="num">{{gas}}{{token}}</div>
                     </div>
                     <div class="launch" @click="authorize" v-show="!isAllowance">
-                        授权
+                        {{$t('lang.lang146')}}
                     </div>
                     <div class="launch" @click="launchCross" v-show="isAllowance">
-                        启动跨连
+                        {{$t('lang.lang152')}}
                     </div>
                 </div>
                 <div class="block2">
                     <div class="title">
-                        跨链记录
+                        {{$t('lang.lang147')}}
                     </div>
                     <div class="line">
-                        <div class="item">时间</div>
-                        <div class="item">方向</div>
-                        <div class="item">状态</div>
-                        <div class="item">链上查看</div>
+                        <div class="item">{{$t('lang.lang148')}}</div>
+                        <div class="item">{{$t('lang.lang149')}}</div>
+                        <div class="item">{{$t('lang.lang150')}}</div>
+                        <div class="item">{{$t('lang.lang151')}}</div>
                     </div>
-                    <div class="lineInfo" v-for="i in 3" :key="i">
-                        <div class="item">2021-09-15 15:43:12</div>
-                        <div class="item">BSC TO ETH</div>
+                    <div class="lineInfo" v-for="item in list" :key="item.out_time">
+                        <div class="item">{{item.out_time | formatTime}}</div>
+                        <div class="item">
+                            {{item.in_chain.toUpperCase()}} TO {{item.out_chain.toUpperCase()}}
+                        </div>
                         <div class="item">已完成</div>
-                        <div class="item" @click="getCrossDetail">
+                        <div class="item" @click="getCrossDetail(item.in_tx, item.out_tx)">
                             <img class="item" src="../assets/img/share.png">
                         </div>
                     </div>
-                    <div class="mInfoLine" @click="getCrossDetail" v-for="i in 3" :key="i">
-                        <div class="item">时间: 2021-09-15 15:43:12</div>
+                    <div class="mInfoLine" @click="getCrossDetail(item.in_tx, item.out_tx)" v-for="item in list" :key="item.in_time">
+                        <div class="item">时间: {{item.out_time | formatTime}}</div>
                         <div class="item">
                             <span>详情</span>
                             <img class="item" src="../assets/img/share.png">
                         </div>
                     </div>
+                    <div v-if="!list.length" class="noData">暂无记录</div>
                 </div>
             </template>
         </div>
@@ -108,6 +111,7 @@
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import format from '../utils/timeFormat'
 import { HDAO_TOKEN, OLD_HDAO, CONVERT, CROSS_CHAIN, HDAO_MATIC } from '../utils/contract'
 import { BSC_HDAO_TOKEN, BSC_CONVERT, BSC_CROSS_CHAIN, BSC_HDAO_MATIC } from '../utils/bsc_contract'
 import BigNumber from 'bignumber.js'
@@ -121,6 +125,9 @@ export default {
     computed: {
         itemShow() {
             return this.$store.state.theme === 'theme1'
+        },
+        crossChain() {
+            return this.$store.state.crossChain === 'polygon'
         },
         isPc() {
             const ret = (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent))
@@ -136,6 +143,12 @@ export default {
                 }
             }
         },
+    filters: {
+        formatTime(time) {
+            console.log(time)
+            return format.call(new Date(time * 1000), 'yy-MM-dd hh:mm:ss')
+        }
+    }, 
     data() {
         return {
             web3:null,
@@ -160,7 +173,9 @@ export default {
             // 当前以太坊网络
             token: '',
             // 是否授权转账
-            isAllowance: false
+            isAllowance: false,
+            // 跨链记录数据
+            list: []
         }
     },
     created(){
@@ -171,7 +186,7 @@ export default {
                 this.getCrossList(this.defaultAccount)
                 // 获取当前链id
                 web3.eth.getChainId().then(chainId => {
-                    console.log(chainId)
+                    // console.log(chainId)
                     this.chainId = chainId
                     if (chainId === 137) { // matic 主网ID
                         this.type = 'toBSC'
@@ -211,18 +226,31 @@ export default {
                 this.getBalance()
                 this.getPounge()
                 this.getISAllowance()
-                console.log(this.CROSSContract)
+                // console.log(this.CROSSContract)
             }
         },
         // 查看跨链记录详情
-        getCrossDetail() {
-
+        getCrossDetail(url1, url2) {
+            console.log(this.chainId)
+            if (this.chainId === 137) { // polygon
+                if (url1.includes('polygon')) {
+                    window.open(url1)
+                } else {
+                    window.open(url2)
+                }
+            } else { // bsc
+                if (url1.includes('bsc')) {
+                    window.open(url1)
+                } else {
+                    window.open(url2)
+                }
+            }
         },
         // 获取跨链记录
         getCrossList(address) {
-            axios.get(process.env.VUE_APP_URL + "user/bridge/" + address).then((res)=>{
+            axios.get('http://47.242.187.3:9091/user/bridge/' + address).then((res)=>{
                 if(res.data.code==0){
-                    console.log(res)
+                    this.list = res.data.data
                 } else {
 
                 }
@@ -237,7 +265,7 @@ export default {
             // 未同意 申请授权
             // const MAX = this.web3.utils.toTwosComplement(-1)
             let res = await this.HDAOMATICContract.methods.approve(this.CROSSContract.options.address, this.rowAccount).send({ from: this.defaultAccount })
-            console.log(res)
+            // console.log(res)
             if (res) {
                 this.isAllowance = true
                 this.$message({ message: '授权成功！', type: 'success' })
@@ -268,11 +296,10 @@ export default {
         },
         // 查询当前网络是否授权跨链合约
         async getISAllowance() {
-            console.log(this.defaultAccount, this.CROSSContract.options.address)
+            // console.log(this.defaultAccount, this.CROSSContract.options.address)
             // 我的钱包地址 授权地址
             let res = await this.HDAOMATICContract.methods.allowance(this.defaultAccount, this.CROSSContract.options.address).call()
             this.isAllowance = !!Number(res)
-            console.log(res)
         },
         // 查询手续费
         async getPounge() {
@@ -329,8 +356,8 @@ export default {
             mintNum = mintNum.times(Math.pow(10,this.oldDecimals))
             let oldBalance = new BigNumber(this.oldBalance)
             oldBalance = oldBalance.times(Math.pow(10,this.oldDecimals))
-            console.log(mintNum.toFixed())
-            console.log(oldBalance.toFixed())
+            // console.log(mintNum.toFixed())
+            // console.log(oldBalance.toFixed())
             // if(parseInt(mintNum)>parseInt(oldBalance)){
             //     this.$message({
             //         message: '余额不足',
@@ -512,7 +539,7 @@ export default {
         max-width: 1046px;
         box-sizing: border-box;
         padding: 0 140px;
-        border: 1px solid #874FEC;
+        // border: 1px solid #874FEC;
         border-radius: 20px;
         margin: 0 auto;
         margin-top: 100px;
@@ -527,9 +554,9 @@ export default {
                 height: 48px;
                 line-height: 48px;
                 text-align: center;
-                background: white;
-                border: 1px solid #874FEC;
-                color: #874FEC;
+                // background: white;
+                // border: 1px solid #874FEC;
+                // color: #874FEC;
                 border-radius: 20px 0px 0px 20px;
                 cursor: pointer;
                 &:last-child {
@@ -537,7 +564,7 @@ export default {
                 }
                 &.active {
                     color: white;
-                    background: #874FEC;
+                    // background: #874FEC;
                 }
             }
         }
@@ -556,6 +583,7 @@ export default {
             padding-left: 10px;
             margin-top: 15px;
             box-sizing: border-box;
+            border-radius: 6px;
             border: 1px solid #979797;
         }
         .corCount {
@@ -563,7 +591,7 @@ export default {
             font-size: 18px; 
             margin-top: 14px;
             span {
-                color: #874FEC;
+                // color: #874FEC;
             }
         }
         .line {
@@ -572,7 +600,7 @@ export default {
             margin-top: 22px;
             font-size: 18px;
             .num {
-                color: #874FEC;
+                // color: #874FEC;
             }
         }
         .launch {
@@ -588,15 +616,15 @@ export default {
             margin-top: 80px;
             margin-bottom: 30px;
             cursor: pointer;
-            box-shadow: 0px 2px 0px 0px #7249BA;
-            background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
+            // box-shadow: 0px 2px 0px 0px #7249BA;
+            // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
         }
     }
     .block2 {
         max-width: 1046px;
         box-sizing: border-box;
         padding: 0 140px;
-        border: 1px solid #874FEC;
+        // border: 1px solid #874FEC;
         border-radius: 20px;
         margin: 0 auto;
         overflow: hidden;
@@ -648,6 +676,12 @@ export default {
         }
         .mInfoLine {
             display: none;
+        }
+        .noData {
+            font-size: 34px;
+            color: #ccc;
+            text-align: center;
+            margin: 60px 0 40px 0;
         }
     }
 }

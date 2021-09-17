@@ -254,7 +254,7 @@ export default {
         .projectList{
             
             li{
-                height:750px;
+                // height:750px;
                 .time{
                     p{
                         font-size:30px;
@@ -343,7 +343,7 @@ export default {
                 text-align:center;
                 line-height:40px;
                 font-size:18px;
-                color:#874FEC;
+                // color:#874FEC;
             }
             .name{
                 padding-top:5px;
@@ -376,7 +376,7 @@ export default {
                 padding-top:30px;
                 .title{
                     font-size:24px;
-                    color:#EDD9FF;
+                    // color:#EDD9FF;
                     line-height:33px;
                     padding-bottom:6px;
                 }
@@ -413,7 +413,7 @@ export default {
                 margin-top:36px;
                 .title{
                     font-size:18px;
-                    color:#EDD9FF;
+                    // color:#EDD9FF;
                     line-height:25px;
                     margin-bottom:12px;
                 }

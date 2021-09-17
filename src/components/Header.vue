@@ -112,7 +112,6 @@
                 if (this.$refs.selection) {
                     let isSelf = this.$refs.selection.contains(e.target)
                     if (!isSelf) {
-                        console.log('close')
                         this.selectionShow = false
                     }
                 }
@@ -161,19 +160,15 @@
                 this.$i18n.locale = this.$i18n.locale === 'en' ? 'zh' : 'en'
                 localStorage.setItem('lang',this.$i18n.locale)
             },
-            // showChooseChain() {
-            //     // this.selectionShow = !this.selectionShow
-            //     setTimeout(() => {
-            //         this.selectionShow = !this.selectionShow
-            //     }, 0);
-            // },
             chooseChain(chain) {
                 this.selectionShow = false
-                if (chain === 'bsc') {
-                    this.$store.commit('updateTheme', 'theme1')
-                } else {
-                    this.$store.commit('updateTheme', 'theme2')
-                }
+                this.$store.commit('updateCrossChain', chain)
+                
+                // if (chain === 'bsc') {
+                //     this.$store.commit('updateTheme', 'theme1')
+                // } else {
+                //     this.$store.commit('updateTheme', 'theme2')
+                // }
             }
         }
     }

@@ -1,6 +1,11 @@
 //构建web3对象
 import Web3 from 'web3'
 
+/**
+ * 请求插件授权连接到当前网站
+ * 初始化web3对象
+ * 设置钱包地址
+ *  */
 const initWeb3 = () => {
     return new Promise(function(resolve, reject) {
         // const web3 = new Web3('https://http-testnet.hecochain.com')
