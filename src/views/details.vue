@@ -948,8 +948,8 @@ export default {
             display:block;
             width:250px;
             height:80px;
-            box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
-            background:#874FEC;
+            // box-shadow: 0px 8px 10px 0px rgba(121, 55, 240, 0.43);
+            // background:#874FEC;
             border-radius:10px;
             font-size:28px;
             color:#fff;

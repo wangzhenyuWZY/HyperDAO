@@ -55,6 +55,7 @@
                         <div class="num">{{gas}}{{token}}</div>
                     </div>
                     <div class="launch" @click="authorize" v-show="!isAllowance">
+                        <!-- <van-loading type="spinner" size="24px" /> -->
                         {{$t('lang.lang146')}}
                     </div>
                     <div class="launch" @click="launchCross" v-show="isAllowance">
@@ -616,6 +617,8 @@ export default {
             margin-top: 80px;
             margin-bottom: 30px;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
             // box-shadow: 0px 2px 0px 0px #7249BA;
             // background: linear-gradient(360deg, #874FEC 0%, #A467FE 100%);
         }
