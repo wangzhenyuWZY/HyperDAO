@@ -283,7 +283,7 @@ export default {
             preNum:'',
             saleToken:null,
             tokenDecimals:18,
-            usdtDecimals:6,
+            usdtDecimals:18,
             usdtBalance:0,
             maticBalance:0,
             tiersNum:0,
@@ -373,6 +373,7 @@ export default {
     methods: {
         async init(){
             this.getIsOpen()
+            this.getUsdtDecimails()
             this.getUsdtBalance()
             this.getTiers()
             this.getUserTier()
@@ -717,13 +718,12 @@ export default {
                 this.getName()
             }
         },
-        // async getUsdtDecimails(){
-        //     let res = await this.USDTContract.methods.decimals().call()
-        //     if(res){
-        //         this.usdtDecimals = res
-        //         this.getUsdtBalance()
-        //     }
-        // },
+        async getUsdtDecimails(){
+            let res = await this.USDTContract.methods.decimals().call()
+            if(res){
+                this.usdtDecimals = res
+            }
+        },
         async getUsdtBalance () {
             let res = await this.USDTContract.methods.balanceOf(this.defaultAccount).call()
             if(res){
