@@ -3,12 +3,16 @@
         <Header></Header>
         <div class="chainPanel">
             <template v-if="itemShow">
-                <img class="banner" v-show="isCn" src="../assets/img/banner2.png">
-                <img class="banner" v-show="!isCn" src="../assets/img/banner22.png">
+                <img class="banner" v-show="isCn && isPc" src="../assets/img/banner2.png">
+                <img class="banner" v-show="!isCn && isPc" src="../assets/img/banner22.png">
+                <img class="banner" v-show="isCn && !isPc" src="../assets/img/mImg/mImg-theme1-cross.png">
+                <img class="banner" v-show="!isCn && !isPc" src="../assets/img/mImg/mImg-en-theme1-cross.png">
             </template>
             <template v-else>
-                <img class="banner" v-show="isCn" src="../assets/img/banner-chain-zh-theme2.png">
-                <img class="banner" v-show="!isCn" src="../assets/img/banner-chain-en-theme2.png">
+                <img class="banner" v-show="isCn && isPc" src="../assets/img/banner-chain-zh-theme2.png">
+                <img class="banner" v-show="!isCn && isPc" src="../assets/img/banner-chain-en-theme2.png">
+                <img class="banner" v-show="isCn && !isPc" src="../assets/img/mImg/mImg-theme2-cross.png">
+                <img class="banner" v-show="!isCn && !isPc" src="../assets/img/mImg/mImg-en-theme2-cross.png">
             </template>
             <template v-if="!itemShow">
                 <p class="chainInfo info1">
@@ -118,7 +122,10 @@ export default {
         itemShow() {
             return this.$store.state.theme === 'theme1'
         },
-
+        isPc() {
+            const ret = (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent))
+            return !ret
+        }
     },
     watch: {
             '$i18n.locale' (newValue) {
