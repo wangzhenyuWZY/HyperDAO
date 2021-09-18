@@ -39,8 +39,8 @@
             <template v-else>
                 <div class="block1">
                     <div class="btns">
-                        <div @click="changeType('toMETIC')" :class="['btn', type === 'toMETIC' ? 'active' : '' ]">BSC TO METIC</div>
-                        <div @click="changeType('toBSC')" :class="['btn', type === 'toBSC' ? 'active' : '' ]">METIC TO BSC</div>
+                        <div @click="changeType('toMETIC')" :class="['btn', type === 'toMETIC' ? 'active' : '' ]">BSC TO MATIC</div>
+                        <div @click="changeType('toBSC')" :class="['btn', type === 'toBSC' ? 'active' : '' ]">MATIC TO BSC</div>
                     </div>
                     <div class="corNums">
                         {{$t('lang.lang142')}}
