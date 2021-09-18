@@ -290,9 +290,10 @@ export default {
             }
             if(this.inviter!==this.idoAddress){
                 let inviterData = await this.STAKEContract.methods.userInfo(this.inviter).call()
+                console.log(inviterData)
                 let stakenum = new BigNumber(inviterData.stake_amount)
                 stakenum = stakenum.div(Math.pow(10,this.hdaDecimals))
-                if(parseInt(stakenum)<10000){
+                if(parseInt(stakenum)<10000 && inviterData.deposit_times < 2){
                     this.$message({
                         message: this.$t('lang.lang139'),
                         type: 'warning'

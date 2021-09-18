@@ -154,4 +154,6 @@ export const lang = {
     "lang150": "状态",
     "lang151": "链上查看",
     "lang152": "启动跨连",
+
+    "lang153": "切换网络"
 }

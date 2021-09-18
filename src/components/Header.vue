@@ -18,16 +18,17 @@
             <li class="navItem" :class="active==3?'active':''" :data-theme="theme">
                 <router-link to="vote">{{$t('lang.lang86')}}</router-link>
             </li>
-            <li class="navItem" :class="active==4?'active':''" :data-theme="theme">
+            <li ref="trigger" @click="toggleSel" class="navItem" :class="active==4?'active':''" :data-theme="theme">
                 <router-link to="chain">{{$t('lang.lang87')}}</router-link>
-                <img ref="trigger"  class="sel-icon" src="@/assets/img/select.png" alt="">
+                <!-- <span>{{$t('lang.lang87')}}</span> -->
+                <img class="sel-icon" src="@/assets/img/select.png" alt="">
                 <div class="selections" ref="selection" v-show="selectionShow">
-                    <div class="item" @click="chooseChain('bsc')">
-                        <span>BSC</span>
+                    <div class="item" :class="[crossChain === 'bsc' ? 'not-allow' : '']" @click.stop="chooseChain('bsc')">
+                        <span>BSC-Polygon</span>
                         <van-icon name="arrow" />
                     </div>
-                    <div class="item" @click="chooseChain('polygon')">
-                        <span>Polygon</span>   
+                    <div class="item" :class="[crossChain === 'polygon' ? 'not-allow' : '']" @click.stop="chooseChain('polygon')">
+                        <span>Polygon-BSC</span>   
                         <van-icon name="arrow" />
                     </div>
                 </div>
@@ -37,6 +38,7 @@
             <a class="wallet" :data-theme="theme">{{defaultAccount?defaultAccount:$t('lang.lang126')}}</a>
             <i class="data" @click="toDatepiker"></i>
             <span class="language" @click="toggleLang">中/En</span>
+            <span class="switch" @click="switchNet">{{$t('lang.lang153')}}</span>
             <!-- <i class="language" :class="isCn?'isEn':'isCn'" @click="toggleLang"></i> -->
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :show-close="false" direction='ltr' custom-class="drawer_body" :with-header="false" @click.stop="tolerPop=false">
@@ -55,12 +57,17 @@
                 </li>
                 <li :class="active==4?'active':''">
                     <router-link to="chain" class="menutitle">{{$t('lang.lang87')}}</router-link>
+                    <ul class="subList">
+                        <li @click="mobileChooseChain('bsc')">BSC - Polygon</li>
+                        <li @click="mobileChooseChain('polygon')">Polygon - BSC</li>
+                    </ul>
                 </li>
             </ul>
             <div class="otherLink">
                 <p>{{defaultAccount?defaultAccount:$t('lang.lang126')}}</p>
                 <p @click="toDatepiker">{{$t('lang.lang124')}}</p>
                 <p @click="toggleLang">{{$t('lang.lang125')}}</p>
+                <p @click="switchNet">{{$t('lang.lang153')}}</p>
             </div>
         </el-drawer>
         <Datepiker v-show="isDate"></Datepiker>
@@ -78,7 +85,7 @@
             Datepiker
         },
         computed: {
-            ...mapState(['theme']),
+            ...mapState(['theme', 'crossChain']),
             itemShow() {
                 return this.theme === 'theme1'
             }
@@ -105,17 +112,17 @@
             }
         },
         created(){
-            document.addEventListener('click', e => {
-                if (e.target === this.$refs.trigger) {
-                    return this.selectionShow = !this.selectionShow
-                }
-                if (this.$refs.selection) {
-                    let isSelf = this.$refs.selection.contains(e.target)
-                    if (!isSelf) {
-                        this.selectionShow = false
-                    }
-                }
-            })
+            // document.addEventListener('click', e => {
+            //     if (e.target === this.$refs.trigger) {
+            //         return this.selectionShow = !this.selectionShow
+            //     }
+            //     if (this.$refs.selection) {
+            //         let isSelf = this.$refs.selection.contains(e.target)
+            //         if (!isSelf) {
+            //             this.selectionShow = false
+            //         }
+            //     }
+            // })
 
             this.$initWeb3().then((web3)=>{
                 if(web3.eth.defaultAccount){
@@ -169,6 +176,20 @@
                 // } else {
                 //     this.$store.commit('updateTheme', 'theme2')
                 // }
+            },
+            // 切换网络
+            switchNet() {
+                const theme = this.theme === 'theme1' ? 'theme2' : 'theme1'
+                this.$store.commit('updateTheme', theme)
+            },
+            toggleSel() {
+                console.log('toggel')
+                this.selectionShow = !this.selectionShow
+            },
+            mobileChooseChain(chain) {
+                this.$router.push('/chain')
+                this.drawer = false
+                this.chooseChain(chain)
             }
         }
     }
@@ -191,6 +212,12 @@
             a{
                 font-size:12px;
                 color:#fff; 
+            }
+            .subList {
+                li {
+                    text-indent:50px;
+                    margin-bottom: 0;
+                }
             }
         }
     }
@@ -233,7 +260,7 @@
             }
             &:last-child {
                 position: relative;
-                width: 150px;
+                width: 160px;
                 .selections {
                     position: absolute;
                     right: 0;
@@ -251,6 +278,10 @@
                         padding: 0 15px;
                         &:last-child {
                             border-top: 1px solid #eee;
+                        }
+                        &.not-allow {
+                            color: #ccc;
+                            cursor: not-allowed;
                         }
                     }
                 }
@@ -320,19 +351,37 @@
                 background-size:100% 100%;
             }
         }
+        .switch {
+            float: left;
+            font-size: 17px;
+            line-height: 30px;
+            margin-top: 31px;
+            margin-left: 30px;
+            cursor: pointer;
+        }
     }
 }   
 
-@media screen and (max-width: 1800px) {
+@media screen and (max-width: 1888px) {
     .header {
         // height: 90px;
         // line-height: 90px;
+        .logo {
+            padding-left: 120px;
+        }
         .navList {
+            padding-left: 70px;
             .navItem {
-                width: 110px;
+                width: 120px;
                 &:last-child {
-                    width: 150px;     
+                    width: 160px;     
                 }
+            }
+        }
+        .utils {
+            padding-right: 100px;
+            .switch {
+                margin-top: 31px;
             }
         }
     }
@@ -346,7 +395,7 @@
             line-height: 80px;
         }
         .navList {
-            padding-left: 50px;
+            padding-left: 30px;
             .navItem {
                 width: 100px;
                 a {
@@ -359,7 +408,7 @@
             }
         }
         .utils {
-            padding-right: 50px;
+            padding-right: 30px;
             .wallet {
                 height: 40px;
                 line-height: 40px;
@@ -372,11 +421,14 @@
             .language {
                 margin-top: 25px;
             }
+            .switch {
+                margin-top: 25px;
+            }
         }
     }
 }
 
-@media screen and (max-width: 1320px) {
+@media screen and (max-width: 1388px) {
     .header{
         height:42px;
         .logo{
@@ -400,6 +452,11 @@
             height:14px;
             // background:url(../assets/img/mImg/navIco.png) no-repeat center;
             background-size:100% 100%;
+        }
+        .utils {
+            .switch {
+                display: none;
+            }
         }
     }
 } 

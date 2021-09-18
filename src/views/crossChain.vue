@@ -165,7 +165,7 @@ export default {
             oldBalance:0,
             isApprove:false,
             isCn:localStorage.getItem('lang')=='zh',
-            type: 'toETH',
+            type: 'toMETIC',
             corCount: '',
             // 以太坊网络余额
             account: 0,

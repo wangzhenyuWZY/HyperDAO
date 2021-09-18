@@ -154,4 +154,7 @@ export const lang = {
     "lang150": "State",
     "lang151": "Check",
     "lang152": "Launch",
+
+
+    "lang153": "Switch Network"
 }
