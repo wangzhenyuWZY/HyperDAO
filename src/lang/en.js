@@ -85,7 +85,7 @@ export const lang = {
     "lang84":"Listings",
     "lang85":"Stake",
     "lang86":"Governance",
-    "lang87":"Polygon Bridge",
+    "lang87":"Polygon Bridges",
     "lang88":"Insufficient Balance",
     "lang89":"Success",
     "lang90":"Input Amount",

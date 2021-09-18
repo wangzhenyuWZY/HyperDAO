@@ -234,7 +234,7 @@
     }
     .logo{
         float:left;
-        padding-left:168px;
+        padding-left:130px;
         line-height:100px;
         img{
             width:273px;
@@ -246,7 +246,7 @@
     }
     .navList{
         float:left;
-        padding-left:95px;
+        padding-left:90px;
         .navItem{
             float:left;
             width:138px;
@@ -305,9 +305,9 @@
     }
     .utils{
         float:right;
-        padding-right:160px;
+        padding-right:130px;
         .wallet{
-            padding:0 44px;
+            padding:0 40px;
             height:50px;
             border-radius:8px;
             line-height:50px;
@@ -367,10 +367,10 @@
         // height: 90px;
         // line-height: 90px;
         .logo {
-            padding-left: 120px;
+            padding-left: 100px;
         }
         .navList {
-            padding-left: 70px;
+            padding-left: 50px;
             .navItem {
                 width: 120px;
                 &:last-child {
@@ -382,6 +382,9 @@
             padding-right: 100px;
             .switch {
                 margin-top: 31px;
+            }
+            .wallet {
+                padding:0 30px;
             }
         }
     }
@@ -414,6 +417,7 @@
                 line-height: 40px;
                 font-size: 16px;
                 margin-top: 20px;
+                padding:0 20px;
             }
             .data {
                 margin-top: 25px;
